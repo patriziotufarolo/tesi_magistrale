@@ -1,0 +1,95 @@
+\documentclass[12pt,fleqn,twoside,a4paper]{book}
+
+\usepackage[utf8]{inputenc} %% lettere accentate
+\usepackage[english]{babel}
+\usepackage[toc,page]{appendix}
+\usepackage[T1]{fontenc}
+\usepackage[procnames]{listings}
+\usepackage{quoting}
+\usepackage{csquotes}
+\usepackage{xcolor}
+\usepackage{eurosym}
+\usepackage{ragged2e}
+\usepackage{fancyhdr}
+\usepackage{caption}
+\usepackage{subfiles}
+\usepackage{graphicx}
+\graphicspath{{immagini}{../immagini/}}
+
+\setlength{\headheight}{15pt}
+
+\fancypagestyle{frontmatter}{%
+  \fancyhf{}% Clear header/footer
+  \fancyfoot[C]{\thepage}%
+}
+\fancypagestyle{mainmatter}{%
+  \fancyhf{}% Clear header/footer
+  \fancyhead[LE,RO]{\itshape \nouppercase \rightmark}
+  \fancyhead[LO,RE]{\itshape \nouppercase Capitolo \arabic{chapter}}
+  \fancyfoot[C]{\thepage}
+}
+\usepackage{afterpage}
+
+\newcommand\blankpage{%
+    \null
+    \thispagestyle{empty}%
+    \addtocounter{page}{-1}%
+    \newpage}
+%\fancyhead[LE,RO]{\itshape \nouppercase \rightmark}
+%\fancyhead[LO,RE]{\itshape \nouppercase Capitolo \arabic{chapter}}
+
+\quotingsetup{font=small}
+\DeclareFixedFont{\ttb}{T1}{txtt}{bx}{n}{12} % for bold
+\DeclareFixedFont{\ttm}{T1}{txtt}{m}{n}{12}  % for normal
+
+\usepackage[top=2.5cm,margin=3cm,bottom=2.5cm]{geometry}
+\usepackage{palatino}
+\usepackage{enumitem}
+\usepackage{float}
+\usepackage{tabulary}
+\usepackage{tikz}
+\usepackage{amsmath}
+\usepackage{fancyvrb}
+%\usepackage[compact]{titlesec}
+\usepackage[backend=biber, style=numeric, sorting=none]{biblatex}
+\addbibresource{bibliografia.bib}
+\input{linguaggi/python.tex}
+\input{linguaggi/html.tex}
+\addto{\captionsenglish}{\renewcommand*{\appendixname}{Appendici}}
+
+
+
+
+
+\AtBeginDocument{\addtocontents{toc}{\protect\thispagestyle{plain}}} 
+\AtBeginDocument{\addtocontents{lof}{\protect\thispagestyle{plain}}} 
+\AtBeginDocument{\addtocontents{lot}{\protect\thispagestyle{plain}}}
+
+\title{TESI}
+\author{Patrizio Tufarolo}
+\date{April 2017}
+\frontmatter
+\makeindex
+
+
+\begin{document}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\pagestyle{frontmatter}
+\input{sezioni/frontespizio.tex}
+\blankpage
+\input{sezioni/dedica.tex}
+\input{sezioni/prefazione.tex}
+\blankpage
+\input{sezioni/ringraziamenti.tex}
+\input{sezioni/indice.tex}
+%\input{sezioni/simboli_e_notazioni.tex}
+\pagestyle{mainmatter}
+\mainmatter
+\input{sezioni/capitoli.tex}
+\pagestyle{frontmatter}
+\input{sezioni/appendice.tex}
+\input{sezioni/bibliografia.tex}
+%\input{sezioni/indice_analitico.tex}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{document}

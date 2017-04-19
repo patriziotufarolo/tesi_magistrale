@@ -1,0 +1,25 @@
+\boolfalse {citerequest}\boolfalse {citetracker}\boolfalse {pagetracker}\boolfalse {backtracker}\relax 
+\defcounter {refsection}{0}\relax 
+\select@language {english}
+\defcounter {refsection}{0}\relax 
+\thispagestyle {plain}
+\defcounter {refsection}{0}\relax 
+\contentsline {chapter}{\numberline {1}Introduction}{1}
+\defcounter {refsection}{0}\relax 
+\contentsline {chapter}{\numberline {2}The compliance challenge}{3}
+\defcounter {refsection}{0}\relax 
+\contentsline {chapter}{\numberline {3}Moon Cloud: a software framework to verify compliance}{5}
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {3.1}What is Moon Cloud}{5}
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {3.2}Moon Cloud's architecture}{5}
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {3.3}How Moon Cloud addresses the compliance issue}{5}
+\defcounter {refsection}{0}\relax 
+\contentsline {chapter}{\numberline {4}Introduction to FedRAMP}{7}
+\defcounter {refsection}{0}\relax 
+\contentsline {chapter}{\numberline {5}FedRAMP readiness}{9}
+\defcounter {refsection}{0}\relax 
+\contentsline {chapter}{\numberline {6}Security Controls for FEDRamp /*have to choose some templates*/}{11}
+\defcounter {refsection}{0}\relax 
+\contentsline {chapter}{\numberline {7}A practical case study: Moon Cloud deployment}{13}
