@@ -1,7 +1,7 @@
 \documentclass[12pt,fleqn,twoside,a4paper]{book}
 
 \usepackage[utf8]{inputenc} %% lettere accentate
-\usepackage[english]{babel}
+\usepackage[italian]{babel}
 \usepackage[toc,page]{appendix}
 \usepackage[T1]{fontenc}
 \usepackage[procnames]{listings}
@@ -51,11 +51,14 @@
 \usepackage{amsmath}
 \usepackage{fancyvrb}
 %\usepackage[compact]{titlesec}
-\usepackage[backend=biber, style=numeric, sorting=none]{biblatex}
-\addbibresource{bibliografia.bib}
-\input{linguaggi/python.tex}
-\input{linguaggi/html.tex}
-\addto{\captionsenglish}{\renewcommand*{\appendixname}{Appendici}}
+
+
+% ABILITA BIBLIO
+%\usepackage[backend=biber, style=numeric, sorting=none]{biblatex}
+%\addbibresource{bibliografia.bib}
+%\input{linguaggi/python.tex}
+%\input{linguaggi/html.tex}
+%\addto{\captionsenglish}{\renewcommand*{\appendixname}{Appendici}}
 
 
 
@@ -89,7 +92,8 @@
 \input{sezioni/capitoli.tex}
 \pagestyle{frontmatter}
 \input{sezioni/appendice.tex}
-\input{sezioni/bibliografia.tex}
+% Abilita biblio
+%\input{sezioni/bibliografia.tex}
 %\input{sezioni/indice_analitico.tex}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \end{document}
