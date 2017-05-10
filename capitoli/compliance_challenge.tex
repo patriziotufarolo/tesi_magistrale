@@ -1,5 +1,81 @@
 \documentclass[../main.tex]{subfiles}
 \begin{document}
 \chapter{Security assurance: lo stato dell'arte e la sfida}
+\section{Introduzione}
+In questo capitolo si approfondirà lo stato dell'arte in materia di \textbf{security assurance} e \textbf{controllo della compliance}, ovvero la verifica della conformità di un'infrastruttura informatica tradizionale, ibrida o cloud, rispetto a una politica, che può essere sviluppata internamente oppure derivata da un più complesso apparato normativo o da uno standard.
+In particolare verranno trattate le problematiche di sicurezza introdotte dall'adozione di un approccio \textit{cloud}, all'interno dei processi \textit{IT} di un'organizzazione strutturata sulla base di un'infrastruttura informatica tradizionale.
 
+Spesso si fa coincidere il concetto di \texit{cloud computing} con quello di \texit{outsourcing}, di fatto presupponendo che l'adozione di tecnologie cloud corrisponda all'attitudine di concedere a terzi gli oneri di gestione di una parte dell'infrastruttura informatica.
+La definizione di \textit{cloud computing} a cui si fa riferimento in questo elaborato di tesi è invece quella del NIST\footnote{National Institute of Standards and Technology} nel documento \textit{SP-800-145} nel quale il cloud è presentato come un insieme di tecnologie aventi come obiettivo l'erogazione di servizi e risorse in modalità \textit{on-demand} da un pool condiviso.
+La condizione di outsourcing, quindi, acquisisce una connotazione non necessaria all'adozione di un servizio cloud.
+
+\section{Sicurezza nel cloud computing}
+Lo scopo finale dell'utilizzo di tecnologie \textit{cloud} consiste nella possibilità per un'organizzazione di usufruire di un modello scalabile, elastico, standard, misurabile e orchestrabile al fine di poter garantire continuità di servizio e prestazioni elevate, demandando la gestione dei processi sistemistici a piattaforme centralizzate e intelligenti.
+A tal proposito il NIST\cite{NISTCloud} identifica tre modelli di servizio:
+\begin{itemize}
+    \item[IaaS], Infrastructure as-a-Service, nel quale è l'asset erogato è l'infrastruttura informatica, in termini di potenza di calcolo mediante sistemi di virtualizzazione, risorse di rete e storage. Essendo il modello più di difficile gestione, è spesso amministrato tramite un orchestratore.
+    \item[PaaS], Platform as-a-Service, tramite il quale si fornisce all'utente la possibilità di eseguire servizi personalizzati offrendo meccanismi di contenimento nell'esecuzione, scalabilità e multi-tenancy. L'utente ha un controllo parziale sull'esecuzione del servizio: solitamente egli può interagire in modo limitato con il kernel.
+    \item[SaaS], Software-as-a-Service, che permette all'utente di usufruire delle funzionalità di un singolo applicativo, riducendo al minimo l'effort computazionale sulla macchina dell'utente stesso. Tipicamente in questa categoria ricadono le applicazioni web, alcune applicazioni mobile e alcuni software per PC.
+\end{itemize}
+
+
+La parola chiave è quindi \textbf{"automazione"}. Questa, oltre a garantire una solidità del modello di distribuzione di un servizio grazie a schemi dichiarativi, apporta notevoli vantaggi anche dal punto di vista della sicurezza, facilitando la gestione degli aspetti di confidenzialità, integrità e disponibilità.
+\\Il paradigma \textit{as-a-service} ha infatti consentito la costituzione di una \textit{baseline} robusta garantita dalla centralizzazione delle funzionalità di security.
+Queste, essendo erogate come risorse \textit{cloud}, sono interamente gestite dal \textit{cloud service provider}, pubblico o privato, che può demandarne la gestione parziale all'utente mediante meccanismi di orchestrazione, interfacce grafiche ed API.
+\\Se a primo impatto può apparire come un enorme vantaggio, di fatto ciò introduce un \textit{single point of failure}, determinando livelli di rischio aggiuntivi rispetto alle infrastrutture tradizionali. Si pensi, ad esempio, alle funzionalità di \textit{firewalling} offerte generalmente con la denominazione di \textit{security groups} o \texit{Firewall as-a-Service} (FWaaS): un'implementazione non idonea dal punto di vista funzionale nel substrato infrastrutturale del fornitore di servizi, potrebbe determinare la mancanza di sicurezza per i servizi che ne fanno affidamento.
+La stessa asserzione è valida per molte altre funzionalità comunemente offerte dal provider: cifratura dei volumi di storage, crittografia e controllo degli accessi nei servizi di block-storage e così via.
+
+
+Ulteriori riflessioni possono essere fatte anche per quanto riguarda l'aspetto di integrità del dato: se da una parte il cloud service provider implementa già meccanismi di basso livello per la persistenza dello storage, ridondanza, sistemi di backup automatici, dall'altra non si ha la chiara evidenza di come questi aspetti siano effettivamente gestiti e di come la proprietà sia garantita.
+
+
+Per quanto concerne la proprietà di disponibilità, la dicotomia va ricercata trattando i concetti di disponibilità del dato e disponibilità del servizio separatamente.
+Il \textit{cloud computing} offre intrinsecamente solidità in quanto basato sui concetti di scalabilità, elasticità e ridondanza. Grazie ai meccanismi di orchestrazione tramite API è infatti possibile configurare le applicazioni per l'\textit{auto-scaling}, al fine di mantenere una qualità adeguata nell'erogazione del servizio al crescere degli utenti. Ciò, dal punto di vista della sicurezza, ha portato a notevoli benefici per quanto riguarda la mitigazione di attacchi DoS\footnote{Denial of Service}, garantendo la continuità di servizio riducendo i costi.
+Tuttavia esistono dei prerequisiti per garantire la disponibilità: innanzitutto il \textit{cloud service provider} deve assicurare la ridondanza dei dati e della rete, contemplando l'ipotesi di distribuire le risorse su più località geografiche, con l'obiettivo sia di prevenire guasti localizzati che di erogare la risorsa dalla località più vicina rispetto all'utente.
+
+
+Nel momento in cui funzionalità comunemente demandate ad hardware specifico vengono implementano in software, si determinano sia benefici che svantaggi che devono sia essere contemplati in fase di valutazione del rischio che trattati nei contratti di service level agreement. Una compromissione dell'interfaccia di gestione della piattaforma cloud, sia che si tratti di una dashboard sia che si tratti di un'interfaccia API, può portare a un'interruzione di servizio.
+
+Gli standard di sicurezza classici, così come l'assetto normativo e i contratti di \textit{service level agreement}, necessitano di essere adeguati per supportare l'integrazione di tecnologie cloud all'interno degli stack tradizionali, tenendo conto delle problematiche di \textit{shared responsability} presentate.
+
+Il NIST \cite{NISTCloud} riconosce quattro diversi modelli di deployment:
+\begin{itemize}
+    \item \textbf{Public Cloud}: modello in cui le risorse sono fornite per un utilizzo pubblico. È tipicamente erogato in outsourcing tramite la rete internet. L'hardware è in mano a un unico provider che eroga servizi in \textit{outsourcing} e ne dispone le metriche e la tariffazione.
+    \item \textbf{Private Cloud}: cloud dedicata a un'azienda o organizzazione, sfruttata per erogare servizi appartenenti al provider. L'hardware è generalmente nel datacenter dell'organizzazione.
+    \item \textbf{Hybrid Cloud}: approccio ibrido dato dalla composizione di public cloud e private cloud, o di public cloud e infrastrutture tradizionali. Le infrastrutture coinvolte rimangono distinte e sono legate tra loro da un'unica tecnologia (standard o proprietaria) che facilita la migrazione e la portabilità delle risorse.
+    \item \textbf{Community Cloud}: modello che fornisce una cloud per uso esclusivo di una comunità di utenti appartenenti ad organizzazioni con obiettivi funzionali comuni. Può essere di proprietà di una o più organizzazioni della community, o di terze parti.
+\end{itemize}
+Per ognuno di questi modelli è possibile esplicitare dei requisiti da soddisfare al fine di colmare il rapporto di sfiducia proprio di questo settore\cite{Ardagna:2015:SAC:2808687.2767005}.
+Uno dei possibili approcci può essere la fornitura di metodologie di \textit{security assurance} per la cloud transparency\cite{6814039}.
+Per \textit{security assurance} si intende la modalità per ottenere, con un certo livello di confidenza, la consapevolezza che l'infrastruttura e/o le applicazioni manterranno nel tempo una o più proprietà di sicurezza, e la loro operatività non sarà compromessa indipendentemente da malfunzionamenti o attacchi\cite{goertzel2007software}.
+
+\section{Valutazione del rischio: vulnerabilità, minacce e attacchi}
+In letteratura sono stati proposti molti lavori sulla valutazione del rischio su infrastrutture cloud. Nei paragrafi a seguire verranno discussi alcuni di questi approcci, sulla base della metodologia utilizzata da Ardagna et Al.\cite{Ardagna:2015:SAC:2808687.2767005}.
+Le vulnerabilità sono qui categorizzate in tre macro aree, in base alla superficie di attacco:
+\begin{enumerate}
+    \item \textbf{Livello applicativo}: quando l'attacco è condotto da un qualsiasi attore nei confronti di una piattaforma SaaS
+    \item \textbf{Tenant su tenant}: quando l'attacco è condotto da attori appartenenti a un tenant nei confronti di un altro tenant
+    \item \textbf{Provider su tenant} e \textbf{Tenant su provider}: quando l'attacco è condotto dal provider nei confronti di un tenant (tipicamente malevolo) oppure da un tenant nei confronti del provider 
+\end{enumerate}
+\subsection{Livello applicativo}
+Si tratta di vulnerabilità tradizionali che da anni tengono sotto scacco il panorama \textit{web services}: si va da attacchi protocollari sulla comunicazione tra servizi fino alla compromissione di applicativi software specifici. Il target dell'attacco sono le piattaforme SaaS, spesso derivate dal porting di un'applicativo tradizionale sul cloud e non nativamente pensate per essere erogate online: per questo motivo sono caratterizzate da una superficie di attacco molto vasta.
+
+Alcuni lavori significativi citati nel survey di rifermento \cite{Ardagna:2015:SAC:2808687.2767005} sono:
+\begin{itemize}
+    \item \textbf{Gruschka and Iacono, 2009}\cite{}, nel quale è stato presentato un \textit{replay attack}, sfruttando una vulnerabilità del meccanismo di verifica della firma digitale sull'interfaccia SOAP di \textit{Amazon EC2}, e sono state eseguiti comandi sulle API con i privilegi di un utente legittimo
+    \item \textbf{Bugiel et Al., 2011}\cite{}, che hanno analizzato le minacce sulla confidenzialità e la privacy estraendo con successo informazioni sensibili da immagini di macchine virtuali Amazon 
+\end{itemize} %todo inserire citazioni
+
+\subsection{Tenant su tenant}
+Le vulnerabilità \textit{tenant su tenant} sono tipiche dei sistemi virtualizzati, quando tenant differenti condividono la stessa infrastruttura e, più specificatamente, lo stesso hardware fisico. L
+\begin{itemize}
+    \item 
+\end{itemize}
+\subsection{Tenant su provider, provider su tenant}
+\label{sub:livello_applicativo}
+
+
+\section{Tecniche di sicurezza per la cloud}
+
+\section{Approcci per assurance, testing, monitoraggio e compliance}
 \end{document}
