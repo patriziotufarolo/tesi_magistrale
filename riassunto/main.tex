@@ -1,0 +1,55 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[top=0.5cm,margin=1.7cm,bottom=2.5cm]{geometry}
+\usepackage{palatino}
+\usepackage{comment}
+\usepackage[export]{adjustbox}
+\usepackage[document]{ragged2e}
+\usepackage{multicol}
+\usepackage[italian]{babel}
+
+\title{Valutazione automatica e continua della compliance in ambienti cloud: il caso di studio FedRAMP}
+\author{\textbf{Patrizio Tufarolo} (matricola 875041)}
+\date{18.05.2017}
+
+\begin{document}
+
+\maketitle
+\begin{multicols}{2}
+\textbf{Relatore:} Prof. Claudio A. Ardagna
+\begin{flushright}
+\textbf{Correlatore:} Dott. Marco Anisetti\\[.1cm]
+Prof. Ernesto Damiani
+\end{flushright}
+\end{multicols}
+\justify
+
+L'adozione del paradigma permette alle organizzazioni di usufruire di vantaggi prestazionali ed economici nell'erogazione dei servizi IT, grazie sia alle caratteristiche di scalabilità ed elasticità proprie del paradigma, che alla possibilità di allocare risorse in modalità \textit{on-demand}.
+Tuttavia, la natura distribuita ed automatizzata della cloud introduce numerose problematiche di sicurezza e valutazione del rischio, soprattutto per tutte quelle realtà in procinto di effettuare migrazioni parziali o totali delle loro infrastrutture tradizionali.
+Infatti, per trarre effettivo vantaggio dalla centralizzazione degli aspetti di sicurezza nelle mani di un \textit{cloud service provider}, è necessario stabilire un rapporto di fiducia reciproca tra il fornitore del servizio e il cliente, in modo da minimizzare il rischio e limitare il perimetro di attacco, e stabilire le responsabilità di ogni entità coinvolta.
+
+Questo lavoro di tesi si pone sull'ambito della ricerca sulla \textit{security assurance}, basata su attività di testing, monitoraggio e controllo della \textit{compliance}; l'obiettivo è l'analisi di FedRAMP, il programma governativo americano per la valutazione del rischio e l'autorizzazione dell'utilizzo di servizi cloud nelle agenzie federali.
+
+È stata quindi implementata un'integrazione tra i controlli di sicurezza descritti nel documento NIST SP 800-53, su cui FedRAMP è basato, e Moon Cloud, una piattaforma a micro-servizi per la trasparency, l'assessment e il monitoraggio continuativo di proprietà non funzionali.
+
+Il lavoro di tesi vuole quindi assumere un ruolo di supporto per tutti gli attori coinvolti nel processo di autorizzazione di FedRAMP, in particolare i fornitori di servizi che vogliano attestarne la \textit{readiness}.
+
+Infine, il lavoro è stato validato mediante l'esecuzione dei controlli di sicurezza automatici sul deployment multi-layer della piattaforma Moon Cloud, fornendo una prospettiva sulle performance.
+
+Nell'ambito del progetto è stato inoltre redatto un articolo dal titolo "A security benchmark for OpenStack" che, partendo dal benchmark CIS, identifica alcuni controlli di sicurezza specifici per il prodotto in oggetto.
+Questo è stato sottomesso ed accettato alla conferenza IEEE Cloud 2017 in programma dal 25 al 30 Giugno  ad Honolulu (Hawaii, USA).
+
+Il lavoro di tesi può essere riassunto come segue:
+\begin{itemize}
+\item \textit{Analisi di FedRAMP}, individuazione dei punti chiave del programma e studio di metodologie a supporto delle attività e degli attori coinvolti nel processo di autorizzazione.
+\item \textit{Design e implementazione di driver} per la valutazione automatica e continua dei controlli di sicurezza.
+Al fine di garantire la copertura delle specifiche del framework, sono stati utilizzati due diversi approcci per l'esecuzione dei controlli di sicurezza:
+\begin{itemize}
+\item \textit{Driver per i controlli automatici}, la cui esecuzione avviene in modo autonomo, per l'\textit{assessment} delle proprietà non-funzionali effettivamente implementate nei sistemi informatici
+\item \textit{Driver per i controlli ad interazione umana}, effettuati tramite la somministrazione di questionari ad utenti, per l'analisi dei processi di business.
+\end{itemize}
+\item \textit{Valutazione} dell'implementazione della sicurezza della piattaforma Moon Cloud, mediante i controlli sviluppati; valutazione dei costi e dell'effort di deployment dei controlli.
+\end{itemize}
+
+Il progetto di tesi si presta a numerosi sviluppi futuri, che possono riguardare sia il perfezionamento dei driver Moon Cloud realizzati, sia la integrazione degli stessi con documenti relativi ad altri standard di settore (PCI-DSS, HIPAA, ISO27000).
+\end{document}
