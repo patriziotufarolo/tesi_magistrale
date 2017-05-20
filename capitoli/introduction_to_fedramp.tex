@@ -30,25 +30,26 @@ A tal fine il \textbf{NIST} ha prodotto il \textbf{Federal Information Risk Mana
 \makebox[\textwidth]{
 \includegraphics[width=0.8\textwidth]{immagini/risk_management_framework.png}
 }
-\caption{Risk Management Framework, da \cite{nist2003nist} }\label{fig:riskmanagementfw}
+\caption{Risk Management Framework \cite{nist2003nist} }\label{fig:riskmanagementfw}
 \end{figure}
 
 Tramite la figura \ref{fig:riskmanagementfw} è possibile identificare le sei fasi che compongono il processo di gestione del rischio, ciclico e continuo, identificato dal framework:
 
 \begin{itemize}
-    \item \textbf{Categorizzazione del sistema informativo}, tramite i documenti FIPS\footnote{Federal Information Processing Standards} 199 e SP 800-60. Il documento FIPS 199 classifica i sistemi in base al livello di rischio, e contiene i criteri da utilizzare nella categorizzazione. Questi criteri sono basati sull'impatto potenziale di una violazione delle proprietà di confidenzialità, integrità e disponibilità sul sistema e sono: i) Rischio basso, impatto limitato, ii) Rischio medio, con serie conseguenze, iii) Rischio elevato con conseguenze gravi e catrastofiche. FIPS 199 si applica a tutti i sistemi, ad esclusione di quelli designati per l'uso della sicurezza nazionale.
+    \item \textbf{Categorizzazione del sistema informativo}, tramite i documenti FIPS\footnote{Federal Information Processing Standards} 199 e NIST SP 800-60 v2\cite{nist80060}. Il documento FIPS 199 classifica i sistemi in base al livello di rischio, e contiene i criteri da utilizzare nella categorizzazione. Questi criteri sono basati sull'impatto potenziale di una violazione delle proprietà di confidenzialità, integrità e disponibilità sul sistema e sono: i) Rischio basso, impatto limitato, ii) Rischio medio, con serie conseguenze, iii) Rischio elevato con conseguenze gravi e catrastofiche. FIPS 199 si applica a tutti i sistemi, ad esclusione di quelli designati per l'uso della sicurezza nazionale.
     \item \textbf{Selezione dei controlli di sicurezza}, mediante i documenti FIPS 200 e SP 800-53. FIPS 200 fornisce i requisiti di sicurezza minimi (e i relativi controlli) per ogni categoria definita nel FIPS 199.
-        Il documento NIST 800-53 invece definisce i controlli di sicurezza e fornisce le linee guida per scegliere i profili da impiegare per soddisfare i requisiti minimi di sicurezza, in base all'impatto del sistema. I controlli di sicurezza sono divisi in 17 famiglie e vengono divisi in tre classi (controlli di gestione, controlli operazionali e controlli tecnici). 
-    \item \textbf{Implementazione dei controlli}, guidata dal documento SP 800-160
-    \item \textbf{Assessment dei controlli di sicurezza}, regolato dal documento SP 800-53/A
-    \item \textbf{Autorizzazione del sistema informativo}, basata sul documento SP 800-37
-    \item \textbf{Fase di monitoraggio}        
+        Il documento NIST 800-53\cite{nist2003nist} invece definisce i controlli di sicurezza e fornisce le linee guida per scegliere i profili da impiegare per soddisfare i requisiti minimi di sicurezza, in base all'impatto del sistema. I controlli di sicurezza sono divisi in 17 famiglie e vengono divisi in tre classi (controlli di gestione, controlli operazionali e controlli tecnici). 
+    \item \textbf{Implementazione dei controlli}, guidata dal documento SP 800-160\cite{nist800160}
+    \item \textbf{Assessment dei controlli di sicurezza}, regolato dal documento SP 800-53\cite{nist2003nist}
+    \item \textbf{Autorizzazione del sistema informativo}, basata sul documento SP 800-37\cite{nist80037}
+    \item \textbf{Fase di monitoraggio}\cite{nist800137}        
 \end{itemize}
 
 \subsection{Obiettivo di FedRAMP}
-L'obiettivo di FedRAMP è quindi quello di fornire un framework per semplificare il processo di autorizzazione dei servizi cloud adottati dagli enti governativi USA.
+L'obiettivo di FedRAMP è quello di fornire un framework per semplificare il processo di autorizzazione dei servizi cloud adottati dagli enti governativi USA.
 Prima dell'adozione di questo programma i produttori di sistemi e applicativi dovevano eseguire l'intero processo di autorizzazione per ciascuna delle agenzie che adottasse il sistema, così come ogni ente gestiva un processo di gestione del rischio a sé stante, anche nel caso in cui un'altra agenzia avesse già adottato servizi e misure di sicurezza analoghi. 
-FedRAMP affronta la problematica nei seguenti modi:
+FedRAMP affronta la problematica nei seguenti modi\cite{understandingFedRAMP}:
+
 \begin{itemize}
     \item Fornendo processi di valutazione della sicurezza e autorizzazione congiunti, basati su una serie di requisiti e controlli standardizzati, sulla base dell'impatto del sistema 
     \item Offrendo un programma di analisi della conformità in grado di produrre
@@ -59,7 +60,7 @@ FedRAMP affronta la problematica nei seguenti modi:
     \item Un repository di pacchetti di autorizzazione per i servizi cloud che possono essere utilizzati dal governo
 \end{itemize}
 
-L'utilizzo di un framework centralizzato ha inevitabilmente determinato un risparmio notevole anche in termini economici, sia per il governo americano, che per i cloud service provider: si stima che questo ammonti a circa \$250,000 per ciascun sistema autorizzato, per un totale di circa 160 implementazioni dello standard FISMA. Il risparmio stimato per il governo è quindi di 40 milioni di dollari.
+L'utilizzo di un framework centralizzato ha inevitabilmente determinato un risparmio notevole anche in termini economici, sia per il governo americano, che per i cloud service provider: si stima che questo ammonti a circa \$250,000 per ciascun sistema autorizzato, per un totale di circa 160 implementazioni dello standard FISMA. Il risparmio stimato per il governo è quindi di 40 milioni di dollari \cite{7036263}.
 \section{Struttura}
 Il programma fornisce un percorso che i fornitori di servizi cloud possono intraprendere per ottenere una autorizzazione provvisoria, da sottoporre in una successiva fase di \textit{security assessment} che verrà poi revisionata dalla \textit{JAB}.
 Mediante questo approccio preventivo è possibile quindi anticipare l'\textit{assessment} dei controlli di sicurezza e di velocizzare il processo di autorizzazione definitiva dell'applicativo o sistema cloud.
@@ -95,11 +96,11 @@ Per i punti 11 e 12 possono essere forniti anche controlli tecnici, legati però
 \makebox[\textwidth]{
 \includegraphics[width=\textwidth]{immagini/fedramp_process.png}
 }
-\caption{Processo di autorizzazione, da \cite{} }\label{fig:fedrampactors}
+\caption{Processo di autorizzazione \cite{understandingFedRAMP} }\label{fig:fedrampactors}
 \end{figure}
 
 
-Nel modulo di richiesta di ammissione al programma il provider fornisce informazioni sul proprio sistema, categorizzandolo sulla base delle direttive contenute nel documento NIST SP 800-60 V2, e decide la \textit{baseline} dei controlli di sicurezza da implementare in base alla sensibilità del sistema (bassa o media).
+Nel modulo di richiesta di ammissione al programma il provider fornisce informazioni sul proprio sistema, categorizzandolo sulla base delle direttive contenute nel documento NIST SP 800-60 V2\cite{nist80060}, e decide la \textit{baseline} dei controlli di sicurezza da implementare in base alla sensibilità del sistema (bassa o media).
 A seguito di una revisione della \textit{readiness} da parte dell'ufficio di gestione del programma, sarà possibile avviare il processo di richiesta dell'autorizzazione provisoria (P-ATO): il \textit{cloud service provider} deve quindi ricercare ed assumere un'organizzazione di terze parti, tra quelle specificate sul sito di FedRAMP.
 L'attore principale è il fornitore di servizi, il quale sottometterà un \textit{security package} e sarà designato come candidato all'autorizzazione. Lo svolgimento del processo può avvenire in due modi:
 \begin{itemize}
@@ -116,7 +117,7 @@ Gli attori coinvolti sono quindi gli enti federali che desiderano adottare un se
 \makebox[\textwidth]{
 \includegraphics[width=\textwidth]{immagini/fedramp_actors.png}
 }
-\caption{Attori coinvolti nel processo di autorizzazione, da \cite{} }\label{fig:fedrampactors}
+\caption{Attori coinvolti nel processo di autorizzazione \cite{understandingFedRAMP} }\label{fig:fedrampactors}
 \end{figure}
 
 
@@ -126,7 +127,7 @@ Il ruolo degli enti federali è quello di garantire che, per tutti i progetti ne
 
 
 Le agenzie devono catalogare i propri sistemi in un inventario, specificando quali di questi siano di tipo cloud e quali invece siano sistemi tradizionali. È raccomandabile avere un referente che sia preparato a rispondere a quesiti riguardanti l'implementazione dei requisiti FedRAMP.
-Per facilitare ciò alcune informazioni utili potrebbero essere \textit{i) il nome del sistema cloud, ii) la descrizione del servizio fornito dal sistema, iii) il contatto dl proprietario del sistema, iv) la data di autorizzazione, v) lo stato della compliance}.
+Per facilitare ciò alcune informazioni utili potrebbero essere \textit{i) il nome del sistema cloud, ii) la descrizione del servizio fornito dal sistema, iii) il contatto dl proprietario del sistema, iv) la data di autorizzazione, v) lo stato della compliance}\cite{fedrampFramework}.
 
 
 In fase di migrazione di sistemi tradizionali sul cloud, così come nell'adattamento di servizi cloud pre-esistenti a FedRAMP, è necessario che i requisiti del programma siano rispettati. Le agenzie devono quindi effetturare un'analisi approfondita delle conseguenze del cambio di tecnologia, per determinare i controlli di sicurezza aggiuntivi da effettuare.
@@ -136,7 +137,7 @@ Se, invece, il fornitore del servizio è un privato e questi non ha effettuato l
 Le agenzie, sulla base di specifiche esigenze, possono sottomettere eventuali controlli aggiuntivi rispetto a quelli basilari; questi devono devono essere adeguatamente documentati e motivati. Gli altri enti possono poi decidere di adottare questi controlli.
 Allo stesso modo, come già trattato, le agenzie possono riutilizzare autorizzazioni emesse per altri enti.
 
-Sulla base del E-Government Act del 2002 (Titolo III, Sezione 3544), le agenzie devono inoltre effettuare analisi del rischio periodiche, valutando l'impatto di eventuali violazione della confidenzialitàe dell'integrità dei dati.
+Sulla base del E-Government Act del 2002 (Titolo III, Sezione 3544), le agenzie devono inoltre effettuare analisi del rischio periodiche, valutando l'impatto di eventuali violazione della confidenzialitàe dell'integrità dei dati\cite{fedrampFramework}.
 
 Uno degli obiettivi della piattaforma presentata in questo lavoro di tesi, è quello di fornire uno strumento a supporto delle agenzie federali per la gestione della sicurezza degli asset inventariati (sistemi tradizionali e cloud), fornendo sia meccanismi di \textit{auto-discovery} degli stessi (ad esempio mediante l'integrazione con le API dei cloud service provider, oppure tramite la scansione delle reti locali), sia un processo di monitoraggio continuativo della stato della compliance.
 
@@ -203,7 +204,7 @@ Nel System Security Plan sono descritte le implementazioni dei controlli di sicu
 Il sistema, infrastruttura, piattaforma o applicazione che sia, è in tal caso trattato come un insieme di componenti, ognuno dei quali deve essere documentato,  utilizzando terminologie chiare, non ambigue, ed aderenti il più possibile alla nomenclatura comunemente utilizzata nell'ambito di interesse del componente stesso.
 In particolare, dovranno essere discussi gli aspetti di virtualizzazione e di conservazione dei dati, focalizzandosi sulla determinazione dei confini determinati dall'utilizzo delle varie tecnologie.
 
-\subsection{Virtualizzazione}
+\subsection{Virtualizzazione dei nodi di calcolo}
 L'ambito di virtualizzazione è gestito dalla sezione 9 del SSP. Bisogna chiarire:
 \begin{itemize}
     \item quali componenti fanno parte del sistema fisico
@@ -226,7 +227,7 @@ Per i provider \textit{IaaS} è necessario anche specificare le modalità di ins
 \end{itemize}
 Inoltre occorre specificare eventuali meccanismi di controllo degli accessi per la gestione delle risorse, l'eventuale modalità di gestione della memoria condivisa, e le tecnologie implementate per la resilienza dell'infrastruttura.
 
-\subsubsection{Virtualizzazione della rete}
+\subsection{Virtualizzazione della rete}
 Grazie alle tecnologie di \textit{software-defined networking} è possibile effettuare anche la virtualizzazione dello stack e dei componenti di rete, come switch e router. Questi eventualmente possono essere integrati con appliance fisiche che supportino protocolli SDN (\textit{OpenFlow, FabricPath}); è necessario perciò specificare:
 \begin{itemize}
     \item quali componenti di rete siano virtualizzati
@@ -236,7 +237,7 @@ L'eventuale adozione di meccanismi di segregazione, come ad esempio le VLAN per 
 Innanzitutto è necessario fornire un diagramma che illustri dettagliatamente la direzione del flusso dei dati sulla rete, indipendentemente da come la topologia della stessa sia strutturata, ed evidenziando gli eventuali componenti critici della topologia che determinano il flusso stesso.
 
 
-\subsubsection {Determinazione dei confini e controlli di sicurezza relativi}
+\subsection {Determinazione dei confini e controlli di sicurezza relativi}
 Per determinare i confini, occorre specificare in modo chiaro ed articolato dove il layer costituito dal servizio cloud inizia e dove finisce.
 Ciò contribuisce alla risoluzione delle problematiche relative alla \textit{shared responsability}: se un servizio \textit{SaaS} che vuole essere autorizzato a FedRAMP utilizza un servizio \textit{PaaS}, è necessario effettuare l'assessment e l'autorizzazione anche del servizio \textit{PaaS}.
 Analogamente, nel caso di una \textit{PaaS} ospitata su una \textit{IaaS}, è importante specificare il livello a cui sono implementati i requisiti di sicurezza desiderati e gestire l'assessment in modo opportuno.
@@ -260,62 +261,52 @@ Alcune domande, relative perlopiù agli aspetti di rete e di storage, consigliat
 Un ulteriore fattore da considerare è determinato dalle funzionalità di migrazione diretta (\textit{live migrations}) impiegate. Ciò riguarda principalmente i fornitori di servizi \textit{IaaS} e \textit{PaaS} che, per ragioni di prestazioni e ridondanza, possono spostare geograficamente le risorse cloud, come macchine virtuali e container.
 È fondamentale, infatti, che in tali casi i dati persistano all'interno del confine designato, sia che siano memorizzati su uno storage, sia che siano in transito su una rete: gli indirizzi IP dichiarati all'interno del confine devono rimanere tali, così come il traffico di rete non deve essere veicolato attraverso regioni geografiche non dichiarate.
 Occorre perciò specificare se le migrazioni dirette siano fatte in modo programmato ed automatizzato, oppure in modo manuale e, nel primo caso, dichiarare le regole utilizzate per gestirle.
+\vfill
+\newpage
 
 
 
 
 
 
-
-\section{Controlli di sicurezza per la conformità - NIST 800-53}
+\section{Controlli di sicurezza per la conformità - NIST 800-53 e FedRAMP}
 \subsection{Categorie dei controlli}
 
-I controlli di sicurezza, organizzati sulla base del livello di sensibilità (basso e moderato), possono essere suddivisi nelle seguenti categorie:
-\begin{table}[hbtp]
-    \begin{tabulary}{\textwidth}{|L|L|L|L|L|}
+I controlli di sicurezza di FedRAMP sono basati sul documento NIST 800-53. Alcuni, di carattere essenzialmente procedurale, sono stati introdotti da FedRAMP, per altri sono stati proposti miglioramenti.
+La catalogazione dei controlli è effettuata sulla base del livello di sensibilità (basso e moderato); essi sono inoltre suddivisi in famiglie, ciascuna delle quali è contrassegnata univocamente da un \textit{ID}\cite{fedrampSCPreface}.
+Ogni famiglia appartiene a una classe (Tecnico, Operativo, Management), che ne identifica l'ontologia.
+Nella tabella \ref{tab:80053fedrampfamilies}, è proposto un conteggio dei controlli di sicurezza in ogni famiglia, per le \textit{baseline} relative ai livelli di sensibilità basso e moderato.
+\begin{table}[h]
+    \begin{tabulary}{\textwidth}{|C|L|L|C|C|}
     \hline
     \textbf{ID}  & \textbf{Famiglia}    &  \textbf{Classe}      & \textbf{Livello Basso}     & \textbf{Livello moderato}  \\    \hline
-    AC  & Controllo degli accessi &               &                   &                   \\    \hline
-    AT  & Awareness \& training  &               &                   &                   \\    \hline
-    AU  & Audit and accountability  &               &                   &                   \\    \hline
-    CA  & Certification, Accdeditation \& Security Assessment &               &                   &                   \\    \hline
-    CM  & Configuration Management & & & \\ \hline 
-    CP  & Contingency Planning & & & \\ \hline
-    IA  & Identification and authentication & & & \\ \hline
-    IR  & Incident response & & & \\ \hline 
-    MA  & Maintenance & & & \\ \hline
-    MP  & Media protection & & & \\ \hline
-    PE  & Physical and environmental protection & & & \\ \hline
-    PL  & Planning & & & \\ \hline
-    PS  & Personnel security & & & \\ \hline
-    RA  & Risk assessment & & & \\ \hline
-    SA  & System and services acquisition & & & \\ \hline
-    SC  & System and communications protection & & & \\ \hline
-    SI  & System and information integrity & & & \\ \hline
+    AC  & Controllo degli accessi & Tecnico &  11  & 18 \\    \hline
+    AT  & Awareness \& training  & Operativo &   4  &  4 \\    \hline
+    AU  & Audit and accountability  & Tecnico  & 10  & 11 \\    \hline
+    CA  & Certification, Accdeditation \& Security Assessment & Management & 7 & 8 \\    \hline
+    CM  & Configuration Management & Operativo & 8 & 11 \\ \hline 
+    CP  & Contingency Planning & Operativo & 6 & 9 \\ \hline
+    IA  & Identification and authentication & Tecnico & 7 & 8 \\ \hline
+    IR  & Incident response & Operativo & 7 & 9 \\ \hline 
+    MA  & Maintenance & Operativo & 4 & 6 \\ \hline
+    MP  & Media protection & Operativo & 4 & 7\\ \hline
+    PE  & Physical and environmental protection & Operativo & 10 & 16 \\ \hline
+    PL  & Planning & Management & 3 & 4 \\ \hline
+    PS  & Personnel security & Operativo & 8 & 8 \\ \hline
+    RA  & Risk assessment & Management & 4 & 4 \\ \hline
+    SA  & System and services acquisition & Management & 6 & 9\\ \hline
+    SC  & System and communications protection & Tecnico & 10 &  20 \\ \hline
+    SI  & System and information integrity & Operativo & 7 & 12 \\ \hline \hline
+    \textbf{TOT } & - & - & \textbf{116} & \textbf{164} \\ \hline
     \end{tabulary}
+    \caption{Famiglie di controlli\cite{fedrampLowSC}\cite{fedrampModSC}}\label{tab:80053fedrampfamilies}
 \end{table}
-\begin{itemize}
-    \item[\textbf{AC}] Access Control, di tipo tecnico. 11 controlli di livello basso, 17 controlli di livello moderato
-    \item[\textbf{AT}] Account Management, di4 controlli di livello basso, 4 controlli di livello moderato
-    \item[\textbf{AU}] 
-    \item[\textbf{CA}] 
-    \item[\textbf{CM}] 
-    \item[\textbf{CP}] 
-    \item[\textbf{IA}] 
-    \item[\textbf{IR}] 
-    \item[\textbf{MA}] 
-    \item[\textbf{MP}] 
-    \item[\textbf{PE}]
-    \item[\textbf{PL}]
-    \item[\textbf{PS}]
-    \item[\textbf{RA}]
-    \item[\textbf{SA}]
-    \item[\textbf{SC}]
-    \item[\textbf{SI}]
-\end{itemize}
 
 
 
+
+
+\begin{comment}
 \subsection{Controlli procedurali}
 AC-1,AC-2(a),AC-2(b),AC-2(c),AC-2(d),AC-2(e),AC-2(f),AC-2(g),AC-2(h),AC-2(i),AC-2(j),AC-2(7)(a),AC-5,AC-6(1),AC-8(b),AC-11(b),AC-17(a),AC-17(b),AC-17(4),AC-17(5),AC-17(6),AC-19(b),AC-19(1),AC-19(2),AC-19(3),AC-19(4)(a),AC-19(4)(b),AC-20(a),AC-20(b),AC-20(1)(a),AC-20(1)(b),AC-20(2),AC-21(a),AC-21(b),AC-22(a),AC-22(b),AC-22(c),AC-22(d),AC-22(e),AU-2(b),AU-6(a),AU-6(b),AU-6(3),CA-1(a),CA-1(b),CA-2(a),CA-2(b),CA-2(c),CA-2(d),CA-2(1),CA-2(2),CA-3(a),CA-3(b),CA-3(1),CA-3(2),CA-5(a),CA-5(b),CA-6(a),CA-6(b),CA-6(c),CM-3(a),CM-3(b),CM-3(c),CM-3(d),CM-3(e),CM-3(f),CM-3(4),CM-7(3),IA-1(a),IA-1(b)
 \subsection{Controlli automatizzabili}
@@ -324,6 +315,7 @@ AC-1,AC-2(a),AC-2(b),AC-2(c),AC-2(d),AC-2(e),AC-2(f),AC-2(g),AC-2(h),AC-2(i),AC-
 AC-3(4),AC-14(a),AC-14(b),AC-14(1),AC-17(c),AC-17(d),AC-17(e),AC-18(b),AC-18(c),AC-18(4),AC-19(c),AC-19(f),AC-19(g),AU-3,AU-8,AU-9(4)(b),AU-12(b),CM-8(3)(a),IA-2,IA-5(e),IA-6,IA-8" 
 
 AC-2(1),AC-7(a),PM-11,PM-10,PM-9,PM-8,PM-7,PM-6,PM-5,PM-4,PM-3,PM-2,PM-1,AC-17(3),AC-18(a),AC-18(b),AC-18(5),AC-21(1),CP-10(2),AT-1(a),AT-1(b),AT-2,AT-3,AT-3(2),AT-4(a),AT-4(b),AT-2,AT-2(1),AT-3,AT-3(1),AT-3(2),AT-5,AU-1(a),AU-1(b),AU-2(3),AU-6(1),AU-6(3),AU-7,AU-7(1),CA-7(a),CA-7(b),CA-7(c),CA-7(d),CA-7(1),CA-7(2),CM-1(a),CM-1(b),CM-2,CM-2(1)(a),CM-2(1)(b),CM-2(1)(c),CM-2(2),CM-2(5)(a),CM-2(5)(b),CM-3(2),CM-4,CM-4(2),CM-5,CM-5(2),CM-5(5)(b),CM-6(a),CM-6(b),CM-6(c),CM-6(1),CM-7(1),CM-8(a),CM-8(b),CM-8(c),CM-8(d),CM-8(e),CM-8(1),CM-8(4),CM-8(5),CM-8(6),CM-9(a),CM-9(b),CM-9(c),CP-1(a),CP-1(b),CP-2(a),CP-2(b),CP-2(c),CP-2(d),CP-2(e),CP-2(f),CP-2(1),CP-2(2),CP-3,CP-4(a),CP-4(b),CP-4(1),CP-6,CP-6(1),CP-6(2),CP-7(a),CP-7(b),CP-7(1),CP-7(2),CP-7(3),CP-7(5),CP-8,CP-(8)(1)(a),CP-8(1)(b),CP-8(2),CP-9(a),CP-9(b),CP-9(c),CP-9(d),CP-9(1),CP-9(3),CP-10,CP-10(2),CP-10(3),IA-4(a),IA-4(b),IA-4(c),IA-4(d),IA-4(e),IA-4(4),IA-5(a),IA-5(d),IA-5(3),IA-5(6),IA-5(7),IR-1(a),IR-1(b),IR-2(a),IR-2(b),IR-3,IR-4(a),IR-4(b),IR-4(c),IR-4(1),IR-6,IR-7,IR-7(1),IR-7(2),IR-8(a),IR-8(b),IR-8(c),IR-8(d),IR-8(e),MA-1(a),MA-2(a),MA-2(b),MA-2(c),MA-2(d),MA-2(e),MA-2(1),MA-3,MA-3(1),MA-3(2),MA-3(3),MA-4(a),MA-4(b),SI-1(a),SI-1(b),SI-2(a),SI-2(b),SI-2(c),SI-3(a),SI-3(b),SI-3(c),SI-3(d),SI-3(1),SI-1(2),SI-1(3),SI-4(a),SI-4(b),SI-4(c),SI-4(d),SI-4(e),SI-4(2),SI-4(4),SI-4(5),SI-4(6),SI-5(a),SI-5(b),SI-5(c),SI-5(d)
+\end{comment}
 
 
 \section{FedRAMP in Amazon Web Services e Azure}
