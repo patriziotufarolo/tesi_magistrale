@@ -16,10 +16,29 @@ Le caratteristiche di Moon Cloud sono le seguenti\cite{MoonCloudWebsite}:
 L'orchestrazione avviene tramite una  \textit{dashboard} grafica erogata in modalità \textit{Software as-a-Service}, la quale si interfaccia con diversi componenti che ne implementano la logica di funzionamento, l'esecuzione dei test, il collezionamento dei risultati e il reporting dello stato di compliance del sistema analizzato.
 
 Moon Cloud nasce sulla scia del progetto europeo FP7 CUMULUS - il cui obiettivo è quello di fornire un framework per la certificazione di servizi cloud mediante l'assessment di proprietà non funzionali\cite{CumulusBigDoc} - da cui riprende alcune caratteristiche architetturali. 
-Di seguito sarà proposta una breve panoramica sulla terminologia utilizzata, sulle componenti principali,  e sui principi di funzionamento dei processi di \textit{assessment} e \textit{compliance} all'interno della piattaforma.
+
 L'obiettivo di questo capitolo è quello di dare al lettore il \texit{know-how} necessario a comprendere le motivazioni di alcune decisioni prese nella realizzazione della tesi, in particolar modo per gestire alcune limitazioni del framework Moon Cloud. 
+Di seguito sarà proposta una breve panoramica sulla terminologia utilizzata, sulle componenti principali,  e sui principi di funzionamento dei processi di \textit{assessment} e \textit{compliance} all'interno della piattaforma.
 
 
+\section{Terminologia}
+\begin{itemize}
+    \item \textbf{Metriche}: insieme di proprietà non funzionali di cui si vogliono ottenere \textbf{misurazioni}.
+    \item \textbf{Controllo}: rappresenta la modalità di raccolta ed elaborazione delle \textit{misurazioni} di una \textit{metrica}.
+        Esso è descritto tramite un documento \textit{JSON}\footnote{JSON, JavaScript Object Notation, \textit{http://www.json.org/}}, i cui attributi sono
+        \begin{itemize}
+            \item \textbf{name}, nome del controllo
+            \item \textbf{description}, descrizione del controllo
+            \item \textbf{category}, categoria di appartenenza
+            \item \textbf{driver-name}, nome del driver che ne implementa il flusso di esecuzione
+            \item \textbf{inputs}, dati ricevuti in input
+            \item \textbf{outputs}, dati attesi in output (\textit{misurazioni})
+        \end{itemize}
+    \item \textbf{Driver}: la porzione di codice che implementa il controllo 
+    \item \textbf{Test}: istanza di un controllo, che ne rappresenta l'esecuzione con gli input effettivi 
+    \item \textbf{Regola di valutazione astratta}, o \textit{AER (abstract evaluation rule)}, regola logica che implementa un processo di compliance. È data dall'aggregazione di controlli mediante operatori \textit{booleani}. I suoi termini possono essere \textit{controlli} e altre \textit{AER}.
+    \item \textbf{Regola di valutazione concreta}, o \textit{ER (evaluation rule)}: istanza di una \textit{AER}. I suoi termini possono essere \textit{test} (mappati sui rispettivi \textit{controlli} o altre \textit{ER}.
+\end{itemize}
 
 
 \section{Architettura e componenti}
