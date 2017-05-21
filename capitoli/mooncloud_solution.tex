@@ -2,12 +2,29 @@
 \begin{document}
 \chapter{Moon Cloud: un framework per il monitoraggio e la security assurance}
 \section{Introduzione}
-In questo capitolo verrà approfondito Moon Cloud\footnote{MOnitoring and assurance ON Cloud }, un framework per il monitoraggio e l'assurance di sistemi tradizionali, cloud e Internet of Things, sviluppato dal laboratorio SESAR Lab\footnote{SEcure Service-oriented Architectures Research Lab - http://sesar.di.unimi.it} dell'Università degli Studi di Milano.
+In questo capitolo verrà approfondito Moon Cloud\footnote{MOnitoring and assurance ON Cloud, \textit{https://www.moon-cloud.eu/}}, un framework per il monitoraggio e l'assurance di sistemi tradizionali, cloud e Internet of Things, sviluppato dal laboratorio SESAR Lab\footnote{SEcure Service-oriented Architectures Research Lab - \textit{http://sesar.di.unimi.it}} dell'Università degli Studi di Milano.
 
-L'obiettivo principale del progetto Moon Cloud è quello di implementare una metodologia automatica per la valutazione della sicurezza, delle performance e di altre proprietà non funzionali, offrendo un processo di assurance basato su attività di auditing e raccolta di evidenze.
+L'obiettivo del progetto Moon Cloud è quello di implementare una metodologia automatica per la valutazione della sicurezza, delle performance e di altre proprietà non funzionali, offrendo un processo di assurance basato su attività di auditing e raccolta di evidenze.
 
-.\\\newpage
+Le caratteristiche di Moon Cloud sono le seguenti\cite{MoonCloudWebsite}:
+\begin{itemize}
+    \item \textbf{Framework automatico e personalizzabile} per la raccolta di evidenze, basato su modelli 
+    \item \textbf{Copertura di tutto lo stack cloud}, ai livelli \textit{IaaS}, \textit{PaaS}, \textit{SaaS}
+    \item \textbf{Possibilità di integrazione con tecnologie pre-esistenti e di terze parti}
+\end{itemize}
+
+L'orchestrazione avviene tramite una  \textit{dashboard} grafica erogata in modalità \textit{Software as-a-Service}, la quale si interfaccia con diversi componenti che ne implementano la logica di funzionamento, l'esecuzione dei test, il collezionamento dei risultati e il reporting dello stato di compliance del sistema analizzato.
+
+Moon Cloud nasce sulla scia del progetto europeo FP7 CUMULUS - il cui obiettivo è quello di fornire un framework per la certificazione di servizi cloud mediante l'assessment di proprietà non funzionali\cite{CumulusBigDoc} - da cui riprende alcune caratteristiche architetturali. 
+Di seguito sarà proposta una breve panoramica sulla terminologia utilizzata, sulle componenti principali,  e sui principi di funzionamento dei processi di \textit{assessment} e \textit{compliance} all'interno della piattaforma.
+L'obiettivo di questo capitolo è quello di dare al lettore il \texit{know-how} necessario a comprendere le motivazioni di alcune decisioni prese nella realizzazione della tesi, in particolar modo per gestire alcune limitazioni del framework Moon Cloud. 
+
+
+
+
 \section{Architettura e componenti}
+
+
 \newpage
 .\\\newpage
 .\\\newpage
