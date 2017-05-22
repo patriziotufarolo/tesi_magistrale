@@ -36,7 +36,7 @@ Di seguito sarà proposta una breve panoramica sulla terminologia utilizzata, su
         \end{itemize}
     \item \textbf{Driver}: la porzione di codice che implementa il controllo 
     \item \textbf{Test}: istanza di un controllo, che ne rappresenta l'esecuzione con gli input effettivi 
-    \item \textbf{Regola di valutazione astratta}, o \textit{AER (abstract evaluation rule)}, regola logica che implementa un processo di compliance. È data dall'aggregazione di controlli mediante operatori \textit{booleani}. I suoi termini possono essere \textit{controlli} e altre \textit{AER}.
+    \item \textbf{Regola di valutazione astratta}, o \textit{AER (abstract evaluation rule)}, regola logica che implementa un processo di valutazione. È data dall'aggregazione di controlli mediante operatori \textit{booleani}. I suoi termini possono essere \textit{controlli} e altre \textit{AER}.
     \item \textbf{Regola di valutazione concreta}, o \textit{ER (evaluation rule)}: istanza di una \textit{AER}. I suoi termini possono essere \textit{test} (mappati sui rispettivi \textit{controlli} o altre \textit{ER}.
 \end{itemize}
 \vfill
@@ -71,59 +71,117 @@ La seconda invece, rappresenta il vero e proprio backend del framework, gestendo
     \item \textbf{Repository} (10), contiene i driver per i controlli di sicurezza. È realizzato tramite un ambiente Git\footnote{Git, \textit{https://git-scm.com/}}, di cui condivide le funzionalità, e da un \textit{registry} di \textit{container}, che rappresentano il singolo driver. Il processo di sviluppo di un driver è ultimato da un motore di \textit{continuous integration} che contestualmente al caricamento del codice dello stesso sul \textit{repository} effettua la build del \textit{container} associato e test automatici di validazione e sanitizzazione dello stesso, per poi pubblicare il \textit{container} sul \textit{registry}..
 \end{itemize}
 \section{Moon Cloud come strumento di verifica delle \textit{recommendation}}
+Mediante i componenti software illustrati nel paragrafo precedente, Moon Cloud è in grado di effettuare un processo di \textit{security assessment} basato sulla verifica di \textit{recommendation}.
+Per verifica delle \textit{recommendation} si intende il controllo  della conformità di un sistema target rispetto ad una data raccomandazione.
 
-La verifica delle \textit{recommendation} è il processo di verifica della conformità di un sistema target ad una data raccomandazione.
-Si tratta di un processo complesso, poiché può richiedere l'aggregazione dei risultati delle valutazioni di diversi servizi; nel caso di Moon Cloud, il processo di valutazione è effettuato tramite la raccolta di evidenze, mediante tecniche di testing e monitoraggio su uno specifico servizio. 
-Le evidenze vengono poi utilizzate per verificare se la raccomandazione sia effettivamente rispettata o no.
+Si tratta di un processo complesso, che richiede l'aggregazione delle valutazioni di diversi servizi. La tecnica adottata da Moon Cloud consiste nella raccolta di evidenze mediante il testing e il monitoraggio di uno specifico servizio, al fine di verificare se la raccomandazione sia effettivamente rispettata oppure no.
 
-\begin{definition}[Recommendation verification]\label{def:prop}
-    Sia $\Rec{}$ la \textit{recommendation} da verificare, la \textit{reccomendation verification} è una funzione $\widehat{\Rec{}}$ definita sulla tupla $\langle$$\EP{}$, $\ER{}$$\rangle$ che restituisce un valore booleano \{true, false\} dove:
+\begin{definition}[\textbf{Recommendation verification}]\label{def:prop}
+    Sia $\Rec{}$ la \textit{recommendation} da verificare, la \textit{reccomendation verification} è una funzione  $\widehat{\Rec{}}$  definita sulla tupla $\langle$$\EP{}$, $\ER{}$$\rangle$ che restituisce un valore booleano \{true, false\} dove:
+
 \begin{itemize}
     \item $\EP{}$ è l'insieme di \textit{processi di valutazione} \{$\Eval{}$\} da eseguire. L'\textit{output} del processo di valutazione è un valore \textit{booleano} che espreime se la valutazione abbia avuto successo o no, aggregato alle \textit{evidence} collezionate a supporto del risultato.
-        \item $\ER{}$ is an \textit{evaluation rule} expressed as a propositional logic formula in terms of the evaluation processes $\Eval{}$. It combines the results of the different evaluations $\Eval{}$$\in$$\EP{}$ and returns true if the property is positively evaluated, false otherwise.
+        \item $\ER{}$ è una \textit{evaluation rule} espressa come formula di logica proposizionale, i cui termini sono i singoli processi di valutazione $\Eval{}$. Essa combina il risultato di vari processi $\Eval{}$$\in$$\EP{}$ e restituisce true se la valutazione ha successo, altrimenti restituisce false.
 \end{itemize}
 \end{definition}
-We note that, although we can implement more complex first order logic formulas for $\ER{}$, propositional logic provides enough expression power to cover all the recommendations in Section~\ref{sec:bench}.
-
-% bisogna rifare per una recommandation di quelle fatte sopra
-An evaluation process $\Eval{}$$\in$$EP{}$ refers to the evaluation of a specific service.
-%Each evaluation process $Eval\in E$ drives the moon cloud architecture instrumenting a specific evaluation setting up the relative evidence collection. They are defined as follows. 
-\begin{definition}[$\Eval{}$]\label{def:eval}
-An evaluation process $\Eval{}$ is a tuple of the form $\langle$$t$, $C$$\rangle$, where:
+\begin{definition}[\textbf{Eval\{\}}]\label{def:eval}
+Un processo di valutazione $Eval\{\}$ è una tupla della forma $\langle$$t$, $C$$\rangle$, dove:
 \begin{itemize}
-	\item $t$ is the \emph{ToE (Target of Evaluation)}. It is defined as the services constituting the perimeter of the evaluation. 
-	%Controlli come funzione
-	\item $C$ is the \emph{Control}, that is, the process executing the evaluation on $t$ and returning the result of the evaluation together with the set of collected evidence.
+	\item $t$ è il \emph{ToE (Target of Evaluation)}, ovvero i servizi o i meccanismi, che costituiscono il perimetro entro cui la proprietà o la funzionalità di sicurezza deve essere valutata
+	\item $C$ è il \emph{Control}, ovvero la funzione di valutazione su $t$ che restituisce il risultato della valutazione insieme a un insieme di evidenze.
 \end{itemize}
 \end{definition}
 
-We note that the ToE can be either a public service or a specific mechanism providing a security feature to be evaluated.
+Un controllo $C$ specifica i dettagli su come collezionare le evidenze su un target $t$ per valutare la \textit{reccomendation}. È definito nel seguente modo:
 
-A Control $C$ defines details on how to collect evidence on a specific target $t$ to evaluate a recommendation. It is defined as follows.
-\begin{definition}[$C$]\label{def:control}
-$C$ is defined over a 3-tuple of the form $\langle$$\phi$, $\lambda$, $\pi$$\rangle$, where:
+
+\begin{definition}[\textbf{$C$}]\label{def:control}
+$C$ è definito su una tripla della forma $\langle$$\phi$, $\lambda$, $\pi$$\rangle$, dove:
 \begin{itemize}
-	\item $\phi$ is the flow of evidence collection execution. It is composed of a sequence of atomic evaluation operations.
-	\item $\lambda$ is set of \textit{Control's Parameters} necessary to connect the evaluation flow $\phi$ to the target service $t$ (e.g., the target URI)
-	\item $\pi$ is a set of \textit{Environmental Settings} describing how to deploy the control (e.g., within the ToE perimeter or not) and possible dependencies on its execution. 
+	\item $\phi$ è il flusso di esecuzione del processo di raccolta  delle evidenze. È composto da una sequenza di operazioni atomiche. 
+	\item $\lambda$ è un insieme di \textit{parametri} necessari a collegare il flusso $\phi$ al target $t$ 
+	\item $\pi$ è un insieme di \textit{Environmental Settings} che descrivono le caratteristiche dell'ambiente in cui il controllo deve essere eseguito e le possibili dipendenze software dello stesso. 
 \end{itemize}
 \end{definition}
 
-The execution of a given Control returns true or false plus a set of evidence on its execution, which are collected at recommendation verification level.
+Moon Cloud è in grado di eseguire molteplici processi di valutazione $ \Eval{} $ in parallelo, ciascuno dei quali si riferisce a un insieme di raccomandazioni $\Rec{}$ che devono essere valutati.
+I controlli $C$ sono modellati utilizzando degli schemi, il flusso di esecuzione del codice ($\phi$) è modellato come una catena formata da tutte le operazioni che un controllo necessita di effettuare per raccogliere le evidenze, ed è implementato sotto forma di script Python.
+I parametri ($\lambda$) e l'ambiente ($\pi$) sono rappresentati da metadati; ciascuna operazione del flusso $\phi$ è collegata agli specifici parametri necessari per la valutazione, mentre l'ambiente $\pi$ rappresenta l'insieme di prerequisiti e dipendenze che devono persistere per l'esecuzione del controllo.
 
 
+\subsection{Regole di valutazione}
+Nel contesto implementativo le regole di valutazione sono modellate attraverso le classi \textit{AbstractEvaluationRule} e \textit{EvaluationRule}, rispettivamente per le regole astratte e per le regole concrete.
+Di seguito verranno approfondite entrambe le classi.
 
-Moon Cloud implements the recommendation verification process in Section~\ref{sec:basic} to assess cloud systems security. 
-It is able to execute a number of evaluation processes $\Eval{}$ in parallel, each one referring to a set of recommendations $\Rec{}$ to be evaluated. 
-It models controls $C$ in Section~\ref{sec:basic} using skeletons. The code/execution flow ($\phi$) is modeled as a chain containing all operations the control needs to exercise for evidence collection.\footnote{The flow $\phi$ can be serialized as a sequence of operations.} It is implemented as python script. We note that the first operation of the chain is the configuration of the target service using parameters $\lambda$. 
-Parameters ($\lambda$) and Environment ($\pi$) are represented using a meta-data format. Each operation within the control flow $\phi$ is connected to the specific parameters needed for the evaluation, while environment $\pi$ represents the set of pre-requisites and dependencies to execute or deploy the specific control. Figure~\ref{fig:script} shows the code/execution flow $\phi$ as a python script for $C_{2}$ in Example~\ref{C:example}.
-%esempio di come sono codificati parametri ed environment potrebbe essere utile
+\subsubsection{Regole di valutazione astratte}
+Per la classe \textit{AbstractEvaluationRule} è definita una proprietà \textit{formula} che contiene la formula in logica proposizionale che rappresenta il processo di valutazione.
 
+La formula è espressa in un linguaggio libero dal contesto la cui grammatica è definita tramite la seguente BNF\footnote{BNF, Backus-Naur Form}:
+\begin{figure}[H]
+\begin{lstlisting}
+
+expressions
+    : expr $ 
+    ;
+
+expr
+    : TOKEN_VAR                       
+    | expr TOKEN_AND expr             
+    | expr TOKEN_OR expr              
+    | expr TOKEN_IMPLIES expr         
+    | expr TOKEN_IFF expr             
+    | TOKEN_NOT expr 
+    | TOKEN_LPAREN expr TOKEN_RPAREN  
+    ;
+
+
+\end{lstlisting}
+\end{figure}
+
+I token di questa grammatica sono \textit{variabili} gestite dall'espressione regolare
+\begin{itemize}
+    \item TOKEN\_VAR $\rightarrow$ \textit{[cf]"\#"\textbackslash d+}
+\end{itemize}
+e \textit{operatori} (distinguibili in operatori unari e binari a seconda dell'arietà), implementati nel seguente modo: 
+\begin{itemize}
+    \item TOKEN\_NOT $\rightarrow$ not(expr), operatore unario che effettua la negazione del termine: $return ~ \sim expr$ 
+    \item TOKEN\_AND $\rightarrow$ and(expr1, expr2), operatore binario che effettua l'\textit{and} logico dei termini: $return ~ expr1 \wedge expr2$
+    \item TOKEN\_OR $\rightarrow$ or(expr1, expr2), operatore binario che effettua l'\textit{or} logico dei termini: $return ~ expr1 \vee expr2$
+    \item TOKEN\_IMPLIES $\rightarrow$ implies(term1, term2), operatore binario che implementa l'operatore di implicazione: $return ~ \sim expr1 \vee expr2$
+    \item TOKEN\_IFF $\rightarrow$ iff(term1, term2), operatore binario che implementa l'operatore "se e solo se": $return ~ (\sim term1 \vee term2) \wedge (\sim term2 \vee term1)$
+\end{itemize}
+\textit{TOKEN\_LPAREN} e \textit{TOKEN\_RPAREN} sono rispettivamente la parentesi tonda aperta e chiusa.
+
+Tramite questo linguaggio è possibile generare tutte le formule ben formate della logica proposizionale.
+
+Le variabili possono essere quindi \textit{Controlli} (rappresentati dalla classe \textit{Control}, e indicati nella formula con la sintassi "c\#<id>", dove <id> è l'identificativo del controllo) ed altre \textit{AER} (indicate nella formula, in modo analogo ai controlli, con la sintassi "f\#<id>"). Ciò permette di organizzare le regole di valutazione astratte secondo una gerarchia, concedendo all'utente una maggiore capacità espressiva nel processo di traduzione da politica a regola logica.
+
+
+\subsubsection{Regole di valutazione concrete}
+
+Le regole di valutazione concrete rappresentano le istanze delle \textit{AER} sopra descritte.
+In questo caso la proprietà \textit{formula} è derivata mediante l'applicazione la funzione di mapping $m(aer)$, \eqref{function:mapping} dove $aer$ è la regola di valutazione astratta di partenza, $c_i$ è un controllo, $t_i$ è un test e $e$ è una regola di valutazione concreta.
+\begin{equation}
+\begin{gathered}
+m(aer):
+c \rightarrow t ~ \forall c_i \in aer ~ | ~ t ~ \text{refers} ~ c ~ \text{\textbf{,}} ~
+        f \rightarrow e ~ \forall aer_i \in aer ~ | ~ e ~ \text{refers} ~ aer_i
+\end{gathered}
+\label{function:mapping}
+\end{equation}
+Tutte le regole di valutazione astratte incluse nella regola di partenza sono quindi sostituite da una o più regole di valutazione concrete che le referenziano, analogamente tutti i controlli inclusi nella regola di partenza sono sostituiti da uno o più test.
+Il mapping avviene sulla base di un oggetto JSON \textit{chiave-valore}, in cui la chiave rappresenta l'identificativo dell'elemento di partenza e il valore rappresenta l'identificativo dell'elemento di arrivo.
+
+La grammatica utilizzata per la validazione della formula così derivata, è ovviamente analoga alla precedente, ad eccezione del token \textit{TOKEN\_VAR} che assume valori nella seguente espressione regolare:
+\begin{center}
+    TOKEN\_VAR $\rightarrow$ \textit{[et]"\#"\textbackslash d+}
+\end{center}
+supportando il carattere '\textit{e}' per indicare le Evaluation Rule, e il carattere '\textit{t}' per indicare i test.
+In fase di esecuzione del processo di valutazione sarà questa la formula effettivamente utilizzata, sostituendo a ciascun termine il valore booleano del test o dell'evaluation rule referenziata.
+\vfill
+\newpage
 \subsection{Driver per i controlli di sicurezza}
 \subsubsection{Struttura di un driver}
 \subsubsection{Meccanismo di \textit{continuous integration}}
 \subsubsection{Payload del driver}
-\subsection{Regole di valutazione}
-\subsubsection{Regole di valutazione astratte}
-\subsubsection{Regole di valutazione concrete}
 \end{document}
