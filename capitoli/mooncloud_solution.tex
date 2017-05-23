@@ -302,12 +302,215 @@ con le seguenti chiavi:
 Verrà di seguito proposto un esempio per illustrare la definizione completa di un processo di valutazione all'interno della piattaforma Moon Cloud.
 La proprietà analizzata da questo esempio è la \textit{confidenzialità del dato} ottenuta dall'aggregazione in \texit{and} logico di due diversi controlli:
 \begin{enumerate}
-    \item{Confidenzialità del dato }
+    \item{Confidenzialità dello storage (\textit{c\#1})}
+    \item{Confidenzialità del canale di comunicazione (\textit{c\#2})}
 \end{enumerate}
 
 \subsection{Abstract Evaluation Rule}
+\framebox[\textwidth][l]{\texttt{c\#1 and c\#2}}
+
+\begin{js}
+{
+    "id":1,
+    "name":"Data Confidentiality",
+    "description":"It allows to execute a set of tests againt a given service to ensure that information are provided over a secure channel and stored over a secure storage.",
+    "category":[],
+    "formula":"c#1 and c#2",
+    "enforced_control":null,
+    "enforced_operator":null,
+    "cardinality":null,
+    "related_controls":[1, 2],
+    "related_aers":[],
+    "metadata":null
+}
+\end{js}
+
+
 \subsection{Controllo}
+
+
+\subsubsection{Confidenzialità dello storage}
+
+\begin{js}
+{
+  "category" : [  ],
+  "driver" : "storage-confidentiality",
+  "id" : 1,
+  "metadata" : {
+      "description" : "Evaluates SSL configuration for a given target",
+      "schema" : { "config" : {
+              "properties" : {
+                  "ssh_string" : {
+                      "title" : "SSH Connection String",
+                      "type" : "string"
+                    },
+                  "ssh_key" : {
+                      "default" : 80,
+                      "title" : "SSH Key",
+                      "type" : "string"
+                    },
+                    "device_to_check": {
+                        "title": "Device to check",
+                        "type":"string",
+                        "default": "/dev/sda"
+                    }
+                },
+              "title" : "Target",
+              "type" : "object"
+            }
+        },
+        "inputs": {
+            "ssh_string": "string",
+            "ssh_key": "string",
+            "device_to_check": "string",
+        },
+        "outputs": {
+            "result": "boolean"
+        }
+    },
+  "name" : "Checks luks is enabled on target"
+}
+\end{js}
+
+\subsubsection{Confidenzialità del canale}
+\\
+
+\begin{js}
+{
+  "category" : [  ],
+  "driver" : "channel-confidentiality",
+  "id" : 1,
+  "metadata" : {
+      "description" : "Evaluates SSL configuration for a given target",
+      "schema" : { "config" : {
+              "properties" : {
+                  "host" : {
+                      "title" : "Host",
+                      "type" : "string"
+                    },
+                  "port" : {
+                      "default" : 80,
+                      "title" : "port",
+                      "type" : "number"
+                    }
+                },
+              "title" : "Target",
+              "type" : "object"
+            }
+        },
+        "inputs": {
+            "host": "hostname",
+            "port": "integer"
+        },
+        "outputs": {
+            "result": "boolean",
+            "strength": "string"
+        }
+    },
+  "name" : "Check channel confidentiality"
+}
+\end{js}
+
+
+
+
+
+
 \subsection{Evaluation Rule}
+\framebox[\textwidth][l]{\texttt{t\#1 and t\#2}}
+
+\begin{js}
+  {
+    "aer" : 1,
+    "description" : "Checks storage confidentiality and network confidentiality on the target tufarolo.eu",
+    "id" : 1,
+    "mapping" : {
+        "c#1":"t#1",
+        "c#2":"t#2"
+    },
+    "name" : "Confidentiality tufarolo.eu",
+    "related_ers" : [  ],
+    "related_tests" : [ 1, 2 ],
+    "status" : 0,
+  }
+\end{js}
+
+
+
+
 \subsection{Test}
+\subsubsection{Confidenzialità dello storage}
+\begin{js}
+ {
+    "control" : 1,
+    "description" : "",
+    "execution_cluster" : 1,
+    "id" : 11,
+    "name" : "",
+    "testcase" : { "config" : {
+            "ssh_string" : "user@tufarolo.eu:22",
+            "ssh_key" : ".....",
+            "device_to_check": "/dev/sda1"
+          }
+      },
+    "__unicode__" : "t#1"
+  }
+  \end{js}
+
+\subsubsection{Confidenzialità del canale}
+\begin{js}
+ {
+    "control" : 2,
+    "description" : "",
+    "execution_cluster" : 1,
+    "id" : 11,
+    "name" : "",
+    "testcase" : { "config" : {
+            "host" : "tufarolo.eu",
+            "port" : 80
+          } },
+    "__unicode__" : "t#2"
+  }
+
+
+\end{js}
+
 \subsection{Driver}
+
+\subsubsection{Confidenzialità dello storage}
+\begin{python}
+from driver import Driver
+from libraries import ssh
+class StorageConfidentiality(Driver):
+    def connect_to_ssh(self, inputs):
+    ssh.connect(self.testinstances.get("ssh").get("ssh_string"), self.testinstances..get("ssh").get("ssh_key")))
+    
+    def check_is_luks(self, inputs):
+        return ssh.run("/bin/cryptsetup isLuks \%s" \% self.testinstances.get())
+
+    def appendAtomics(self):
+        self.appendAtomic(self.connect_to_ssh, lambda(x): None)
+        self.appendAtomic(self.check_is_luks, lambda(x): None)
+
+\end{python}
+
+\subsubsection{Confidenzialità del canale}
+
+\begin{python}
+from driver import Driver
+from libraries import ssl
+class ChannelConfidentiality(Driver):
+    def check_ssl(self, inputs):
+        target = self.testinstances.get("config").get("target")
+        port = self.testinstances.get("port").get("port")
+        status, strength =  ssl.check(target, port)
+        self.result.data["strength"] = strength
+        return status
+    def appendAtomics(self):
+        self.appendAtomic(self.check_ssl, lambda(x): None)
+
+\end{python}
+
+
+
 \end{document}

@@ -141,6 +141,43 @@ showstringspaces=false            %
   {ö}{{\"o}}1
 }}
 
+
+
+\newcommand\javascriptstyle{\lstset{
+language=JavaScript,
+basicstyle=\ttfamily\scriptsize,
+breaklines=true,
+tabsize=4,
+numbers=left,
+numberstyle=\ttfamily\scriptsize,
+frame=tb,                         % Any extra options here
+showstringspaces=false            % 
+  % Code design
+  identifierstyle=\color{black},
+  keywordstyle=\color{blue}\bfseries,
+  ndkeywordstyle=\color{editorGreen}\bfseries,
+  stringstyle=\color{black}\ttfamily,
+  commentstyle=\color{darkgray}\ttfamily,
+  % Code
+  alsodigit={.:;},	
+  tabsize=2,
+  showtabs=false,
+  showspaces=false,
+  showstringspaces=false,
+  extendedchars=true,
+  breaklines=true,
+  % German umlauts
+  literate=%
+  {Ö}{{\"O}}1
+  {Ä}{{\"A}}1
+  {Ü}{{\"U}}1
+  {ß}{{\ss}}1
+  {ü}{{\"u}}1
+  {ä}{{\"a}}1
+  {ö}{{\"o}}1
+}}
+
+
 % HTML environment
 \lstnewenvironment{html}[1][]
 {
@@ -148,6 +185,17 @@ showstringspaces=false            %
 \lstset{#1}
 }
 {}
+
+\lstnewenvironment{js}[1][]
+{
+\javascriptstyle
+\lstset{#1}
+}
+{}
+
+
+
+
 
 % HTML for external files
 \newcommand\htmlexternal[2][]{{
