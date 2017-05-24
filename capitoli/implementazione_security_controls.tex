@@ -2,13 +2,16 @@
 \begin{document}
 \chapter{Implementazione dei controlli di sicurezza FedRAMP in Moon Cloud}
 %\addcontentsline{toc}{chapter}{Introduzione}
-%\chaptermark{Introduzione}i
+%\chaptermark{Introduzione}
 \section{Introduzione}
 In questo capitolo verrà effettuata un'analisi dei controlli di sicurezza elencati nel capitolo precedente, classificandoli in \textit{controlli automatici} e \textit{controlli procedurali}. Dopodiché verra offerta una possibile implementazione per ciascuna delle due tipologie di controlli, i quali verranno integrati in Moon Cloud. Per i controlli automatici sarà utilizzato Open Scap, uno strumento per il l'auditing realizzato da Red Hat e certificato dal NIST. I controlli procedurali invece, eseguono l'\textit{processi di business} e vanno ad indirizzare tutte quelle proprietà di carattere puramente qualitativo per cui è fondamentale l'interazione umana.
 Questi saranno implementati con un \textit{driver Moon Cloud ad interazione umana}, che somministra un questionario online ad un target.
 
 \section{Analisi dei controlli di sicurezza}
+Verranno ora proposte alcune tabelle di riepilogo dei controlli di sicurezza di FedRAMP, suddivisi per famiglia, dei quali viene indicata la \textit{baseline} di riferimento e la tipologia (\textit{A}, automatizzabile / \textit{M} manuale (interazione umana) / \textit{A/M} composizione di approccio automatico e manuale}.
+I controlli di sicurezza, essendo proposti in modo astratto così da poter coprire il più vasto numero di scenari, vanno poi comunque studiati e implementati sulla base delle caratteristiche e del contesto del sistema target.
 \subsection{Access Control}
+\input{capitoli/tabelle_controlli/AC.tex}
 \section{Implementazione dei controlli automatici}
 \subsection{Il framework OpenSCAP}
 \subsection{Driver OpenSCAP per Moon Cloud}

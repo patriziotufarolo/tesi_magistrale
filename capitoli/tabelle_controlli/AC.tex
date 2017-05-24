@@ -1,0 +1,56 @@
+\makeatletter
+
+\begin{ltabulary}{|p{2cm}|p{8cm}|L|p{1cm}|}
+  \toprule
+    \hline
+    \textbf{ID}     &\textbf{Nome}                                                          & \textbf{Baseline} & \textbf{Tipo}  \\    \hline
+  \midrule
+  \endhead
+  \textbf{AC-1 }	    &		 access control policy and procedures                                   &		 Basso 	    &		 A \\ \hline
+  \textbf{AC-2 }	    &		 account management 	                                                &		 Basso 	    &		 A/M \\ \hline
+AC-2 (1) 	&		 automated system account management 	                                &		 Moderato 	&		 A/M \\ \hline
+AC-2 (2) 	&		 removal of temporary / emergency accounts                        	    &		 Moderato 	&		 A \\ \hline
+AC-2 (3) 	&		 disable inactive accounts                                              &		 Moderato 	&		 A/M \\ \hline
+AC-2 (4) 	&		 automated audit actions 	                                            &		 Moderato 	&		 A \\ \hline
+AC-2 (5) 	&		 inactivity logout 	                                                    &		 Moderato 	&		 A \\ \hline
+AC-2 (7) 	&		 role-based schemes 	                                                &		 Moderato 	&		 M \\ \hline
+AC-2 (9) 	&		 restrictions on use of shared groups / accounts 	                    &		 Moderato 	&		 A \\ \hline
+AC-2 (10) 	&		 shared / group account credential termination 	                        &		 Moderato 	&		 A/M \\ \hline
+AC-2 (12) 	&		 account monitoring / atypical usage 	                                &		 Moderato 	&		 M \\ \hline
+\textbf{AC-3 }   	&		 access enforcement 	                                                &		 Basso 		&		 A/M \\ \hline
+\textbf{AC-4 }	    &		 information flow enforcement 	                                        &		 Moderato 	&		 A/M \\ \hline
+AC-4 (21) 	&		 physical / logical separation of information flows                     &		 Moderato 	&		 A/M \\ \hline
+\textbf{AC-5 }	    &		 separation of duties 	                                                &		 Moderato 	&		 A/M \\ \hline
+\textbf{AC-6 }	    &		 least privilege                                                        &		 Moderato 	&		 A/M \\ \hline
+AC-6 (1) 	&		 authorize access to security functions 	                            &		 Moderato 	&		 A \\ \hline
+AC-6 (2) 	&		 non-privileged access for nonsecurity functions 	                    &		 Moderato 	&		 A \\ \hline
+AC-6 (5) 	&		 privileged accounts 	                                                &		 Moderato 	&		 A \\ \hline
+AC-6 (9) 	&		 auditing use of privileged functions 	                                &		 Moderato 	&		 A \\ \hline
+AC-6 (10) 	&		 prohibit non-privileged users from execution of privileged functions 	&		 Moderato 	&		 A \\ \hline
+\textbf{AC-7 }	    &		 unsuccessful logon attempts 	                                        &		 Basso 		&		 A \\ \hline
+\textbf{AC-8 }	    &		 system use notification                                                &		 Basso 		&		 A \\ \hline
+\textbf{AC-10} 	    &		 concurrent session control                                             &		 Moderato 	&		 A \\ \hline
+\textbf{AC-11} 	    &		 session lock                                                           &		 Moderato 	&		 A \\ \hline
+AC-11 (1) 	&		 pattern-hiding displays                                                &		 Moderato 	&		 A \\ \hline
+\textbf{AC-12} 	    &		 session termination                                                    &		 Moderato 	&		 A \\ \hline
+\textbf{AC-14} 	    &		 "permitted actions without identification or authentication"           &		 Basso 		&		 A/M \\ \hline
+\textbf{AC-17} 	    &		 remote access                                                         	&		 Basso 		&		 A/M \\ \hline
+AC-17 (1) 	&		 automated monitoring / control                                         &		 Moderato 	&		 M \\ \hline
+AC-17 (2) 	&		 protection of confidentiality / integrity using encryption             &		 Moderato 	&		 A/M \\ \hline
+AC-17 (3) 	&		 managed access control points                      	                &		 Moderato 	&		 A \\ \hline
+AC-17 (4) 	&		 privileged commands / access                       	                &		 Moderato 	&		 A/M \ \hline
+AC-17 (9) 	&		 disconnect / disable access 	                                        &		 Moderato 	&		 A/M \\ \hline
+\textbf{AC-18} 	    &		 wireless access                                                       	&		 Basso 		&		 A/M \\ \hline
+AC-18 (1) 	&		 authentication and encryption                    	&		 Moderato 	&		 A/M \\ \hline
+\textbf{AC-19} 	    &		 access control for mobile devices                                  	&		 Basso 		&		 A \\ \hline
+AC-19 (5) 	&		 full device / container-based encryption                        	    &		 Moderato 	&		 A \\ \hline
+\textbf{AC-20} 	    &		 use of external information systems                                	&		 Basso 		&		 A \\ \hline
+AC-20 (1) 	&		 limits on authorized use     	                                        &		 Moderato 	&		 A \\ \hline
+AC-20 (2) 	&		 portable storage devices                                           	&		 Moderato 	&		 A \\ \hline
+\textbf{AC-21} 	    &		 information sharing                                                	&		 Moderato 	&		 M \\ \hline
+    \textbf{AC-22} 	    &		 publicly accessible content                                           	&		 Basso 		&		 A/M \\ \hline
+\end{ltabulary}
+%AC17 1
+
+Abbiamo un totale di 43 controlli, di cui 22 sono completamente automatizzabili, 4 sono di carattere procedurale e necessitano interazione umana, mentre per 16 di questi è necessario adottare un approccio ibrido.
+Pertanto possiamo utilizzare un approccio totalmente automatico solo nel 51.1\%  dei casi.
