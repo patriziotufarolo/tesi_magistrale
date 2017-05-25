@@ -17,7 +17,7 @@ L'orchestrazione avviene tramite una  \textit{dashboard} grafica erogata in moda
 
 Moon Cloud nasce sulla scia del progetto europeo FP7 CUMULUS - il cui obiettivo è quello di fornire un framework per la certificazione di servizi cloud mediante l'assessment di proprietà non funzionali\cite{CumulusBigDoc} - da cui riprende alcune caratteristiche architetturali. 
 
-L'obiettivo di questo capitolo è quello di dare al lettore il \texit{know-how} necessario a comprendere le motivazioni di alcune decisioni prese nella realizzazione della tesi, in particolar modo per gestire alcune limitazioni del framework Moon Cloud. 
+L'obiettivo di questo capitolo è quello di dare al lettore il \textit{know-how} necessario a comprendere le motivazioni di alcune decisioni prese nella realizzazione della tesi, in particolar modo per gestire alcune limitazioni del framework Moon Cloud. 
 Di seguito sarà proposta una breve panoramica sulla terminologia utilizzata, sulle componenti principali,  e sui principi di funzionamento dei processi di \textit{assessment} e \textit{compliance} all'interno della piattaforma.
 
 
@@ -204,7 +204,7 @@ All'interno del container sono presenti due componenti:
 Altri due file molto importanti sono:
 \begin{itemize}
     \item \textit{Dockerfile}, che costituisce la definizione di ogni container Docker. Questo permette di installare o compilare eventuali dipendenze software utili all'esecuzione del driver 
-    \item \textit{requirements.txt}, che, in Python, contiene tutte le librerie del database PyPI\foontnote{https://pypi.python.org/} da cui il codice del driver dipende.
+    \item \textit{requirements\.txt}, che, in Python, contiene tutte le librerie del database PyPI\footnote{https://pypi.python.org/} da cui il codice del driver dipende.
 \end{itemize}
 
 
@@ -373,7 +373,6 @@ La proprietà analizzata da questo esempio è la \textit{confidenzialità del da
 \end{js}
 
 \subsubsection{Confidenzialità del canale}
-\\
 
 \begin{js}
 {
