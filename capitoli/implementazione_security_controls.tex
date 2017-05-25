@@ -8,10 +8,60 @@ In questo capitolo verrà effettuata un'analisi dei controlli di sicurezza elenc
 Questi saranno implementati con un \textit{driver Moon Cloud ad interazione umana}, che somministra un questionario online ad un target.
 
 \section{Analisi dei controlli di sicurezza}
-Verranno ora proposte alcune tabelle di riepilogo dei controlli di sicurezza di FedRAMP, suddivisi per famiglia, dei quali viene indicata la \textit{baseline} di riferimento e la tipologia (\textit{A}, automatizzabile / \textit{M} manuale (interazione umana) / \textit{A/M} composizione di approccio automatico e manuale}.
+Verranno ora proposte alcune tabelle di riepilogo dei controlli di sicurezza di FedRAMP, suddivisi per famiglia, dei quali viene indicata la \textit{baseline} di riferimento e la tipologia (\textit{A}, automatizzabile / \textit{P} procedurale (interazione umana) / \textit{A/P} composizione di approccio automatico e manuale}.
+
 I controlli di sicurezza, essendo proposti in modo astratto così da poter coprire il più vasto numero di scenari, vanno poi comunque studiati e implementati sulla base delle caratteristiche e del contesto del sistema target.
 \subsection{Access Control}
 \input{capitoli/tabelle_controlli/AC.tex}
+
+\subsection{Awareness \& training}
+\input{capitoli/tabelle_controlli/AT.tex}
+
+\subsection{Audit and accountability}
+\input{capitoli/tabelle_controlli/AU.tex}
+
+\subsection{Certification, Accreditation \& Security Assessment}
+\input{capitoli/tabelle_controlli/CA.tex}
+
+\subsection{Configuration Management}
+\input{capitoli/tabelle_controlli/CM.tex}
+
+\subsection{Contingency Planning}
+\input{capitoli/tabelle_controlli/CP.tex}
+
+\subsection{Identification and Authentication}
+\input{capitoli/tabelle_controlli/IA.tex}
+
+\subsection{Incident response}
+\input{capitoli/tabelle_controlli/IR.tex}
+
+\subsection{Maintenance}
+\input{capitoli/tabelle_controlli/MA.tex}
+
+\subsection{Media protection}
+\input{capitoli/tabelle_controlli/MP.tex}
+
+\subsection{Physical and environmental protection}
+\input{capitoli/tabelle_controlli/PE.tex}
+
+\subsection{Planning}
+\input{capitoli/tabelle_controlli/PL.tex}
+
+\subsection{Personnel security}
+\input{capitoli/tabelle_controlli/PS.tex}
+
+\subsection{Risk assessment}
+\input{capitoli/tabelle_controlli/RA.tex}
+
+\subsection{System and services acquisition}
+\input{capitoli/tabelle_controlli/SA.tex}
+
+\subsection{System and communication protection}
+\input{capitoli/tabelle_controlli/SC.tex}
+
+\subsection{System and information integrity}
+\input{capitoli/tabelle_controlli/SI.tex}
+
 \section{Implementazione dei controlli automatici}
 \subsection{Il framework OpenSCAP}
 \subsection{Driver OpenSCAP per Moon Cloud}

@@ -1,0 +1,41 @@
+\makeatletter
+
+\begin{ltabulary}{|p{2cm}|p{8cm}|L|p{1cm}|}
+  \toprule
+    \hline
+    \textbf{ID}     &\textbf{Nome}                                                          & \textbf{Baseline} & \textbf{Tipo}  \\    \hline
+  \midrule
+  \endhead
+
+
+CM-1      & "configuration management policy and procedures"                             & Basso    & P   \\ \hline
+CM-2      & baseline configuration                                                       & Basso    & P   \\ \hline
+CM-2 (1)  & previews and updates                                                          & Moderato & P   \\ \hline
+CM-2 (2)  & automation support for accuracy / currency                                   & Moderato & P   \\ \hline
+CM-2 (3)  & retention of previous configurations                                         & Moderato & P   \\ \hline
+CM-2 (7)  & configure systems, components, or devices for high-risk areas                & Moderato & P   \\ \hline
+CM-3      & configuration change control                                                 & Moderato & P   \\ \hline
+CM-4      & security impact analysis                                                     & Basso    & P   \\ \hline
+CM-5      & access restrictions for change                                               & Moderato & A/P \\ \hline
+CM-5 (1)  & automated access enforcement / auditing                                      & Moderato & A   \\ \hline
+CM-5 (3)  & signed components                                                            & Moderato & A   \\ \hline
+CM-5 (5)  & "access restrictions for change | limit production / operational privileges" & Moderato & A   \\ \hline
+CM-6      & configuration settings                                                       & Basso    & A/P \\ \hline
+CM-6 (1)  & automated central management / application / verification                    & Moderato & P   \\ \hline
+CM-7      & least functionality                                                          & Basso    & A/P \\ \hline
+CM-7 (1)  & periodic review                                                              & Moderato & P   \\ \hline
+CM-7 (2)  & prevent program execution                                                    & Moderato & A   \\ \hline
+CM-7 (5)  & authorized software / whitelisting                                           & Moderato & A   \\ \hline
+CM-8      & information system component inventory                                       & Basso    & A/P \\ \hline
+CM-8 (1)  & updates during installations / removals                                      & Moderato & A/P \\ \hline
+CM-8 (3)  & automated unauthorized component detection                                   & Moderato & A   \\ \hline
+CM-8 (5)  & no duplicate accounting of components                                        & Moderato & A   \\ \hline
+CM-9      & configuration management plan                                                & Moderato & P   \\ \hline
+CM-10     & software usage restrictions                                                  & Basso    & A/P \\ \hline
+CM-10 (1) & open source software                                                         & Moderato & P   \\ \hline
+CM-11     & user-installed software                                                      & Basso    & A/P \\ \hline
+\end{ltabulary}
+I controlli appartenenti a questa famiglia rientrano nella tipologia "controllo operativo". Molti di questi sono quindi controlli essenzialmente procedurali, in quanto conssistono nel verificare l'esistenza e la conformità delle policy per la gestione dei cambiamenti.
+Gran parte delle conseguenze di queste policy, però, contengono elementi di carattere tecnico; per questa ragione, in alcuni casi, l'esecuzione degli stessi può avvenire in modo automatico o semi-automatico.
+In particolare i meccanismi automatici possono essere utilizzati in 14 casi su 26, garantendo quindi una copertura del 53\%. Di questi 14 controlli effettuabili in maniera automatica, la metà devono però essere eseguiti con un approccio ibrido.
+\makeatother

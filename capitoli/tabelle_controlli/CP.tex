@@ -1,0 +1,46 @@
+\makeatletter
+
+\begin{ltabulary}{|p{2cm}|p{8cm}|L|p{1cm}|}
+  \toprule
+    \hline
+    \textbf{ID}     &\textbf{Nome}                                                          & \textbf{Baseline} & \textbf{Tipo}  \\    \hline
+  \midrule
+  \endhead
+
+
+  \textbf{CP-1 } & "contingency planning policy and procedures"   & Basso    & P   \\ \hline
+  \textbf{CP-2 } & contingency plan                               & Basso    & P   \\ \hline
+CP-2 (1)         & coordinate with related plans                  & Moderato & P   \\ \hline
+CP-2 (2)         & capacity planning                              & Moderato & P   \\ \hline
+CP-2 (3)         & resume essential missions / business functions & Moderato & P   \\ \hline
+CP-2 (8)         & identify critical assets                       & Moderato & P   \\ \hline
+\textbf{CP-3 }   & contingency training                           & Basso    & P   \\ \hline
+\textbf{CP-4 }   & contingency plan testing                       & Basso    & P   \\ \hline
+CP-4 (1)         & coordinate with related plans                  & Moderato & P   \\ \hline
+\textbf{CP-6 }   & alternate storage site                         & Moderato & A/P \\ \hline
+CP-6 (1)         & separation from primary site                   & Moderato & P   \\ \hline
+CP-6 (3)         & accessibility                                  & Moderato & P   \\ \hline
+\textbf{CP-7 }   & alternate processing site                      & Moderato & P   \\ \hline
+CP-7 (1)         & separation from primary site                   & Moderato & P   \\ \hline
+CP-7 (2)         & accessibility                                  & Moderato & P   \\ \hline
+CP-7 (3)         & priority of service                            & Moderato & P   \\ \hline
+\textbf{CP-8 }   & telecommunications services                    & Moderato & P   \\ \hline
+CP-8 (1)         & priority of service provisions                 & Moderato & P   \\ \hline
+CP-8 (2)         & single points of failure                       & Moderato & P   \\ \hline
+\textbf{CP-9 }   & information system backup                      & Basso    & A/P \\ \hline
+CP-9 (1)         & testing for reliability / integrity            & Moderato & A   \\ \hline
+CP-9 (3)         & separate storage for critical information      & Moderato & A/P \\ \hline
+\textbf{CP-10}   & information system recovery and reconstitution & Basso    & P   \\ \hline
+CP-10 (2)        & transaction recovery                           & Moderato & A/P \\ \hline
+\end{ltabulary}
+
+La realizzazione del piano di contingenza è di carattere prettamente procedurale per definizione; l'obiettivo è infatti quello di studiare gli impatti sul business di possibili incidenti informatici, pianificare le operazioni di \textit{incident response}, un piano per il recupero dall'incidente (\textit{disastery recovery}) e le eventuali misure prese per garantire la \textit{business continuity}.
+
+
+Proprio le ultime citate sono l'oggetto dei pochi controlli parzialmente automatizzabili: nel caso del \textit{CP-6}, ad esempio, che prevede l'esistenza di una locazione alternativa per lo \textit{storage} dei dati, si può verificare che entrambe le locazioni siano sempre sincronizzate e che le proprietà di confidenzialità e integrità nella ridondanza geografica siano rispettate.
+
+
+La stessa considerazione può essere fatta per i sistemi di backup dei dati (CP-9) e dei log delle transazioni (CP-10), tenendo anche conto del fatto che le informazioni critiche devono essere trattate separatamente (CP-9 (3)). Eventuali sistemi automatici possono essere utilizzati anche per la verifica dell'affidabilità, l'integrità, il testing (e la effettiva possibilità di recupero dati).
+
+L'approccio automatico può essere usato nel 16\% dei casi.
+\makeatother
