@@ -62,8 +62,190 @@ I controlli di sicurezza, essendo proposti in modo astratto così da poter copri
 \subsection{System and information integrity}
 \input{capitoli/tabelle_controlli/SI.tex}
 
+\subsection{Conclusioni della fase di analisi}
+Dall'analisi effettuata si evince che dei 325 controlli delle \textit{baseline} bassa e moderata, 130 sono completamente automatizzabili (40\%), 133 richiedono interazione umana (41\%) e 62 richiedono un approccio misto tra automazione e interazione umana (19\%).
+Molti di questi controlli, inoltre, sono relativi ad attività di monitoraggio continuativo, pertanto possono essere soddisfatti con la semplice adozione di \textit{Moon Cloud} o altre soluzioni di monitoraggio.
+Si andrà ora a definire due metodologie per la copertura di tutti quei controlli di carattere procedurale, tecnico ed operativo.
+La prima metodologia consiste nella gestione dei controlli automatizzabili, mediante l'integrazione di Moon Cloud con il protocollo SCAP; la seconda, invece, prevede la somministrazione di questionari agli attori coinvolti nei controlli di tipo procedurale ad interazione umana.
+
 \section{Implementazione dei controlli automatici}
+Per implementare i controlli automatizzabili di FedRAMP in Moon Cloud, è stato creato un driver con il supporto al protocollo \textit{SCAP}.
+SCAP è una \textit{suite} composta da sei specifiche il cui obiettivo è standardizzare, utilizzando documenti XML, il formato e la nomenclatura con cui i prodotti di sicurezza comunicano informazioni relative alle configurazioni e alle vulnerabilità dei software noti, a umani e macchine.
+SCAP utilizza alcuni documenti e dataset di riferimento (es. \textit{NVD, National Vulnerability Database}), forniti e mantenuti dal NIST e dal DHS.
+Le finalità di SCAP sono molteplici:
+\begin{itemize}
+    \item Massimizzare l'interoperabilità tra strumenti di tipologia diversa
+    \item Favorire la software integration tra soluzioni di produttori differenti
+    \item Favorire lo sviluppo collaborativo dei documenti e dei dataset di riferimento
+\end{itemize}
+following five categories (with overview of the components):
+languages – XCCDF, OVAL, OCIL,
+• reporting formats – ARF, Asset Identification
+• enumerations – CPE, CCE, CVE,
+• measurement and scoring systems – CVSS, CCSS and
+• integrity – TMSAD.
+Many of these components use XML as the underlying technology
+and a typical SCAP content then consists of multiple pieces of XML
+with format defined by the (standalone) specifications of the components
+listed above either in separate, but mutually linked, files or in
+a single file with the pieces encapsulated in data stream collection
+defined in the aforementioned NIST Special Publication 800-126.
+Every well-formed [10] XML file must have one root element. In
+case of the SCAP content encapsulated in a single file it is the datastream-collection
+element that defines XML namespaces and
+is composed of one or more data-streams, components and optionally
+Signatures. Signature elements (which are required to
+be valid XML digital signatures [11]) can be used to ensure integrity
+and authenticity of the data. component elements then hold the content,
+as defined by the SCAP components’ specifications, that are referenced
+by the data-streams. data-stream elements are composed
+(among the other things) of dictionaries (links to CPE
+dictionaries), checklists (links to XCCDF content) and checks
+(links to OVAL or OCIL checks). Since the intention was to facilitate
+the creation of data streams and data stream collections from
+an existing content using separate files, all these links are realized
+as component-ref elements that provide IDs for what used to be
+separate files (so that all the references from an existing content are
+still valid) and contain catalogs that do basically the same for the
+referenced component – i.e. catalogs define mappings between
+what used to be separate files used by the component to IDs of the
+component-refs for the content from those files.
+The rest of the chapter is dedicated to descriptions of the SCAP
+components, that are the basic building blocks of the SCAP content,
+with the amounts of text proportional to the importance of the components
+in connection with this thesis.
+
+%languages
+The languages category contains the two probably most important
+components of SCAP – Extensible Configuration Checklist Description
+Format (XCCDF) and Open Vulnerability and Assessment Language
+(OVAL) – and the Open Checklist Interactive Language (OCIL).
+
+%xccdf
+In short, the Extensible Configuration Checklist Description Format
+is a language that can be used to define rules and cases in which
+particular rules should be applied
+The XCCDF provides a way how to define rules, but only on
+the level of their titles, descriptions and IDs. While for the human
+reader just a description (or even a title) like “Create a separate partition
+or logical volume for /tmp” could be enough to get the meaning
+of the rule and to perform a check, for a computer anything like
+that is practically impossible. And since one of the main goals of the
+SCAP is automation, it needs to provide a way how to include some
+machine-readable data to the rules on basis of which an automatic
+evaluation could be done.
+
+%oval
+That is where the Open Vulnerability and Assessment Language (OVAL) comes into play with its three major
+components – OVAL System Characteristics, OVAL Definitions and
+OVAL Results as defined by The OVAL Language Specification [
+Examples of such extending specifications are The OVAL
+Language UNIX Component Model Specification [13] for UNIX-like
+systems [14] and The OVAL Language Windows Component Model
+Specification [15] for Windows systems, but these are definitely not
+the only ones (in total there are currently 15 extensions for OVAL
+Definitions). An interesting fact about The OVAL Language Speci-
+fication and the specifications of the extensions is that they use the
+Unified Modeling Language (UML) [16] to describe XML elements.
+On one hand it is quite unusual, but on the other hand it perfectly
+fits the model the OVAL language uses where new elements are in
+many cases defined as being inherited2
+from some other elements
+and elements often use (contain) the other elements.
+From the perspective of this thesis the most important part of
+the OVAL language are Oval Definitions that are, among the other
+things, used in XCCDF rules’ checks. Example of OVAL definitions
+can be seen in the attachments. It contains metadata about the content
+generation (product\_name, schema\_version and timestamp
+elements) followed by the definitions, tests and objects. Each
+definition has some metadata (title, description) and criteria
+where each criterion references one or more tests that describe
+what should hold for some objects. The basic framework covered
+by the OVAL language specification consists of all the elements but
+tests and objects that are system-specific (and thus specified in
+the extensions that apply to a particular system).
+
+As it was already mentioned above, an OVAL content is, among
+the other things, usually used to define checks whether XCCDF rules
+are followed or not. That means there has to be an interpreter that
+actually checks the system according to the OVAL content and provides
+back data showing if the check failed of passed. There is a freely
+available3
+referential implementation of such tool – The OVAL Interpreter
+[18], but since it doesn’t cover all the functionality needed
+in many cases (especially the extensions), some other interpreters
+are usually being used. For example there is the jOVAL [19] project
+focused on implementing a more comprehensive OVAL interpreter
+(covering more extensions) that is licensed under the Affero GPL license
+[20].
+Another important part of the OVAL framework is the OVAL
+Repository described on its home page as follows:
+“The OVAL Repository is the central meeting place for
+the OVAL Community to discuss, analyze, store, and
+disseminate OVAL Definitions. Members of the community
+contribute definitions by posting them to the
+OVAL Repository Forum, where the OVAL Team and
+other members of the community review and discuss
+them.” [21]
+which plays an important role in reusability of the OVAL content.
+Though it may seem that the OVAL covers everything needed
+to define checks for XCCDF rules, there are cases when it cannot
+be used because of the fact that it is oriented only on systems and
+their states and configurations and not on the users of such systems.
+This allows OVAL content to be evaluated automatically, but
+on the other hand doesn’t cover the rules like “All users must have
+passed the basic security training.” that may appear in the SCAP content.
+For cases like that elements of the Open Checklist Interactive
+Language are used. The most recent format of the language is de-
+fined by the NIST Interagency Report 7692 – Specification for the
+Open Checklist Interactive Language (OCIL) Version 2.0. [22] The
+OCIL provides a unified and general framework for creating questionnaires
+that can be used, among the other places4
+, in a SCAP con-
+
+
 \subsection{Il framework OpenSCAP}
+An important feature of the SCAP, also pointed out in it’s name, is
+that it allows automation which means that the evaluation of a SCAP
+content on a particular system can be done by some tool instead of
+manual verification of the rules and manual fixing of the system’s
+state and configuration. On the other hand the creation of SCAP content
+cannot be done automatically (as today’s computers are not able
+to detect a vulnerability, provide a fix for it and compose an XML file
+will all the data needed), but still can be done in a “computer-aided”
+way. There are many projects focused on both SCAP content creation
+and evaluation, some of them focusing on separate particular components
+and some of them trying to cover the whole specification.
+Fortunately, many projects are focused on producing open-source [4]
+tools and content that is publicly available with all the source code
+for usage, modifications and redistribution which means that they
+could be used as part of the Fedora GNU/Linux distribution strictly
+requiring all its components to be open-source and publicly available.
+We have already seen examples of such projects in the section
+describing the OVAL (2.1) – OVAL Interpreter and jOVAL – both focused
+on the evaluation of the OVAL content.
+An example of a project that tries to cover all components of the
+SCAP is the OpenSCAP project. Although still being under development
+it already provides powerful tools to process the SCAP content
+and creates an important “crossroad” for many other projects focused
+on particular components. The OpenSCAP per se provides [3]:
+• a library that can be used for SCAP content processing and
+evaluation,
+a scanner that utilizes the library and provides local scanning
+capabilities,
+• a number of XSLT1
+[38] transformations that can be used to
+transform an XML content to more human-readable HTML
+format and
+• SCAP content intended for testing and experimental purposes.
+The library is written in C, but there are bindings for Perl and Python
+languages, so that it can be used also from these high-level languages.
+Probably the most important part of the OpenSCAP project is the
+scanner (called oscap) which can be used for a wide range of actions
+done with a SCAP content starting from validation and basic
+information extraction going through various transformations and
+ending with complete evaluation. A
+
 \subsection{Driver OpenSCAP per Moon Cloud}
 \subsection{OpenSCAP per la FedRAMP readiness}
 \subsection{OpenSCAP per la NIST 800-53}

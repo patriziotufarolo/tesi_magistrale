@@ -1,10 +1,6 @@
-\makeatletter
-
 \begin{ltabulary}{|p{2cm}|p{8cm}|L|p{1cm}|}
-  \toprule
     \hline
     \textbf{ID} & \textbf{Nome}                                             & \textbf{Baseline} & \textbf{Tipo} \\ \hline
-  \midrule
   \endhead
 \textbf{RA-1}   & risk assessment policy and procedures                     & Basso             & P             \\ \hline
 \textbf{RA-2}   & security categorization                                   & Basso             & P             \\ \hline
@@ -17,4 +13,11 @@ RA-5 (5)        & privileged access                                         & Mo
 RA-5 (6)        & automated trend analyses                                  & Moderato          & A             \\ \hline
 RA-5 (8)        & review historic audit logs                                & Moderato          & P             \\ \hline
 \end{ltabulary}
-\makeatother
+Il processo di analisi del rischio è per definizione procedurale. Tuttavia, in ambito IT, è spesso supportato da strumenti automatici e modelli per la raccolta di informazioni utili a supporto dell'analisi.
+Molte funzionalità di \textit{risk analysis} possono essere quindi automatizzate: tra queste la gestione e gli aggiornamenti di eventuali definizioni dei \textit{tool} utilizzati e il \textit{vulnerability scanning}. 
+Per individuare le vulnerabilità possiamo considerare due approcci:
+\begin{itemize}
+    \item \textbf{Vulnerability scan statico}, che analizza le vulnerabilità sulla base della versione dei prodotti installati, confrontando i numeri di rilascio con le vulnerabilità note.
+    \item \textbf{Vulnerability scan dinamico}, che effettua una vera e propria scansione verso il sistema \textit{target}, in modo più invasivo.
+\end{itemize}
+Il metodo automatico, in questo caso, può essere applicato nel 60\% dei casi. 

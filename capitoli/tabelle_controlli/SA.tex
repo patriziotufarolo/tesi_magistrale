@@ -1,10 +1,6 @@
-\makeatletter
-
 \begin{ltabulary}{|p{2cm}|p{8cm}|L|p{1cm}|}
-  \toprule
     \hline
     \textbf{ID} & \textbf{Nome}                                              & \textbf{Baseline} & \textbf{Tipo} \\ \hline
-  \midrule
   \endhead
 \textbf{SA-1 }  & "system and services acquisition policy and procedures"    & Basso             & P             \\ \hline
 \textbf{SA-2 }  & allocation of resources                                    & Basso             & P             \\ \hline
@@ -18,15 +14,15 @@ SA-4 (10)       & use of approved piv products                               & M
 \textbf{SA-5 }  & information system documentation                           & Basso             & P             \\ \hline
 \textbf{SA-8 }  & security engineering principles                            & Moderato          & P             \\ \hline
 \textbf{SA-9 }  & external information system services                       & Basso             & P             \\ \hline
-SA-9 (1)        & "risk assessments / organizational approvals"              & Moderato          & P             \\ \hline
+SA-9 (1)        & "risk assessments / organizational approvals               & Moderato          & P             \\ \hline
 SA-9 (2)        & identification of functions / ports / protocols / services & Moderato          & P             \\ \hline
 SA-9 (4)        & consistent interests of consumers and providers            & Moderato          & P             \\ \hline
 SA-9 (5)        & processing, storage, and service location"                 & Moderato          & P             \\ \hline
 \textbf{SA-10}  & developer configuration management                         & Moderato          & P             \\ \hline
-SA-10 (1)       & software / firmware integrity verification"                & Moderato          & P             \\ \hline
+SA-10 (1)       & software / firmware integrity verification                 & Moderato          & A             \\ \hline
 \textbf{SA-11}  & developer security testing and evaluation                  & Moderato          & P             \\ \hline
-SA-11 (1)       & static code analysis                                       & Moderato          & P             \\ \hline
-SA-11 (2)       & threat and vulnerability analyses                          & Moderato          & P             \\ \hline
-SA-11 (8)       & dynamic code analysis                                      & Moderato          & P             \\ \hline
+SA-11 (1)       & static code analysis                                       & Moderato          & A             \\ \hline
+SA-11 (2)       & threat and vulnerability analyses                          & Moderato          & A             \\ \hline
+SA-11 (8)       & dynamic code analysis                                      & Moderato          & A             \\ \hline
 \end{ltabulary}
-\makeatother
+Questa classe è relativa al processo di acquisizione del software da terze parti, e contiene perlopiù controllo di sicurezza di tipo procedurale.  Tra questi, alcune attività possono però essere automatizzate, parzialmente o totalmente, mediante l'utilizzo di strumenti pilotabili. Tra queste possiamo riconoscere il controllo della configurazione dello sviluppatore, con la verifica dell'integrità degli strumenti software utilizzati, e tutta la fase di testing del software, comprendente anche analisi statica e dinamica. 
