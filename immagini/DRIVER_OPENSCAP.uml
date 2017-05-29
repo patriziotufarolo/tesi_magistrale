@@ -1,0 +1,33 @@
+@startuml
+skinparam shadowing false
+skinparam monochrome true
+
+state "Driver OpenSCAP" as sm {
+    state "Lettura dei parametri\nper la connessione\nSSH" as s1
+    state "Connessione a SSH" as s2 : "Rollback: chiusura\ndella connessione SSH"
+    state "Creazione di una directory\ntemporanea sul server" as s3 : "Rollback: rimozione\ndella directory temporanea"
+    state "Verifica che OSCAP sia installato" as s4 
+    state "Lettura della configurazione\nper OpenSCAP" as s5
+    state "Caricamento degli XCCDF\nnella directory temporanea" as s6
+    state "Lancio di OpenSCAP" as s7
+    state "Lettura della configurazione\nper upload su Azure" as s8
+    state "Download del report\ndal server" as s9
+    state "Upload del report\nsu Azure" as s10
+    state "Rimozione della\ndirectory temporanea" as s11
+    state "Chiusura della connessione SSH" as s12
+
+
+[*] --> s1
+s1 --> s2 
+s2 --> s3
+s3 --> s4
+s4 --> s5
+s5 --> s6
+s6 --> s7
+s7 --> s8
+s8 --> s9
+s9 --> s10
+s10 --> s11
+s11 --> s12
+}
+@enduml
