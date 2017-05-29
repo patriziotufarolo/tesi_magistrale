@@ -1,0 +1,19 @@
+@startuml
+skinparam shadowing false
+skinparam monochrome true
+
+|Sistema|
+start
+:Preparazione del database;
+:Download della definizione del questionario;
+:Avvio del web service;
+:Invio della mail di notifica;
+|Utente|
+:Compilazione questionario;
+:Invio del questionario;
+|Sistema|
+:Redazione del report PDF;
+:Invio del report PDF;
+stop
+
+@enduml

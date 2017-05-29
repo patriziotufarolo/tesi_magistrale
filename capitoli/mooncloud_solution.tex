@@ -328,7 +328,6 @@ La proprietà analizzata da questo esempio è la \textit{confidenzialità del da
 
 \subsection{Controllo}
 
-
 \subsubsection{Confidenzialità dello storage}
 
 \begin{js}
@@ -337,15 +336,15 @@ La proprietà analizzata da questo esempio è la \textit{confidenzialità del da
   "driver" : "storage-confidentiality",
   "id" : 1,
   "metadata" : {
-      "description" : "Evaluates SSL configuration for a given target",
-      "schema" : { "config" : {
+      "description" : "Evaluates storage confidentiality for a given target",
+      "schema" : {
+          "config" : {
               "properties" : {
                   "ssh_string" : {
                       "title" : "SSH Connection String",
                       "type" : "string"
                     },
                   "ssh_key" : {
-                      "default" : 80,
                       "title" : "SSH Key",
                       "type" : "string"
                     },
@@ -360,9 +359,11 @@ La proprietà analizzata da questo esempio è la \textit{confidenzialità del da
             }
         },
         "inputs": {
-            "ssh_string": "string",
-            "ssh_key": "string",
-            "device_to_check": "string",
+            "config": {
+                "ssh_string": "string",
+                "ssh_key": "string",
+                "device_to_check": "string",
+            }
         },
         "outputs": {
             "result": "boolean"
@@ -381,7 +382,8 @@ La proprietà analizzata da questo esempio è la \textit{confidenzialità del da
   "id" : 1,
   "metadata" : {
       "description" : "Evaluates SSL configuration for a given target",
-      "schema" : { "config" : {
+      "schema" : {
+          "config" : {
               "properties" : {
                   "host" : {
                       "title" : "Host",
@@ -398,8 +400,10 @@ La proprietà analizzata da questo esempio è la \textit{confidenzialità del da
             }
         },
         "inputs": {
-            "host": "hostname",
-            "port": "integer"
+            "config": {
+                "host": "hostname",
+                "port": "integer"
+            }
         },
         "outputs": {
             "result": "boolean",
@@ -446,11 +450,12 @@ La proprietà analizzata da questo esempio è la \textit{confidenzialità del da
     "execution_cluster" : 1,
     "id" : 11,
     "name" : "",
-    "testcase" : { "config" : {
-            "ssh_string" : "user@tufarolo.eu:22",
-            "ssh_key" : ".....",
-            "device_to_check": "/dev/sda1"
-          }
+    "testcase" : {
+            "config" : {
+                "ssh_string" : "user@tufarolo.eu:22",
+                "ssh_key" : ".....",
+                "device_to_check": "/dev/sda1"
+            }
       },
     "__unicode__" : "t#1"
   }
@@ -464,7 +469,8 @@ La proprietà analizzata da questo esempio è la \textit{confidenzialità del da
     "execution_cluster" : 1,
     "id" : 11,
     "name" : "",
-    "testcase" : { "config" : {
+    "testcase" : {
+        "config" : {
             "host" : "tufarolo.eu",
             "port" : 80
           } },

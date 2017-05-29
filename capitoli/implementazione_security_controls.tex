@@ -165,16 +165,6 @@ Sulla base di ciò è possibile, tramite OVAL, determinare se una regola \textit
 Si tratta, tuttavia, di un linguaggio orientato all'automazione, che pertanto non può essere applicato in caso di verifiche umane e procedurali, come molti dei controlli di sicurezza analizzati.
 In questi casi il linguaggio adatto è OCIL, \textit{Open Checklist Interactive Language}.
 
-\subsubsection{OCIL}
-OCIL è un framework generico per la creazione di questionari ad interazione umana e non automatizzabili, definito nel documento NIST Interagency Report 7692 – Specification for the Open Checklist Interactive Language (OCIL) Version 2.0.
-Le funzionalità di OCIL sono:
-\begin{itemize}
-    \item Possibilità di definire domande (con risposte di tipo booleano, scelta multipla, numerico, stringa)
-    \item Possibilità di definire risposte predefinite per ciascuna domanda
-    \item Possibilità di definire le azioni conseguenti alla risposta dell'utente 
-    \item Possibilità di catalogare le risposte date
-\end{itemize}
-
 \subsection{Il framework OpenSCAP}
 Uno dei tanti progetti che implementano il protocollo SCAP è Red Hat \textit{OpenSCAP}\footnote{https://www.open-scap.org}.
 Questo fornisce una serie di strumenti open-source:
@@ -201,15 +191,20 @@ Al fine di effettuare i controlli NIST 800-53 per FedRAMP in Moon Cloud, è stat
 Questo driver è in grado di pilotare \textit{OpenSCAP} su un server remoto per effettuarne l'analisi, in alternativa può essere utilizzato per eseguire gli stessi controlli su container Docker.
 
 La comunicazione tra il driver e l'host target protocollo SSH, implementato con la libreria Python \textit{paramiko}.
+
 Come prima cosa, vengono quindi letti i parametri per la connessione: \textit{hostname} o indirizzo IP del target, porta, nome utente, eventuale password, oppure chiave privata e relativa \textit{passphrase} di sblocco.
-Vien avviata la connessione SSH e, tramite essa, viene creata una directory temporanea sul server. Questa directory andrà a contenere gli XCCDF selezionati, e sarà eliminata.
+
+Viene avviata la connessione SSH e, tramite essa, viene creata una directory temporanea sul server. Questa directory andrà a contenere gli XCCDF selezionati, e sarà eliminata.
+
 A seguire, viene effettuato un controllo della presenza di OpenSCAP sul server, che rappresenta un prerequisito per l'esecuzione. Se il binario \textit{oscap} non viene trovato, il test si blocca ed avvia la sequenza di rollback.
+
 Dopo aver letto da input le configurazioni di OpenSCAP (file XCCDF da considerare, profilo scelto, eventuale download di risorse remote specificate nel XCCDF), viene lanciato il comando \textit{oscap}; il report HTML generato da viene poi caricato su un bucket di \textit{Microsoft Azure Storage} (se sono state fornite credenziali), e i dati in esso contenuti vengono restituiti a Moon Cloud.
+
 Il flusso di esecuzione si conclude con la rimozione delle cartelle temporanee e la chiusura della connessione SSH.
 
 Il driver supporta gli XCCDF presenti nella \textit{OpenSCAP Security Guide}, ovvero:
 \begin{table}[H]
-    \begin{tabulary}{\textwidth}{xxxx}
+    \begin{tabulary}{\textwidth}{cccc}
 
          
         ssg-centos5 & ssg-rhel5     & ssg-ubuntu1404 & ssg-sl5      \\
@@ -222,31 +217,9 @@ Il driver supporta gli XCCDF presenti nella \textit{OpenSCAP Security Guide}, ov
     \end{tabulary}
 \end{table}
 I profili relativi a ciascun XCCDF sono ottenibili con il comando:
-\begin{Verbatim}[H, frame=single]
+\begin{Verbatim}[frame=single]
 oscap info file.xml
 \end{Verbatim}
-\subsubsection{JSON di input}
-\begin{javascript}
-{
-    "read_ssh_configuration": {
-        "hostname":"217.182.90.154",
-        "username":"centos",
-        "private_key":"",
-        "private_key_passphrase":"mooncloud"
-    },
-    "read_xccdf_configuration": {
-        "xccdf":"ssg-centos7",
-        "profile":"nist-800-171-cui",
-        "fetch_remote_resources": true
-    },
-    "read_azure_configuration": {
-        "user": "moonclouddashboard",
-        "access_key": "EGXT5aAF51nMwaJJNrpzEgq5teUWKUhzdM1+qTkqoalusLxtagw70QMPGmPk6z4sNF2d9QhrfQ2ACbZMv4FCkw==",
-        "container_name":"pdfcontainer"
-    }
-}
-
-\end{javascript}
 \subsubsection{Flusso di esecuzione}
 \begin{figure}[H]
 \centering
@@ -255,8 +228,164 @@ oscap info file.xml
 
 \end{figure}
 
+\subsubsection{Metadata}
+
+\begin{js}
+{
+  "driver-name": "OpenSCAP_SSH",
+  "description" : "",
+  "schema" : {
+        "read_ssh_configuration" : {
+            "properties" : {
+                "hostname" : {
+                    "title" : "SSH Connection String",
+                    "type" : "string",
+                    "required": true
+                },
+                "username" : {
+                    "title" : "Username",
+                    "type" : "string",
+                    "required": true
+                },
+                "password": {
+                    "title":"Password",
+                    "type":"password"
+                },
+                "private_key": {
+                    "title": "SSH Private Key",
+                    "type":"string",
+                },
+                "private_key_passphrase": {
+                    "title":"Passphrase",
+                    "type":"password"
+                }
+            },
+            "title" : "Target",
+            "type" : "object"
+        },
+        "read_xccdf_configuration":{
+            "properties": {
+                "xccdf": {
+                    "title": "XCCDF",
+                    "type": "string",
+                    "required": true
+                },
+                "profile": {
+                    "title": "Profile",
+                    "type": "string",
+                    "required":"true"
+                },
+                "fetch_remote_resources": {
+                    "title": "Fetch remote resources declared in XCCDF",
+                    "type": "boolean",
+                    "default": false
+                }
+            },
+            "title": "OpenSCAP settings",
+            "type":"object"
+        },
+        "read_azure_configuration":{
+            "properties": {
+                "user": {
+                    "title": "Username",
+                    "type": "string",
+                    "required": true
+                },
+                "access_key": {
+                    "title": "Access Key",
+                    "type": "password",
+                    "required":true
+                },
+                "container_name": {
+                    "title": "Azure Container name",
+                    "type": "string",
+                    "required":true
+                }
+            },
+            "title": "Azure settings",
+            "type":"object"
+        }
+
+    },
+    "inputs": {
+        "read_ssh_configuration": {
+            "hostname": "string",
+            "username": "string",
+            "password": "password",
+            "private_key": "string",
+            "private_key_passphrase": "string"
+        },
+        "read_xccdf_configuration": {
+            "xccdf": "string",
+            "profile": "string",
+            "fetch_remote_resources": "boolean"
+        },
+        "read_azure_configuration": {
+            "user": "string",
+            "access_key": "password",
+            "container_name": "string"
+        }
+    },
+    "outputs": {
+        "report": "string"
+    }
+}
+\end{js}
+Il codice del driver è stato allegato nell'Appendice \ref{appendix:driver1}
+
 \section{Controlli ad interazione umana}
-\subsection{OCIL FedRAMP readiness}
+Poiché, come già ampiamente trattato, non è possibile eseguire in maniera automatica tutti i controlli di sicurezza, l'obiettivo di questa tesi è
+anche quello di fornire uno strumento per la verifica dei controlli di carattere procedurale che prevedono intrinsecamente un'interazione umana.
+
+La modalità scelta è la somministrazione di questionari agli attori coinvolti nel controllo. A tal fine, una delle possibili strategie è quella di utilizzare
+il linguaggio OCIL presente nel framework SCAP.
+
+OCIL è un framework generico per la creazione di questionari ad interazione umana e non automatizzabili, definito nel documento NIST Interagency Report 7692 – Specification for the Open Checklist Interactive Language (OCIL) Version 2.0.
+Le funzionalità di OCIL sono:
+\begin{itemize}
+    \item Possibilità di definire domande (con risposte di tipo booleano, scelta multipla, numerico, stringa)
+    \item Possibilità di definire risposte predefinite per ciascuna domanda
+    \item Possibilità di definire le azioni conseguenti alla risposta dell'utente 
+    \item Possibilità di catalogare le risposte date
+\end{itemize}
+Un esempio di OCIL per la valutazione della \textit{FedRAMP readiness} è presente in appendice \ref{appendix:readiness}
+
 \subsection{Driver Survey per Moon Cloud}
-\subsection{Templating del questionario}
+
+Si è voluto perciò integrare in Moon Cloud un driver ad interazione umana che, tramite un web-service, proponga all'utente un questionario e generi un report di feedback.
+Nel caso di Moon Cloud, i questionari non sono descritti in OCIL ma utilizzando lo standard JSON Schema\footnote{JSON Schema \textit{http://www.json-schema.org/}}; è possibile eventualmente effettuare la traduzione mediante un foglio di trasformazione \textit{XSLT}.
+
+Il test effettua il download della definizione del questionario da sottoporre, dopodiché lancia una web-application che offre il questionario all'utente. La web application è autenticata con nome utente e password, ed esposta tramite un reverse proxy dinamico chiamato \textit{traefik\footnote{Traefik: https://www.traefik.io}}.
+\textit{Traefik} è un proxy per architetture a microservizi, in grado di leggere la lista dei container attivi dalle API Docker consentendo l'accesso ad eventuali servizi esposti sugli stessi.
+I \textit{container} del driver \textit{Survey} vengono quindi  avviati con la \textit{label} \textit{"proxied"} e sono forniti tramite connessione SSL. Il certificato SSL viene automaticamente generato utilizzando il protocollo \textit{ACME}\footnote{ACME,  \textit{https://tools.ietf.org/html/draft-ietf-acme-acme-04}} e il servizio LetsEncrypt.
+
+A questo punto viene inviata una notifica a mezzo \textit{e-mail} per il destinatario, con il link per accedere e compilare lo stesso.
+Nel momento in cui il questionario viene sottomesso, viene generato un report in PDF, che è successivamente caricato in un \textit{Windows Azure Storage} analogamente al report \textit{OSCAP} precedentemente illustrato.
+
+La difficoltà principale riscontrata nella realizzazione di questo driver risiede nell'introduzione di un processo manuale all'interno del framework Moon Cloud, pensato per eseguire test in modo automatico.
+Il flusso di esecuzione, in questo caso, è invece caratterizzato da una fase bloccante che non termina finché l'utente non ha compilato il questionario stesso.
+Lo \textit{scheduler} di Moon Cloud, per come originariamente ideato, programma l'esecuzione dei test eseguendone \textit{n} alla volta, dove \textit{n} è un parametro di concorrenza (\textit{--max-concurrency}) generalmente calcolato in base alla potenza computazionale e al numero di core disponibili sull'\textit{execution node}.
+
+L'introduzione dell'azione bloccante ha perciò comportato una saturazione dei thread, rendendo impossibile lo \textit{scheduling} di nuovi test.
+Questo problema è stato affrontato dapprima aumentando il valore di \textit{max-concurrency}, poi facendo scalare orizzontalmente il framework, tuttavia è necessaria una reingegnerizzazione del processo di esecuzione di alcune tipologie di test, etichettati come "bloccanti".
+
+A tal fine sono state proposte due soluzioni:
+\begin{itemize}
+    \item La prima soluzione proposta è implementabile aggiungendo un \textit{timer} di durata massima all'esecuzione del test: quando il timer scade, il test viene rimosso restituendo un risultato \textit{False} e il container relativo viene cancellato.
+\item La seconda soluzione proposta consiste nell'eseguire il driver in background, per poi monitorarne lo stato con un test ad esecuzione periodica. 
+In questo caso avremmo quindi una evaluation rule così composta:
+\begin{Verbatim}[frame=single]
+a#1 implies a#2
+\end{Verbatim}
+In questo modo \textit{a\#1} lancia il driver "survey" in background terminando con "true", mentre \textit{a\#2} viene eseguito periodicamente per raccogliere il risultato del questionario, e restituisce "false" finché il questionario non è stato compilato.
+\end{itemize}
+\subsubsection{Flusso di esecuzione}
+\begin{figure}[H]
+\centering
+\includegraphics[height=15cm]{immagini/DRIVER_SURVEY.png}
+\caption{Flusso di esecuzione del driver}\label{fig:flussodriver2}
+
+\end{figure}
+\subsubsection{Metadata}
+
 \end{document}

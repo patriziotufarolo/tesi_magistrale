@@ -1,450 +1,345 @@
 \appendix
 \thispagestyle{plain}
-%%% commented out
 
-\iffalse
 
-\chapter{Driver di sonda - Isolamento della rete e firewalling}
+\chapter{Driver di integrazione con OpenSCAP}
 \begin{python}
-__author__ = 'Patrizio Tufarolo'
-__email__ = 'patrizio.tufarolo@studenti.unimi.it'
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+import sys
+import spur
+import uuid
+
+from xml.etree import cElementTree as ElementTree
+
+from driver import Driver
+from test.ssh_client import CustomSshShell
+from azure.storage.blob import BlockBlobService, ContentSettings
+
+__author__ = "Patrizio Tufarolo"
+__email__ = "patrizio@tufarolo.eu"
+
+__description__ = "This driver controls a remote OpenSCAP instance through SSH"
+
+ocil_cs = "http://scap.nist.gov/schema/ocil/2"
+xccdf_ns = "http://checklists.nist.gov/xccdf/1.1"
 
 
-import time,uuid,subprocess
+class SSHConnection(object):
+    def read_ssh_configuration(self, inputs):
+        ssh_connection_ti = self.testinstances.get("read_ssh_configuration",
+                                                   {})
 
-from testagent.probe import Probe
+        assert ssh_connection_ti is not None
+        hostname = ssh_connection_ti.get("hostname")
+        port = ssh_connection_ti.get("port", 22)
+        username = ssh_connection_ti.get("username")
+        password = ssh_connection_ti.get("password", None)
+        private_key = ssh_connection_ti.get("private_key", None)
+        private_key_passphrase = None
+        if private_key is not None:
+            private_key_passphrase = ssh_connection_ti.get(
+                "private_key_passphrase",
+                None)
 
-from neutronclient.v2_0 import client as NeutronClient
-from novaclient.client import Client as NovaClient
-from keystoneclient.auth.identity import v2 as KeystoneClient
-from keystoneclient import session as KeystoneSession
-from libnmap.process import NmapProcess
-from libnmap.parser import NmapParser, NmapParserException
+        return hostname, port, username, password, \
+            private_key or None, private_key_passphrase or None
 
-class NetworkSecurityGroup(Probe):
-	def nullRollback(self,inputData):
-		return inputData
+    def ssh_connection(self, inputs):
+        hostname, port, username, password, \
+            private_key, private_key_passphrase = inputs
+        self.ssh_client = \
+            CustomSshShell(hostname=hostname,
+                           username=username,
+                           password=password,
+                           port=port,
+                           private_key=private_key,
+                           private_key_passphrase=private_key_passphrase,
+                           missing_host_key=spur.ssh.MissingHostKey.warn,
+                           shell_type=spur.ssh.ShellTypes.sh
+                           )
+        return isinstance(self.ssh_client, spur.SshShell)
 
-	def createNeutronClient(self,inputData):
-		self.neucl = NeutronClient.Client(auth_url=self.testinstances["OpenStackConfig"]["OS_AUTH_URL"],
-						username=self.testinstances["OpenStackConfig"]["OS_USERNAME"],
-						password=self.testinstances["OpenStackConfig"]["OS_PASSWORD"],
-						tenant_name=self.testinstances["OpenStackConfig"]["OS_TENANT_NAME"],
-						region_name=self.testinstances["OpenStackConfig"]["OS_REGION_NAME"])
-		self.keystonecl = KeystoneClient.Password(auth_url=self.testinstances["OpenStackConfig"]["OS_AUTH_URL"],
-						username=self.testinstances["OpenStackConfig"]["OS_USERNAME"],
-						password=self.testinstances["OpenStackConfig"]["OS_PASSWORD"],
-						tenant_name=self.testinstances["OpenStackConfig"]["OS_TENANT_NAME"])
-		sess = KeystoneSession.Session(auth=self.keystonecl)
-		self.novacl = NovaClient(3,session=sess)
-		return inputData
+    def ssh_create_tmp_dir(self, ssh_client_ok):
+        self.temp_dir = None
+        assert ssh_client_ok and isinstance(self.ssh_client, spur.SshShell)
+        self.temp_dir = self.ssh_client.run(
+            ["mktemp", "--directory"], encoding="ascii").output.strip()
 
+    def ssh_remove_tmp_dir(self, inputs):
+        assert self.temp_dir
+        self.ssh_client.run(["rm", "-rf", self.temp_dir])
 
-	def deployHoneypot(self,inputData):
-		name = "honeypot_" + str(uuid.uuid4())
-		print("Deploying honeypot "+ str(name))
-		imagename = self.testinstances["DeployHoneypot"]["Image"]
-		print(imagename)
-		flavorname = self.testinstances["DeployHoneypot"]["Flavor"]
-		networkname = self.testinstances["DeployHoneypot"]["Network"]
-		checktcp = self.testinstances["Configuration"]["CheckTCP"]
-		checkudp = self.testinstances["Configuration"]["CheckUDP"]
-		sgname = self.testinstances["DeployHoneypot"]["SecurityGroup"]
-
-		openAllPorts = """#!/bin/bash\n"""
-		if checktcp == "True":
-			tcpminport = int(self.testinstances["Configuration"]["TCPMinPort"])
-			tcpmaxport = int(self.testinstances["Configuration"]["TCPMaxPort"])
-			openAllPorts += '''
-			echo "Adding iptables TCP redirect\n"
-			iptables -t nat -A PREROUTING -p tcp --dport '''+str(tcpminport)+':'+str(tcpmaxport-1)+' -j REDIRECT --to-ports '+str(tcpmaxport)+'''\n
-			echo "Running TCP server in background on port '''+str(tcpmaxport)+'''\n"
-			echo -e "import socket, sys; sock=socket.socket(socket.AF_INET, socket.SOCK_STREAM); sock.bind(('','''+str(tcpmaxport)+''')); sock.listen(1); \nwhile True: s,a = sock.accept()\n" | python &
-			\n'''
-
-		if checkudp == "True":
-			udpminport = int(self.testinstances["Configuration"]["UDPMinPort"])
-			udpmaxport = int(self.testinstances["Configuration"]["UDPMaxPort"])
-			openAllPorts += '''
-			echo "Adding iptables UDP redirect"\n
-			iptables -t nat -A PREROUTING -p udp --dport '''+str(udpminport)+':'+str(udpmaxport-1)+' -j REDIRECT --to-ports '+str(udpmaxport)+'''\n
-			echo "Running python server in background on port''' + str(udpmaxport) + ''' udp\n"
-			echo -e "import socket, sys; sock=socket.socket(socket.AF_INET, socket.SOCK_DGRAM); sock.bind((,'''+str(udpmaxport)+''')); \nwhile True: d,a = sock.recvfrom(4096)\n" | python &'''
-		print openAllPorts
-		image = self.novacl.images.find(name=imagename)
-		flavor = self.novacl.flavors.find(name=flavorname)
-		net = self.novacl.networks.find(label=networkname)
-		server = self.novacl.servers.create(name,image,flavor,security_groups=[sgname],nics=[{'net-id': net.id}],userdata=openAllPorts)
-		print("Deployed honeypot")
-		print(server)
-		self.server_id = server.id
-		return inputData
-
-	def removeHoneypot(self,inputData):
-		print(self.novacl.servers.delete(self.server_id))
-		print("Removed honeypot")
-		return inputData
-
-	def pollingHoneypot(self,inputData):
-		try:
-			timeout = time.time() + int(self.testinstances["DeployHoneypot"]["Timeout"]) or 120
-		except:
-			timeout = time.time() + 120
-		status = self.novacl.servers.get(self.server_id).status
-		while status == "BUILD":
-			time.sleep(5)
-			if timeout < time.time():
-				raise Exception("Timeout!")
-			status = self.novacl.servers.get(self.server_id).status
-		if status != "ACTIVE":
-			raise Exception("Failed to boot honeypot. Status is " + status + ". Please look at Openstack logs for more info.")
-		print("Honeypot ready")
-		return inputData
+    def ssh_close(self, inputs):
+        self.ssh_client.__exit__()
 
 
-	def createFloatingIp(self,inputData):
-		self.floating_ip = self.novacl.floating_ips.create(pool=self.testinstances['DeployHoneypot']['FloatingIPPool'])
-		print("Created floating ip")
-		return inputData
+class XCCDFEvaluator(SSHConnection):
+    def read_xccdf_configuration(self, inputs):
+        xccdf_ti = self.testinstances.get("read_xccdf_configuration", None)
+        xccdf = xccdf_ti.get("xccdf", None)
+        profile = xccdf_ti.get("profile", None)
+        assert xccdf is not None and profile is not None
+        fetch_remote_resources = xccdf_ti.get("fetch_remote_resources", False)
+        return xccdf, profile, fetch_remote_resources
 
-	def deleteFloatingIp(self,inputData):
-		self.novacl.floating_ips.delete(self.floating_ip)
-		print("Deleted floating ip")
-		return inputData
+    @staticmethod
+    def get_xccdf_references(xccdf):
+        result = []
+        xccdftree = ElementTree.parse(
+            "/usr/src/app/test/ssg/{xccdf}-xccdf.xml".format(xccdf=xccdf)
+        )
+        check_content_refs = xccdftree.findall(
+            ".//{%s}check-content-ref" % xccdf_ns
+        )
+
+        for check_content_ref in check_content_refs:
+            check_content_ref_href_attr = check_content_ref.get("href")
+            if check_content_ref_href_attr.startswith("http://") or \
+                    check_content_ref_href_attr.startswith("https://"):
+                continue
+            refhref = check_content_ref.get("href")
+            if refhref not in result:
+                result.append(refhref)
+
+        return result
+
+    def upload_files(self, inputs):
+        xccdf, profile, fetch_remote_resources = inputs
+        with self.ssh_client._connect_sftp() as sftp:
+            sftp.put(
+                "/usr/src/app/test/ssg/{xccdf}-xccdf.xml".format(xccdf=xccdf),
+                self.temp_dir + "/" + "{xccdf}-xccdf.xml".format(xccdf=xccdf)
+            )
+
+            for document in self.get_xccdf_references(xccdf):
+                sftp.put(
+                    "/usr/src/app/test/ssg/{document}"
+                    .format(document=document),
+                    self.temp_dir + "/" + "{document}".
+                    format(document=document)
+                )
+        return xccdf, profile, fetch_remote_resources
+
+    def get_report(self, inputs):
+        with self.ssh_client._connect_sftp() as sftp:
+            sftp.get(
+                "{temp_dir}/report.html".format(temp_dir=self.temp_dir),
+                "/tmp/report.html"
+            )
+        return inputs
+
+    def evaluate_xccdf(self, inputs):
+        xccdf, profile, fetch_remote_resources = inputs
+        ssh_command = [
+            "oscap",
+            "xccdf",
+            "eval",
+            "--profile", "{profile}".format(profile=profile),
+            "--results-arf", "{temp_dir}/results.arf.xml".format(
+                temp_dir=self.temp_dir
+            ),
+            "--progress",
+            "--report",
+            "{temp_dir}/report.html".format(
+                temp_dir=self.temp_dir
+            ),
+            "{temp_dir}/{xccdf}-xccdf.xml".format(
+                temp_dir=self.temp_dir, xccdf=xccdf
+            )
+        ]
+        index = 7
+        if not self.verifyRoot():
+            ssh_command = ["sudo"] + ssh_command
+            index += 1
+        if fetch_remote_resources:
+            ssh_command.insert(index, "--fetch-remote-resources")
+        print ssh_command
+        out = self.ssh_client.run(ssh_command,
+                                  stdout=sys.stderr,
+                                  stderr=sys.stderr,
+                                  use_pty=True,
+                                  allow_error=True).output.strip().split("\n")
+        initial_result = "pass"
+        for line in out:
+            if line.strip() == "":
+                continue
+            if ":" not in line:
+                continue
+            if line.startswith("Downloading"):
+                continue
+
+            splitted = line.split(":")
+            if len(splitted) < 2:
+                continue
+
+            try:
+                initial_result = initial_result and splitted[1] != "fail"
+                self.result.put_value(splitted[0], splitted[1])
+            except IndexError:
+                continue
+
+        return initial_result
 
 
-	def attachFloatingIp(self,inputData):
-		time.sleep(5)
-		self.novacl.servers.get(self.server_id).add_floating_ip(self.floating_ip)
-		return inputData
-	def deattachFloatingIp(self,inputData):
-		self.novacl.servers.get(self.server_id).remove_floating_ip(self.floating_ip)
-		return inputData
+class AzureUploader(object):
+    def read_azure_configuration(self, inputs):
+        azure_ti = self.testinstances.get("read_azure_configuration", {})
+        azure_user = azure_ti.get("user", None)
+        azure_access_key = azure_ti.get("access_key", None)
+        azure_container_name = azure_ti.get("container_name", None)
+        self.azure_user = azure_user
+        self.azure_access_key = azure_access_key
+        self.azure_container_name = azure_container_name
+        return inputs
 
-	def parseSecurityGroup(self,inputData):
-		allSecurityGroups = self.novacl.servers.get(self.server_id).list_security_group()
-		allSecurityGroups_details = []
-		for sg in allSecurityGroups:
-			allSecurityGroups_details.append(self.neucl.show_security_group(str(sg)))
-		print(allSecurityGroups_details)
-		dict_tcp = {}
-		dict_udp = {}
-		list_tcp = []
-		list_udp = []
-		icmp = 0
-		for sg in allSecurityGroups_details:
-			for rule in sg['security_group']['security_group_rules']:
-				if rule["direction"] == "ingress":
-					if rule["protocol"] == "icmp":
-						icmp = 1 if icmp == 0 else icmp
-					
-					elif rule["port_range_min"] and rule["port_range_max"]:
-						for i in range(rule["port_range_min"],rule["port_range_max"]+1):
-							if self.testinstances["Configuration"]["CheckTCP"] and rule["protocol"] == "tcp" and i >= int(self.testinstances["Configuration"]["TCPMinPort"]) and i <= int(self.testinstances["Configuration"]["TCPMaxPort"]):
-								dict_tcp[i] = 1
-							if self.testinstances["Configuration"]["CheckUDP"] and rule["protocol"] == "udp" and i >= int(self.testinstances["Configuration"]["UDPMinPort"]) and i <= int(self.testinstances["Configuration"]["UDPMaxPort"]):	
-								dict_udp[i] = 1
-		if self.testinstances["Configuration"]["CheckTCP"]:
-			print("Parsed TCP:")
-			print(dict_tcp)
-		if self.testinstances["Configuration"]["CheckUDP"]:
-			print("Parsed UDP:")
-			print dict_udp
+    def upload_to_azure(self, inputs):
+        try:
+            azure_user, \
+                azure_access_key, \
+                azure_container_name = \
+                self.azure_user, \
+                self.azure_access_key, \
+                self.azure_container_name
 
-		return icmp, dict_tcp, dict_udp
+            if azure_user is None or azure_access_key is None \
+                    or azure_container_name is None:
+                return inputs
+            block_blob_service = BlockBlobService(account_name=azure_user,
+                                                  account_key=azure_access_key)
 
-	def doRealScan(self,inputData):
-		time.sleep(120)
-		icmp_flag, dict_tcp, dict_udp = inputData
-		def do_scan(target,options):
-			command = ["/usr/bin/nmap", "-oX", "-"] + options + [str(target)]
-			print("Executing nmap Command")
-			print(command)
-			output = subprocess.check_output(command)
-			print output
-			return NmapParser.parse(output)
-		ip = str(self.floating_ip.ip)
-		options = ""
-		new_options = []
-		if self.testinstances["NMapScan"]["Pn"] == "True":
-			options += " -Pn"
-			new_options.append("-Pn")
-
-		if self.testinstances["Configuration"]["CheckTCP"] == "True":
-			tcp_options = options + " -p"+self.testinstances["Configuration"]["TCPMinPort"]+"-"+self.testinstances["Configuration"]["TCPMaxPort"]+" -s"
-			tcp_options += "S" if self.testinstances["NMapScan"]["TCPSynScan"] == "True" else "T"
-			
-			new_tcp_options = list(new_options)
-			new_tcp_options.append("-p"+self.testinstances["Configuration"]["TCPMinPort"]+"-"+self.testinstances["Configuration"]["TCPMaxPort"])
-			if self.testinstances["NMapScan"]["TCPSynScan"] == "True":
-				new_tcp_options.append("-sS")
-			else:
-				new_tcp_options.append("-sT")
-
-			tcpScanResults = do_scan(ip,new_tcp_options)
-			print("tcpScanResults")
-			print(tcpScanResults)
-			for host in tcpScanResults.hosts:
-				for port, protocol in host.get_open_ports():
-					if protocol == "tcp" and port not in dict_tcp:
-						return False
+            blob_name = str(uuid.uuid4()).replace("-", "")[:10]
+            block_blob_service.create_blob_from_path(
+                self.azure_container_name, blob_name,
+                "/tmp/report.html",
+                content_settings=ContentSettings(content_type="text/html")
+            )
+            report_url = block_blob_service.make_blob_url(
+                self.azure_container_name, blob_name
+            )
+            self.result.put_value("report", report_url)
+        except:
+            self.logger.error("Error during report upload")
+        return inputs
 
 
-		if self.testinstances["Configuration"]["CheckUDP"] == "True":
-			udp_options = options + " -p"+self.testinstances["Configuration"]["UDPMinPort"]+"-"+self.testinstances["Configuration"]["UDPMaxPort"]+" -sU"	
-			udpScanResults = do_scan(ip,udp_options)
-			print("udpScanResults")
-			print(udpScanResults)
-			for host in udpScanResults.hosts:
-				for port, protocol in host.get_open_ports():
-					if protocol == "udp" and port not in dict_udp:
-						return False
+class OpenSCAP_SSH(Driver, XCCDFEvaluator, AzureUploader):
 
-		return True
+    def verifyOscapInstalled(self, inputs):
+        try:
+            assert self.ssh_client.run(["/usr/bin/which", "oscap"])
+            return True
+        except AssertionError:
+            return False
 
+        return inputs
 
-	def checkResult(self,inputData):
-		self.deattachFloatingIp(inputData)
-		self.deleteFloatingIp(inputData)
-		self.removeHoneypot(inputData)
-		return inputData
+    def verifyRoot(self):
+        return self.ssh_client.run([
+            "/usr/bin/id", "-u"
+        ]).output.strip() == "0"
 
-	def appendAtomics(self):
-		self.appendAtomic(self.createNeutronClient,self.nullRollback)
-		self.appendAtomic(self.deployHoneypot,self.removeHoneypot)
-		self.appendAtomic(self.createFloatingIp,self.deleteFloatingIp)
-		self.appendAtomic(self.attachFloatingIp,self.deattachFloatingIp)
-		self.appendAtomic(self.pollingHoneypot,self.nullRollback)
-		self.appendAtomic(self.parseSecurityGroup,self.nullRollback)
-		self.appendAtomic(self.doRealScan,self.nullRollback)
-		self.appendAtomic(self.checkResult,self.nullRollback)
-
-probe = NetworkSecurityGroup()
+    def appendAtomics(self):
+        self.appendAtomic(self.read_ssh_configuration, lambda rollback: False)
+        self.appendAtomic(self.ssh_connection, self.ssh_close)
+        self.appendAtomic(self.ssh_create_tmp_dir, self.ssh_remove_tmp_dir)
+        self.appendAtomic(self.verifyOscapInstalled, lambda rollback: None)
+        self.appendAtomic(self.read_xccdf_configuration, lambda rollback: None)
+        self.appendAtomic(self.upload_files, lambda rollback: None)
+        self.appendAtomic(self.evaluate_xccdf, lambda rollback: None)
+        self.appendAtomic(self.read_azure_configuration, lambda rollback: None)
+        self.appendAtomic(self.get_report, lambda rollback: None)
+        self.appendAtomic(self.upload_to_azure, lambda rollback: None)
+        self.appendAtomic(self.ssh_remove_tmp_dir, lambda rollback: None)
+        self.appendAtomic(self.ssh_close, lambda rollback: None)
 \end{python}
-\label{app:isolamento}
-\chapter{Driver di sonda - Confidenzialità dei file}
-\begin{python}
-__author__ = 'Patrizio Tufarolo'
-__email__ = 'patrizio.tufarolo@studenti.unimi.it'
-
-from testagent.probe import Probe
-import paramiko
-import os
-import socket
-
-class CFile(Probe):
-
-	def parseChmod(self,chmod):
-		chmod = str(chmod)
-		a = [['0', '0', '0'], ['0', '0', '0'], ['0', '0', '0']]
-		for i in range(0, 3):
-			digit = int(chmod[i])
-			for j in range(0, 3):
-				a[i][j] = str(int(digit / pow(2, 2 - j)) % 2)
-		return a
-
-	class SSHClient(object):
-
-		def __init__(self, hostname, username, keyfile, keypassphrase, server_key_file, server_key_policy, port=22):
-			self.hostname = hostname
-			self.ip = socket.gethostbyname(hostname)
-			self.username = username
-			self.keyfile = keyfile
-			self.key = paramiko.RSAKey.from_private_key_file(keyfile,password=keypassphrase)
-			self.port = port
-			self.connected = False
-			self.client = paramiko.SSHClient()
-			self.client.load_host_keys(server_key_file)
-			if server_key_policy == "autoadd":
-				self.client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-			elif server_key_policy == "reject":
-				self.client.set_missing_host_key_policy(paramiko.RejectPolicy())
-
-		def connect(self):
-			try:
-				print("Connecting to the target through SSH")
-				self.client.connect(self.hostname, self.port, self.username, pkey=self.key)
-			except:
-				pass
-
-			self.connected = True
-			return self
-
-		def executeCommand(self, command=""):
-			if (self.connected == False):
-				raise Exception, "Not connected"
-			if (command == ""):
-				raise Exception, "No command"
-			stdin, stdout, stderr = self.client.exec_command(command)
-			out = stdout.readlines()
-			output = ""
-			for line in out:
-				if line != '':
-					output = output + line
-			return output
-
-		def close(self):
-			self.client.close()
-
-	def rollback():
-		try:
-			self.ssh.close()
-		except:
-			pass
-
-	def configuration(self, inputs):
-		print("Started configuration phase")
-		host = self.testinstances["configuration"]["host"]
-		try:
-			port = int(self.testinstances["configuration"]["port"]) or 22
-		except:
-			port = 22
-		ssh_key_path = self.testinstances["configuration"]["ssh_key_path"]
-		ssh_key_passphrase = self.testinstances["configuration"]["ssh_key_passphrase"]
-		server_key_file = self.testinstances["configuration"]["server_key_file"]
-		try:
-			server_key_policy = self.testinstances["configuration"]["server_key_policy"] or "autoadd"
-		except:
-			server_key_policy = "autoadd"
-
-		file_path = self.testinstances["configuration"]["file_path"]
-		file_chmod = self.testinstances["configuration"]["file_chmod"]
-		print("Completed configuration phase")
-		return host, port, ssh_key_path, ssh_key_passphrase, server_key_file, server_key_policy, file_path, file_chmod
 
 
-	def chmod_test(self,inputs):
-		print("Starting CHMOD test")
-		username = self.testinstances["test_owner"]["username"]
-		print("Username set")
-		hostname, port, ssh_key_path, ssh_key_passphrase, server_key_file, server_key_policy, file_path, chmod = inputs
-		print("Now let's SSH into the target")
-		self.ssh = self.SSHClient(hostname,username,ssh_key_path,ssh_key_passphrase, server_key_file, server_key_policy, port)
-		self.ssh.connect()
-		print("Connected")
-		filelist = self.ssh.executeCommand("stat -c \"%a\" " + file_path)
-		for eachFile in filelist.split("\n"):
-			if eachFile and eachFile != chmod:
-				print("Test failed")
-				try:
-					print("Closing SSH connection")
-					self.ssh.close()
-				except:
-					pass
-				return False, inputs
-		try:
-			print("Closing SSH Connection")
-			self.ssh.close()
-		except:
-			pass
-		print("Test succeeded")
-		return True, inputs
+\chapter{FedRAMP readiness}
+\begin{xml}
+<?xml version="1.0" encoding="UTF-8"?>
+<ocil xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.mitre.org/ocil/1.0 ocil.xsd" xmlns="http://www.mitre.org/ocil/1.0">
+  <generator>
+    <schema_version>1.0</schema_version>
+    <timestamp>2017-05-20T12:06:31</timestamp>
+    <author organization="Universita degli Studi di Milano">Patrizio Tufarolo</author>
+  </generator>
+
+  <document>
+    <title>FedRAMP Readiness</title>
+    <description>Questionario per la FedRAMP readiness</description>
+  </document>
+
+  <boolean_question_test_action question_ref="ocil:mitre.org:question:1" id="ocil:mitre.org:testaction:1">
+    <when_true>
+      <result>SUCCESS</result>
+    </when_true>
+
+    <when_false>
+      <result>FAIL</result>
+    </when_false>
+
+  </boolean_question_test_action>
+
+  
+
+  [...]
 
 
-	def chmod_rw_test(self, username, hostname, port, ssh_key_path, ssh_key_passphrase, server_key_file, server_key_policy, file_path, hasToBeR, hasToBeW):
-		print("Connecting through SSH")
-		self.ssh = self.SSHClient(hostname, username, ssh_key_path, ssh_key_passphrase, server_key_file, server_key_policy, port)
-		self.ssh.connect()
-		print("Getting file list")
-		filelist = self.ssh.executeCommand("stat  -c \"%n\" " + file_path)
-		filelistsplitted = filelist.split("\n")
 
-		for eachFile in filelistsplitted[0:len(filelistsplitted)-1]:
-			print(self.inject_read(eachFile))
-			output = self.ssh.executeCommand(self.inject_read(eachFile))
-			output = output.strip("\n")
-			if (hasToBeR == '1' and output == 'False') or (hasToBeR == '0' and output == 'True'):
-				print("Test failed")
-				try:
-					print("Closing SSH Connection")
-					self.ssh.close()
-				except:
-					pass
-				return False
-			output = self.ssh.executeCommand(self.inject_write(eachFile))
+  <boolean_question id="ocil:mitre.org:question:1" model="MODEL_YES_NO">
+    <question_text>L'organizzazione è in grado di affrontare processi elettronici ed eventuali contenziosi?</question_text>
+  </boolean_question>
 
-			output = output.strip("\n")
-			print ("Inj write "+ output)
-			if (hasToBeW == '1' and output == 'False') or (hasToBeW == '0' and output == 'True'):
-				print("Test failed")
-				try:
-					print("Closing SSH Connection")
-					self.ssh.close()
-				except:
-					pass
-				return False
-		try:
-			print("Closing SSH Connection")
-			self.ssh.close()
-		except:
-			pass
-		print("Test succeded")
-		return True
+  <boolean_question id="ocil:mitre.org:question:2" model="MODEL_YES_NO">
+    <question_text>L'organizzazione è in grado di determinare e descrivere in modo chiaro i confini del sistema?</question_text>
+  </boolean_question>
+  <boolean_question id="ocil:mitre.org:question:3" model="MODEL_YES_NO">
+    <question_text>L'organizzazione ha meccanismi per gestire la shared responsability?</question_text>
+  </boolean_question>
 
+  <boolean_question id="ocil:mitre.org:question:4" model="MODEL_YES_NO">
+    <question_text>È presente un meccanismo di autenticazione a due fattori per l'accesso via rete tramite account privilegiati?</question_text>
+  </boolean_question>
 
-	def run_test_owner(self,inputs):
-		print("Starting OWNER R/W test")
-		if not inputs:
-			return False
-		previousResult, inputs = inputs
-		if not previousResult:
-			return False
-		hostname, port, ssh_key_path, ssh_key_passphrase, server_key_file, server_key_policy, file_path, chmod = inputs
-		username = self.testinstances["test_owner"]["username"]
-		chmod = self.parseChmod(chmod)[0]
-		hasToBeR = chmod[0]
-		hasToBeW = chmod[1]
-		return self.chmod_rw_test(username, hostname, port, ssh_key_path, ssh_key_passphrase, server_key_file, server_key_policy, file_path, hasToBeR, hasToBeW), inputs
+  <boolean_question id="ocil:mitre.org:question:5" model="MODEL_YES_NO">
+    <question_text>È presente un meccanismo di autenticazione a due fattori per l'accesso via rete tramite account non privilegiati?</question_text>
+  </boolean_question>
 
-	def run_test_group(self,inputs):
-		print("Starting GROUP R/W test")
-		if not inputs:
-			return False
-		previousResult, inputs = inputs
-		if not previousResult:
-			return False
+  <boolean_question id="ocil:mitre.org:question:6" model="MODEL_YES_NO">
+    <question_text>È presente un meccanismo di autenticazione a due fattori per l'accesso locale tramite account privilegiati?</question_text>
+  </boolean_question>
 
-		hostname, port, ssh_key_path, ssh_key_passphrase, server_key_file, server_key_policy, file_path, chmod = inputs
-		username = self.testinstances["test_group"]["username"]
-		chmod = self.parseChmod(chmod)[1]
-		hasToBeR = chmod[0]
-		hasToBeW = chmod[1]
-		return self.chmod_rw_test(username, hostname, port, ssh_key_path, ssh_key_passphrase, server_key_file, server_key_policy, file_path, hasToBeR, hasToBeW), inputs
+  <boolean_question id="ocil:mitre.org:question:7" model="MODEL_YES_NO">
+    <question_text>Si ha la possibilità di effettuare analisi del codice per le soluzioni software adottate?</question_text>
+  </boolean_question>
 
-	def run_test_other(self, inputs):
-		print("Starting OTHER R/W test")
-		if not inputs:
-			return False
-		previousResult, inputs = inputs
-		if not previousResult:
-			return False
-			
-		hostname, port, ssh_key_path, ssh_key_passphrase, server_key_file, server_key_policy, file_path, chmod = inputs
-		username = self.testinstances["test_other"]["username"]
-		chmod = self.parseChmod(chmod)[2]
-		hasToBeR = chmod[0]
-		hasToBeW = chmod[1]
-		return self.chmod_rw_test(username, hostname, port, ssh_key_path, ssh_key_passphrase, server_key_file, server_key_policy, file_path, hasToBeR, hasToBeW)
+  <boolean_question id="ocil:mitre.org:question:8" model="MODEL_YES_NO">
+    <question_text>Sono predisposte protezioni di confine per l'isolamento fisico degli asset?</question_text>
+  </boolean_question>
 
+  <boolean_question id="ocil:mitre.org:question:8" model="MODEL_YES_NO">
+    <question_text>Sono predisposte protezioni di confine per l'isolamento logico degli asset?</question_text>
+  </boolean_question>
 
-	def inject_read(self, file_path):
-		print("Injecting CHECK READ script into host")
-		return 'echo -e "try:\\n\\topen(\\"' + file_path + '\\",\\"r\\");\\n\\tprint(\\"True\\")\\nexcept IOError:\\n\\tprint(\\"False\\")" | python'
+  <boolean_question id="ocil:mitre.org:question:8" model="MODEL_YES_NO">
+    <question_text>Si è in grado di rimediare a situazioni di rischio elevato entro 30 giorni?</question_text>
+  </boolean_question>
 
-	def inject_write(self, file_path):
-		print("Injecting CHECK WRITE script into host")
-		return 'echo -e "try:\\n\\topen(\\"' + file_path + '\\",\\"a\\");\\n\\tprint(\\"True\\")\\nexcept IOError:\\n\\tprint(\\"False\\")" | python'
+  <boolean_question id="ocil:mitre.org:question:9" model="MODEL_YES_NO">
+    <question_text>Viene redatto un inventario dei dispositivi?</question_text>
+  </boolean_question>
 
+  <boolean_question id="ocil:mitre.org:question:10" model="MODEL_YES_NO">
+    <question_text>Si hanno meccanismi di sicurezza per evitare data leakage?</question_text>
+  </boolean_question>
 
-	def appendAtomics(self):
-		self.appendAtomic(self.configuration, self.rollback)
-		self.appendAtomic(self.chmod_test, self.rollback)
-		self.appendAtomic(self.run_test_owner, self.rollback)
-		self.appendAtomic(self.run_test_group, self.rollback)
-		self.appendAtomic(self.run_test_other, self.rollback)
+  <boolean_question id="ocil:mitre.org:question:11" model="MODEL_YES_NO">
+    <question_text>Si hanno meccanismi di crittografia dei dati in transito sulla rete?</question_text>
+  </boolean_question>
 
+</ocil>
 
-probe = CFile()
-\end{python}
-\label{app:confid}
-\fi
+\end{xml}
+\label{appendix:readiness}
