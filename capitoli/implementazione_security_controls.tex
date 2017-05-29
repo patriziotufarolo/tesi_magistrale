@@ -387,5 +387,88 @@ In questo modo \textit{a\#1} lancia il driver "survey" in background terminando 
 
 \end{figure}
 \subsubsection{Metadata}
+\begin{js}
+{
+	"driver-name": "SurveyControl",
+	"description": "",
+	"schema": {
+		"applicant": {
+			"type": "object",
+			"title": "Applicant Information",
+			"properties": {
+				"name": {
+					"type": "string",
+					"title": "Full Name"
+				},
+				"company": {
+					"type": "string",
+					"title": "Company"
+				},
+				"default_sender": {
+					"type": "string",
+					"title": "E-Mail address"
+				}
+			}
+		},
+        "survey_definition": {
+            "type": "object",
+            "title": "Survey definition",
+            "properties": {
+                "survey_url": {
+                    "type": "string"
+                    "title": "Survey definition URL"
+                }
+            }
+        },
+        "notification_email_settings": {
+			"type": "object",
+			"title": "SMTP Client Configuration",
+			"properties": {
+				"": {
+					"type": "boolean",
+					"title": "Use moon-cloud email service (it must be selected)",
+					"default": true
+				}
+			}
+		},
+		"notification_email_subject": {
+			"type": "object",
+			"title": "Recipient Information",
+			"properties": {
+				"name": {
+					"type": "string",
+					"title": "Full Name"
+				},
+				"email": {
+					"type": "string",
+					"title": "E-Mail address"
+				}
+			}
+		},
+        "read_azure_configuration":{
+            "properties": {
+                "user": {
+                    "title": "Username",
+                    "type": "string",
+                    "required": true
+                },
+                "access_key": {
+                    "title": "Access Key",
+                    "type": "password",
+                    "required":true
+                },
+                "container_name": {
+                    "title": "Azure Container name",
+                    "type": "string",
+                    "required":true
+                }
+            },
+            "title": "Azure settings",
+            "type":"object"
+        }
+	}
+}
 
+
+\end{js}
 \end{document}

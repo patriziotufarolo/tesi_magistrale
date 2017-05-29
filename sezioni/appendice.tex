@@ -253,7 +253,7 @@ class OpenSCAP_SSH(Driver, XCCDFEvaluator, AzureUploader):
         self.appendAtomic(self.ssh_remove_tmp_dir, lambda rollback: None)
         self.appendAtomic(self.ssh_close, lambda rollback: None)
 \end{python}
-
+\label{appendix:driver1}
 
 \chapter{FedRAMP readiness}
 \begin{xml}
@@ -289,30 +289,30 @@ class OpenSCAP_SSH(Driver, XCCDFEvaluator, AzureUploader):
 
 
   <boolean_question id="ocil:mitre.org:question:1" model="MODEL_YES_NO">
-    <question_text>L'organizzazione è in grado di affrontare processi elettronici ed eventuali contenziosi?</question_text>
+    <question_text>L'organizzazione e in grado di affrontare processi elettronici ed eventuali contenziosi?</question_text>
   </boolean_question>
 
   <boolean_question id="ocil:mitre.org:question:2" model="MODEL_YES_NO">
-    <question_text>L'organizzazione è in grado di determinare e descrivere in modo chiaro i confini del sistema?</question_text>
+    <question_text>L'organizzazione e in grado di determinare e descrivere in modo chiaro i confini del sistema?</question_text>
   </boolean_question>
   <boolean_question id="ocil:mitre.org:question:3" model="MODEL_YES_NO">
     <question_text>L'organizzazione ha meccanismi per gestire la shared responsability?</question_text>
   </boolean_question>
 
   <boolean_question id="ocil:mitre.org:question:4" model="MODEL_YES_NO">
-    <question_text>È presente un meccanismo di autenticazione a due fattori per l'accesso via rete tramite account privilegiati?</question_text>
+    <question_text>E presente un meccanismo di autenticazione a due fattori per l'accesso via rete tramite account privilegiati?</question_text>
   </boolean_question>
 
   <boolean_question id="ocil:mitre.org:question:5" model="MODEL_YES_NO">
-    <question_text>È presente un meccanismo di autenticazione a due fattori per l'accesso via rete tramite account non privilegiati?</question_text>
+    <question_text>E presente un meccanismo di autenticazione a due fattori per l'accesso via rete tramite account non privilegiati?</question_text>
   </boolean_question>
 
   <boolean_question id="ocil:mitre.org:question:6" model="MODEL_YES_NO">
-    <question_text>È presente un meccanismo di autenticazione a due fattori per l'accesso locale tramite account privilegiati?</question_text>
+    <question_text>E presente un meccanismo di autenticazione a due fattori per l'accesso locale tramite account privilegiati?</question_text>
   </boolean_question>
 
   <boolean_question id="ocil:mitre.org:question:7" model="MODEL_YES_NO">
-    <question_text>Si ha la possibilità di effettuare analisi del codice per le soluzioni software adottate?</question_text>
+    <question_text>Si ha la possibilit\`a di effettuare analisi del codice per le soluzioni software adottate?</question_text>
   </boolean_question>
 
   <boolean_question id="ocil:mitre.org:question:8" model="MODEL_YES_NO">
@@ -324,7 +324,7 @@ class OpenSCAP_SSH(Driver, XCCDFEvaluator, AzureUploader):
   </boolean_question>
 
   <boolean_question id="ocil:mitre.org:question:8" model="MODEL_YES_NO">
-    <question_text>Si è in grado di rimediare a situazioni di rischio elevato entro 30 giorni?</question_text>
+    <question_text>Si \`e in grado di rimediare a situazioni di rischio elevato entro 30 giorni?</question_text>
   </boolean_question>
 
   <boolean_question id="ocil:mitre.org:question:9" model="MODEL_YES_NO">

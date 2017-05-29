@@ -7,10 +7,10 @@ start
 :Preparazione del database;
 :Download della definizione del questionario;
 :Avvio del web service;
+:Impostazione del mail server;
 :Invio della mail di notifica;
 |Utente|
 :Compilazione questionario;
-:Invio del questionario;
 |Sistema|
 :Redazione del report PDF;
 :Invio del report PDF;
