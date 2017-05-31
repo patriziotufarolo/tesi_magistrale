@@ -64,19 +64,19 @@ Questa può essere divisa in due aree. La prima, accessibile dagli utenti del si
 La seconda invece, rappresenta il vero e proprio backend del framework, gestendo i meccanismi di esecuzione dei test, raccolta dei risultati e valutazione degli stessi.
 È composta da:
 \begin{itemize}
-    \item \textbf{Execution Cluster} (8), ovvero l'insieme dei nodi - \textit{execution node}, (9)  - che eseguono materialmente il test. I cluster sono equipaggiati da uno \textit{scheduler} (7), che gestisce l'esecuzione temporizzata dei test periodici, per effettuare il monitoraggio in modo continuo, inviando i test in esso memorizzati a cadenze temporali scandite da un pattern \textit{CRON}\footnote{http://man7.org/linux/man-pages/man5/crontab.5.html}.
+    \item \textbf{Execution Cluster} (8), ovvero l'insieme dei nodi - \textit{execution node}, (9)  - che eseguono materialmente il test. Gli execution cluster sono equipaggiati da uno \textit{scheduler} (7), che gestisce l'esecuzione temporizzata dei test periodici, per effettuare il monitoraggio in modo continuo, inviando i test in esso memorizzati a cadenze temporali scandite da un pattern \textit{CRON}\footnote{http://man7.org/linux/man-pages/man5/crontab.5.html}.
     \item \textbf{Execution Manager} (10), ovvero il servizio che gestisce il lavoro di ciascun nodo del cluster.        
         Gli \textit{execution manager} di uno stesso cluster sono connessi alla stessa coda: all'arrivo di un messaggio essi effettuano il download il driver relativo al controllo referenziato dal test dal repository (11), eseguono lo stesso con gli input contenuti nel messaggio, e collezionano gli output del test nel \textit{results database}. 
-    \item \textbf{Evaluation Module} (13), rimane in ascolto sul database \textit{time-series} (12) in attesa di eventi. Quando lo stato di uno specifico test cambia, avvia la procedura di valutazione di tutte le \textit{ER} che fanno riferimento a tale test, e ne memorizza il risultato nel database di management (4).
-    \item \textbf{Repository} (10), contiene i driver per i controlli di sicurezza. È realizzato tramite un ambiente Git\footnote{Git, \textit{https://git-scm.com/}}, di cui condivide le funzionalità, e da un \textit{registry} di \textit{container}, che rappresentano il singolo driver. Il processo di sviluppo di un driver è ultimato da un motore di \textit{continuous integration} che contestualmente al caricamento del codice dello stesso sul \textit{repository} effettua la build del \textit{container} associato e test automatici di validazione e sanitizzazione dello stesso, per poi pubblicare il \textit{container} sul \textit{registry}..
+    \item \textbf{Evaluation Module} (13), rimane in ascolto sul database dei risultati (12) in attesa di eventi. Quando lo stato di uno specifico test cambia, avvia la procedura di valutazione di tutte le \textit{ER} che fanno riferimento a tale test, e ne memorizza il risultato nel database di management (4).
+    \item \textbf{Repository} (10), contiene i driver per i controlli di sicurezza. È realizzato tramite un ambiente Git\footnote{Git, \textit{https://git-scm.com/}}, di cui condivide le funzionalità, e da un \textit{registry} di \textit{container}, che rappresentano il singolo driver. Il processo di sviluppo di un driver è ultimato da un motore di \textit{continuous integration} che contestualmente al caricamento del codice dello stesso sul \textit{repository} effettua la build del \textit{container} associato e test automatici di validazione e sanitizzazione dello stesso, per poi pubblicare il \textit{container} sul \textit{registry}.
 \end{itemize}
-\section{Moon Cloud come strumento di verifica delle \textit{recommendation}}
+\section{Moon Cloud come strumento di verifica delle raccomandazioni}
 Mediante i componenti software illustrati nel paragrafo precedente, Moon Cloud è in grado di effettuare un processo di \textit{security assessment} basato sulla verifica di \textit{recommendation}.
 Per verifica delle \textit{recommendation} si intende il controllo  della conformità di un sistema target rispetto ad una data raccomandazione.
 
-Si tratta di un processo complesso, che richiede l'aggregazione delle valutazioni di diversi servizi. La tecnica adottata da Moon Cloud consiste nella raccolta di evidenze mediante il testing e il monitoraggio di uno specifico servizio, al fine di verificare se la raccomandazione sia effettivamente rispettata oppure no.
+Si tratta di un processo complesso, che richiede l'aggregazione delle valutazioni di diversi servizi. La tecnica adottata da Moon Cloud consiste nella raccolta di evidenze mediante il testing e il monitoraggio di uno specifico servizio, al fine di verificare se la raccomandazione sia effettivamente rispettata oppure no\cite{MyPaper}.
 
-\begin{definition}[\textbf{Recommendation verification}]\label{def:prop}
+\begin{definition}[\textbf{Recommendation verification\cite{MyPaper}}]\label{def:prop}
     Sia $\Rec{}$ la \textit{recommendation} da verificare, la \textit{reccomendation verification} è una funzione  $\widehat{\Rec{}}$  definita sulla tupla $\langle$$\EP{}$, $\ER{}$$\rangle$ che restituisce un valore booleano \{true, false\} dove:
 
 \begin{itemize}
@@ -85,18 +85,18 @@ Si tratta di un processo complesso, che richiede l'aggregazione delle valutazion
 \end{itemize}
 \end{definition}
 \begin{definition}[\textbf{Eval\{\}}]\label{def:eval}
-Un processo di valutazione $Eval\{\}$ è una tupla della forma $\langle$$t$, $C$$\rangle$, dove:
+    Un processo di valutazione\cite{MyPaper} $Eval\{\}$ è una tupla della forma $\langle$$t$, $C$$\rangle$, dove:
 \begin{itemize}
 	\item $t$ è il \emph{ToE (Target of Evaluation)}, ovvero i servizi o i meccanismi, che costituiscono il perimetro entro cui la proprietà o la funzionalità di sicurezza deve essere valutata
 	\item $C$ è il \emph{Control}, ovvero la funzione di valutazione su $t$ che restituisce il risultato della valutazione insieme a un insieme di evidenze.
 \end{itemize}
 \end{definition}
 
-Un controllo $C$ specifica i dettagli su come collezionare le evidenze su un target $t$ per valutare la \textit{reccomendation}. È definito nel seguente modo:
+Un controllo $C$ specifica i dettagli su come collezionare le evidenze su un target $t$ per valutare la \textit{reccomendation}. È definito nel seguente modo\cite{MyPaper}:
 
 
 \begin{definition}[\textbf{$C$}]\label{def:control}
-$C$ è definito su una tripla della forma $\langle$$\phi$, $\lambda$, $\pi$$\rangle$, dove:
+    $C$ è definito su una tripla della forma $\langle$$\phi$, $\lambda$, $\pi$$\rangle$, dove:
 \begin{itemize}
 	\item $\phi$ è il flusso di esecuzione del processo di raccolta  delle evidenze. È composto da una sequenza di operazioni atomiche. 
 	\item $\lambda$ è un insieme di \textit{parametri} necessari a collegare il flusso $\phi$ al target $t$ 
@@ -106,7 +106,7 @@ $C$ è definito su una tripla della forma $\langle$$\phi$, $\lambda$, $\pi$$\ran
 
 Moon Cloud è in grado di eseguire molteplici processi di valutazione $ \Eval{} $ in parallelo, ciascuno dei quali si riferisce a un insieme di raccomandazioni $\Rec{}$ che devono essere valutati.
 I controlli $C$ sono modellati utilizzando degli schemi, il flusso di esecuzione del codice ($\phi$) è modellato come una catena formata da tutte le operazioni che un controllo necessita di effettuare per raccogliere le evidenze, ed è implementato sotto forma di script Python.
-I parametri ($\lambda$) e l'ambiente ($\pi$) sono rappresentati da metadati; ciascuna operazione del flusso $\phi$ è collegata agli specifici parametri necessari per la valutazione, mentre l'ambiente $\pi$ rappresenta l'insieme di prerequisiti e dipendenze che devono persistere per l'esecuzione del controllo.
+I parametri ($\lambda$) e l'ambiente ($\pi$) sono rappresentati da metadati; ciascuna operazione del flusso $\phi$ è collegata agli specifici parametri necessari per la valutazione, mentre l'ambiente $\pi$ rappresenta l'insieme di prerequisiti e dipendenze che devono persistere per l'esecuzione del controllo\cite{MyPaper}.
 
 
 \subsection{Regole di valutazione}
@@ -160,19 +160,19 @@ Le variabili possono essere quindi \textit{Controlli} (rappresentati dalla class
 \subsubsection{Regole di valutazione concrete}
 
 Le regole di valutazione concrete rappresentano le istanze delle \textit{AER} sopra descritte.
-In questo caso la proprietà \textit{formula} è derivata mediante l'applicazione la funzione di mapping $m(aer)$, \eqref{function:mapping} dove $aer$ è la regola di valutazione astratta di partenza, $c_i$ è un controllo, $t_i$ è un test e $e$ è una regola di valutazione concreta.
+In questo caso la proprietà \textit{formula} è derivata mediante l'applicazione della funzione di mapping $m(\chi)$, \eqref{function:mapping} dove $\chi$ è la regola di valutazione astratta di partenza, $c_i$ è un controllo, $t_i$ è un test ed $e$ è una regola di valutazione concreta.
 \begin{equation}
 \begin{gathered}
-m(aer):
-c \rightarrow t ~ \forall c_i \in aer ~ | ~ t ~ \text{refers} ~ c ~ \text{\textbf{,}} ~
-        f \rightarrow e ~ \forall aer_i \in aer ~ | ~ e ~ \text{refers} ~ aer_i
+m(\chi):
+c \rightarrow t ~ \forall c_i \in \chi ~ | ~ t ~ \text{refers} ~ c ~ \text{\textbf{,}} ~
+        f \rightarrow e ~ \forall \chi_i \in \chi ~ | ~ e ~ \text{refers} ~ \chi_i
 \end{gathered}
 \label{function:mapping}
 \end{equation}
 Tutte le regole di valutazione astratte incluse nella regola di partenza sono quindi sostituite da una o più regole di valutazione concrete che le referenziano, analogamente tutti i controlli inclusi nella regola di partenza sono sostituiti da uno o più test.
 Il mapping avviene sulla base di un oggetto JSON \textit{chiave-valore}, in cui la chiave rappresenta l'identificativo dell'elemento di partenza e il valore rappresenta l'identificativo dell'elemento di arrivo.
 
-La grammatica utilizzata per la validazione della formula così derivata, è ovviamente analoga alla precedente, ad eccezione del token \textit{TOKEN\_VAR} che assume valori nella seguente espressione regolare:
+La grammatica utilizzata per la validazione della formula così derivata, è ovviamente analoga alla precedente, ad eccezione del token \textit{TOKEN\_VAR} che assume valori rappresentabili dalla seguente espressione regolare:
 \begin{center}
     TOKEN\_VAR $\rightarrow$ \textit{[et]"\#"\textbackslash d+}
 \end{center}
@@ -184,18 +184,17 @@ In fase di esecuzione del processo di valutazione sarà questa la formula effett
 Di seguito verrà illustrata la struttura di un driver Moon Cloud, utilizzato per l'implementazione effettiva dei controlli di sicurezza e per l'esecuzione dei test.
 
 I driver sono costituiti da container \textit{Docker} basati sull'immagine \textit{python:2-onbuild}\footnote{https://hub.docker.com/\_/python/} e possono essere eseguiti sia all'interno del framework Moon Cloud che in modalità completamente standalone.
-Il container è gestito da un \textit{entrypoint} che riceve gli input nello stream \textit{STDIN\footnote{Standard Input}}, colleziona eventuali log di diagnostica in \textit{STDERR\footnote{Standard Error}} e restituisce gli output in \textit{STDOUT\footnote{Standard Output}}, secondo lo standard POSIX.
-
+Il container è gestito da un \textit{entrypoint} che riceve gli input per l'esecuzione del test, colleziona eventuali log di diagnostica e restituisce gli output all'\textit{Execution Manager}.
 Sia l'input che l'output di un driver sono costituiti da documenti JSON le cui chiavi devono corrispondere a quelle dichiarate negli attributi \textit{inputs} e \textit{outputs}, del \textit{Controllo} corrispondente, precedentemente trattati nella sezione \ref{sec:terminology}
 \subsubsection{Struttura di un driver}
 \label{subsec:strutturadriver}
 All'interno del container sono presenti due componenti:
 \begin{itemize}
-    \item{\textit{entrypoint.py}}, il cui ruolo è quello di leggere ed effettuare la deserializzazione degli \textit{input} da \textit{STDIN}, leggere i metadati del driver, e precaricare la classe del driver.
+    \item{\textit{entrypoint.py}}, il cui ruolo è quello di leggere ed effettuare la deserializzazione degli \textit{input}, leggere i metadati del driver, e precaricare la classe del driver.
         Il discovery della classe viene fatto in modo automatico da una directory chiamata \textit{test/} che andremo a dettagliare tra poco.
     \item{\textit{driver.py}}, che fornisce un'\textit{interfaccia} mediante la classe \textit{Driver} che ciascun payload dovrà implementare.
         Una peculiarità della classe \textit{Driver} è la presenza della sottoclasse \textit{\_\_metaclass\_\_} che fornisce un meccanismo di \textit{subscription} per tutte le classi che ereditano da Driver. Questo permette di far funzionare il meccanismo di \textit{autodiscovery}, permettendo a chi scrive il payload di lavorare in modo agnostico rispetto alle funzionalità del framework.
-        L'esecuzione effettiva del codice avviene mediante il metodo \textit{run} e un meccanismo di gestione delle operazioni atomiche in due flussi (forward e rollback) dettagliatamente illustrati nella sezione successiva.
+        L'esecuzione effettiva del codice avviene per mezzo del metodo \textit{run} e un meccanismo di gestione delle operazioni atomiche in due flussi (forward e rollback) dettagliatamente illustrati nella sezione successiva.
         Un'altra classe molto importante è la classe \textit{DriverResult} che fornisce la possibilità di restituire le misurazioni effettuate dal controllo in forma \textit{chiave-valore}.
 \end{itemize}
 
@@ -311,7 +310,7 @@ La proprietà analizzata da questo esempio è la \textit{confidenzialità del da
 {
     "id":1,
     "name":"Data Confidentiality",
-    "description":"It allows to execute a set of tests againt a given service to ensure that information are provided over a secure channel and stored over a secure storage.",
+    "description":"It allows to execute a set of tests against a given service to ensure that information are provided over a secure channel and stored over a secure storage.",
     "category":[],
     "formula":"c#1 and c#2",
     "enforced_control":null,

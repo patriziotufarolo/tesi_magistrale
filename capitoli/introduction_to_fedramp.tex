@@ -23,7 +23,7 @@ Esso definisce tre obiettivi principali per la sicurezza dei sistemi informativi
     \item \textbf{Disponibilità}, per assicurare condizioni di affidabilità nell'accesso al dato
 \end{itemize}
 
-A tal fine il \textbf{NIST} ha prodotto il \textbf{Federal Information Risk Management Framework}(\textit{RMF}) il quale organizza i sistemi informatici sulla base del livello di rischio e descrive un insieme minimo di requisiti che devono essere rispettati per garantire un livello di sicurezza adeguato\cite{nist2003nist}, fornendo una metodologia per la selezione dei controlli di sicurezza e per l'esecuzione del deployment e dell'assessment.
+A tal fine il \textbf{NIST} ha prodotto il \textbf{Federal Information Risk Management Framework} (\textit{RMF}) il quale organizza i sistemi informatici sulla base del livello di rischio e descrive un insieme minimo di requisiti che devono essere rispettati per garantire un livello di sicurezza adeguato \cite{nist2003nist}, fornendo una metodologia per la selezione dei controlli di sicurezza e per l'esecuzione del deployment e dell'assessment.
 
 \begin{figure}[H]
 \centering
@@ -52,7 +52,6 @@ FedRAMP affronta la problematica nei seguenti modi\cite{understandingFedRAMP}:
 
 \begin{itemize}
     \item Fornendo processi di valutazione della sicurezza e autorizzazione congiunti, basati su una serie di requisiti e controlli standardizzati, sulla base dell'impatto del sistema 
-    \item Offrendo un programma di analisi della conformità in grado di produrre
     \item Strutturando un processo di analisi e valutazione della conformità condotto da Organizzazioni di terze parti approvate (3PAO), per valutare costantemente la capacità di un provider di servizi cloud (CSP) di soddisfare requisiti di sicurezza desiderati
     \item Coordinando servizi di monitoraggio continuo
     \item Fornendo pacchetti di autorizzazione composti da servizi cloud già revisionati da una Joint Authorization Board (JAB), composta da esperti di sicurezza provienienti dal DHS, dalla GSA e del DoD. 
@@ -127,7 +126,7 @@ Il ruolo degli enti federali è quello di garantire che, per tutti i progetti ne
 
 
 Le agenzie devono catalogare i propri sistemi in un inventario, specificando quali di questi siano di tipo cloud e quali invece siano sistemi tradizionali. È raccomandabile avere un referente che sia preparato a rispondere a quesiti riguardanti l'implementazione dei requisiti FedRAMP.
-Per facilitare ciò alcune informazioni utili potrebbero essere \textit{i) il nome del sistema cloud, ii) la descrizione del servizio fornito dal sistema, iii) il contatto dl proprietario del sistema, iv) la data di autorizzazione, v) lo stato della compliance}\cite{fedrampFramework}.
+Per facilitare ciò alcune informazioni utili potrebbero essere \textit{i) il nome del sistema cloud, ii) la descrizione del servizio fornito dal sistema, iii) il contatto dl proprietario del sistema, iv) la data di autorizzazione, v) lo stato della compliance} \cite{fedrampFramework}.
 
 
 In fase di migrazione di sistemi tradizionali sul cloud, così come nell'adattamento di servizi cloud pre-esistenti a FedRAMP, è necessario che i requisiti del programma siano rispettati. Le agenzie devono quindi effetturare un'analisi approfondita delle conseguenze del cambio di tecnologia, per determinare i controlli di sicurezza aggiuntivi da effettuare.
@@ -168,7 +167,7 @@ Il \textit{cloud service provider} può essere sia un'entità di terze parti com
 Le modalità con cui un fornitore di servizi può essere autorizzato sono tre:
 \begin{itemize}
     \item Il provider può inviare la documentazione appropriata al PMO (ufficio di gestione del programma FedRAMP) e alla Joint Advisory Board, che possono erogare un'autorizzazione provvisoria (P-ATO, Provisional Authorization to Operate) 
-    \item Il provider può inviare la documentazione appropriata al PMO e ad un'agenzia, che può erogare un'autorizzazione ad operare (ATO, Authorization to Operate). Come già spiegato, un'altra agenzia può utilizzare poi la stessa autorizzazione, abbreviando i tempi di approvazione.
+    \item Il provider può inviare la documentazione appropriata al PMO e ad un'agenzia, che può erogare un'autorizzazione ad operare (ATO, Authorization to Operate). Un'altra agenzia può utilizzare poi la stessa autorizzazione, abbreviando i tempi di approvazione.
     \item Il provider può inviare la documentazione per intraprendere autonomamente un percorso di tipo "CSP supplied". In tal caso, dovrà assumere una organizzazione di terze parti che ne analizzi la sicurezza.
 \end{itemize}
 
@@ -233,11 +232,12 @@ Grazie alle tecnologie di \textit{software-defined networking} è possibile effe
     \item quali componenti di rete siano virtualizzati
     \item quali invece siano apparati fisici
 \end{itemize}
-L'eventuale adozione di meccanismi di segregazione, come ad esempio le VLAN per il partizionamento del livello 2 dello Stack ISO/OSI, le VLAN estese, gli switch virtuali distribuiti, i gateway di sicurezza virtuali, introduce ulteriori parametri da valutare e da specificare nel System Security Plan, in particolare per la determinazione dei confini (approfondita nel prossimo paragrafo).
+L'eventuale adozione di meccanismi di segregazione, come ad esempio le VLAN per il partizionamento del livello 2 dello Stack ISO/OSI, le VLAN estese, gli switch virtuali distribuiti, i gateway di sicurezza virtuali, introduce ulteriori parametri da valutare e da specificare nel System Security Plan, in particolare per la determinazione dei confini (approfondita nella sezione \ref{subsec:confini}).
 Innanzitutto è necessario fornire un diagramma che illustri dettagliatamente la direzione del flusso dei dati sulla rete, indipendentemente da come la topologia della stessa sia strutturata, ed evidenziando gli eventuali componenti critici della topologia che determinano il flusso stesso.
 
 
 \subsection {Determinazione dei confini e controlli di sicurezza relativi}
+\label{subsec:confini}
 Per determinare i confini, occorre specificare in modo chiaro ed articolato dove il layer costituito dal servizio cloud inizia e dove finisce.
 Ciò contribuisce alla risoluzione delle problematiche relative alla \textit{shared responsability}: se un servizio \textit{SaaS} che vuole essere autorizzato a FedRAMP utilizza un servizio \textit{PaaS}, è necessario effettuare l'assessment e l'autorizzazione anche del servizio \textit{PaaS}.
 Analogamente, nel caso di una \textit{PaaS} ospitata su una \textit{IaaS}, è importante specificare il livello a cui sono implementati i requisiti di sicurezza desiderati e gestire l'assessment in modo opportuno.
@@ -279,24 +279,24 @@ Nella tabella \ref{tab:80053fedrampfamilies}, è proposto un conteggio dei contr
 \begin{table}[h]
     \begin{tabulary}{\textwidth}{|C|L|L|C|C|}
     \hline
-    \textbf{ID}   & \textbf{Famiglia}                                   & \textbf{Classe} & \textbf{Livello Basso} & \textbf{Livello moderato} \\ \hline
-    AC            & Controllo degli accessi                             & Tecnico         & 11                     & 43                        \\ \hline
-    AT            & Awareness \& training                               & Operativo       & 4                      & 5                        \\ \hline
-    AU            & Audit and accountability                            & Tecnico         & 10                     & 19                        \\ \hline
-    CA            & Certification, Accdeditation \& Security Assessment & Management      & 8                      & 15                        \\ \hline
-    CM            & Configuration Management                            & Operativo       & 8                      & 26                        \\ \hline
-    CP            & Contingency Planning                                & Operativo       & 6                      & 24                        \\ \hline
-    IA            & Identification and authentication                   & Tecnico         & 15                     & 27                        \\ \hline
-    IR            & Incident response                                   & Operativo       & 7                      & 18                        \\ \hline
-    MA            & Maintenance                                         & Operativo       & 4                      & 11                        \\ \hline
-    MP            & Media protection                                    & Operativo       & 4                      & 10                        \\ \hline
-    PE            & Physical and environmental protection               & Operativo       & 10                     & 20                        \\ \hline
-    PL            & Planning                                            & Management      & 3                      & 6                         \\ \hline
-    PS            & Personnel security                                  & Operativo       & 8                      & 9                         \\ \hline
-    RA            & Risk assessment                                     & Management      & 4                      & 10                        \\ \hline
-    SA            & System and services acquisition                     & Management      & 6                      & 22                        \\ \hline
-    SC            & System and communications protection                & Tecnico         & 10                     & 32                        \\ \hline
-    SI            & System and information integrity                    & Operativo       & 7                      & 28                        \\ \hline \hline
+    \textbf{ID}   & \textbf{Famiglia}                                   & \textbf{Classe} & \textbf{\scriptsize{Livello Basso}} & \textbf{\scriptsize{Livello moderato}} \\ \hline
+    AC            & Controllo degli accessi                             & \scriptsize{Tecnico}         & 11                     & 43                        \\ \hline
+    AT            & Awareness \& training                               & \scriptsize{Operativo}       & 4                      & 5                        \\ \hline
+    AU            & Audit and accountability                            & \scriptsize{Tecnico}         & 10                     & 19                        \\ \hline
+    CA            & Certification, Accdeditation \& Security Assessment & \scriptsize{Management}      & 8                      & 15                        \\ \hline
+    CM            & Configuration Management                            & \scriptsize{Operativo}       & 8                      & 26                        \\ \hline
+    CP            & Contingency Planning                                & \scriptsize{Operativo}       & 6                      & 24                        \\ \hline
+    IA            & Identification and authentication                   & \scriptsize{Tecnico}         & 15                     & 27                        \\ \hline
+    IR            & Incident response                                   & \scriptsize{Operativo}       & 7                      & 18                        \\ \hline
+    MA            & Maintenance                                         & \scriptsize{Operativo}       & 4                      & 11                        \\ \hline
+    MP            & Media protection                                    & \scriptsize{Operativo}       & 4                      & 10                        \\ \hline
+    PE            & Physical and environmental protection               & \scriptsize{Operativo}       & 10                     & 20                        \\ \hline
+    PL            & Planning                                            & \scriptsize{Management}      & 3                      & 6                         \\ \hline
+    PS            & Personnel security                                  & \scriptsize{Operativo}       & 8                      & 9                         \\ \hline
+    RA            & Risk assessment                                     & \scriptsize{Management}      & 4                      & 10                        \\ \hline
+    SA            & System and services acquisition                     & \scriptsize{Management}      & 6                      & 22                        \\ \hline
+    SC            & System and communications protection                & \scriptsize{Tecnico}         & 10                     & 32                        \\ \hline
+    SI            & System and information integrity                    & \scriptsize{Operativo}       & 7                      & 28                        \\ \hline \hline
     \textbf{TOT } & -                                                   & -               & \textbf{125}           & \textbf{325}              \\ \hline
     \end{tabulary}
     \caption{Famiglie di controlli\cite{fedrampLowSC}\cite{fedrampModSC}}\label{tab:80053fedrampfamilies}

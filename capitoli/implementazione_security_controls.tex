@@ -4,11 +4,11 @@
 %\addcontentsline{toc}{chapter}{Introduzione}
 %\chaptermark{Introduzione}
 \section{Introduzione}
-In questo capitolo verrà effettuata un'analisi dei controlli di sicurezza elencati nel capitolo precedente, classificandoli in \textit{controlli automatici} e \textit{controlli procedurali}. Dopodiché verra offerta una possibile implementazione per ciascuna delle due tipologie di controlli, i quali verranno integrati in Moon Cloud. Per i controlli automatici sarà utilizzato Open Scap, uno strumento per il l'auditing realizzato da Red Hat e certificato dal NIST. I controlli procedurali invece, eseguono l'\textit{processi di business} e vanno ad indirizzare tutte quelle proprietà di carattere puramente qualitativo per cui è fondamentale l'interazione umana.
+In questo capitolo verrà effettuata un'analisi dei controlli di sicurezza elencati nel capitolo precedente, classificandoli in \textit{controlli automatici} e \textit{controlli procedurali}. Dopodiché verra offerta una possibile implementazione per ciascuna delle due tipologie di controlli, i quali verranno integrati in Moon Cloud. Per i controlli automatici sarà utilizzato OpenSCAP\footnote{https://www.openscap.org}, uno strumento per l'auditing realizzato da Red Hat e certificato dal NIST. I controlli procedurali invece, eseguono l'\textit{processi di business} e vanno ad indirizzare tutte quelle proprietà di carattere puramente qualitativo per cui è fondamentale l'interazione umana.
 Questi saranno implementati con un \textit{driver Moon Cloud ad interazione umana}, che somministra un questionario online ad un target.
 
 \section{Analisi dei controlli di sicurezza}
-Verranno ora proposte alcune tabelle di riepilogo dei controlli di sicurezza di FedRAMP, suddivisi per famiglia, dei quali viene indicata la \textit{baseline} di riferimento e la tipologia (\textit{A}, automatizzabile / \textit{P} procedurale (interazione umana) / \textit{A/P} composizione di approccio automatico e manuale).
+Verranno ora proposte alcune tabelle di riepilogo dei controlli di sicurezza di FedRAMP, suddivisi per famiglia, dei quali viene indicata la \textit{baseline} di riferimento e la tipologia (\textit{A}, automatizzabile / \textit{P} procedurale (interazione umana) / \textit{A/P} composizione di approccio automatico e manuale); i controlli contrassegnati in grassetto sono di primo livello, quelli invece presentati con stile normale, sono specializzazioni.
 
 I controlli di sicurezza, essendo proposti in modo astratto così da poter coprire il più vasto numero di scenari, vanno poi comunque studiati e implementati sulla base delle caratteristiche e del contesto del sistema target.
 \subsection{Access Control}
@@ -40,7 +40,7 @@ I controlli di sicurezza, essendo proposti in modo astratto così da poter copri
 
 \subsection{Media protection}
 \input{capitoli/tabelle_controlli/MP.tex}
-
+\vfill\newpage
 \subsection{Physical and environmental protection}
 \input{capitoli/tabelle_controlli/PE.tex}
 
