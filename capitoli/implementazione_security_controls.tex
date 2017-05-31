@@ -187,19 +187,15 @@ OpenSCAP è disponibile nei repository delle distribuzioni Linux ed è composto 
 
 
 \subsection{Driver OpenSCAP per Moon Cloud}
-Al fine di effettuare i controlli NIST 800-53 per FedRAMP in Moon Cloud, è stato implementato un apposito driver Moon Cloud per OpenSCAP.
-Questo driver è in grado di pilotare \textit{OpenSCAP} su un server remoto per effettuarne l'analisi, in alternativa può essere utilizzato per eseguire gli stessi controlli su container Docker.
+\label{sec:openscapmooncloud}
+Al fine di effettuare i controlli NIST 800-53 per FedRAMP in Moon Cloud, è stato implementato un apposito driver Moon Cloud per OpenSCAP, in grado di pilotare il tool \textit{oscap} su un server remoto per effettuarne l'analisi; la comunicazione tra il driver e l'host target avviene tramite il protocollo SSH, implementato con la libreria Python \textit{paramiko}.
 
-La comunicazione tra il driver e l'host target protocollo SSH, implementato con la libreria Python \textit{paramiko}.
+Come prima cosa, vengono  letti i parametri per la connessione: \textit{hostname} o indirizzo IP del target, la porta TCP per SSH, e le credenziali di un utente privilegiato; è supportata l'autenticazione sia tramite password che mediante chiave pubblica.
 
-Come prima cosa, vengono quindi letti i parametri per la connessione: \textit{hostname} o indirizzo IP del target, porta, nome utente, eventuale password, oppure chiave privata e relativa \textit{passphrase} di sblocco.
+Viene quindi avviata la connessione SSH e, tramite essa, viene creata una directory temporanea sul server. Questa directory andrà a contenere gli XCCDF selezionati, e sarà eliminata alla fine dell'esecuzione.
+A seguire, viene effettuato un controllo della presenza di OpenSCAP sul server, che rappresenta un prerequisito per l'esecuzione. Se il file eseguibile \textit{oscap} non viene trovato, il test si blocca ed avvia la sequenza di rollback.
 
-Viene avviata la connessione SSH e, tramite essa, viene creata una directory temporanea sul server. Questa directory andrà a contenere gli XCCDF selezionati, e sarà eliminata.
-
-A seguire, viene effettuato un controllo della presenza di OpenSCAP sul server, che rappresenta un prerequisito per l'esecuzione. Se il binario \textit{oscap} non viene trovato, il test si blocca ed avvia la sequenza di rollback.
-
-Dopo aver letto da input le configurazioni di OpenSCAP (file XCCDF da considerare, profilo scelto, eventuale download di risorse remote specificate nel XCCDF), viene lanciato il comando \textit{oscap}; il report HTML generato da viene poi caricato su un bucket di \textit{Microsoft Azure Storage} (se sono state fornite credenziali), e i dati in esso contenuti vengono restituiti a Moon Cloud.
-
+Dopo aver interpreato le configurazioni di OpenSCAP ricevute in input (file XCCDF da considerare, profilo scelto, eventuale download di risorse remote specificate nel XCCDF), viene lanciato il comando \textit{oscap}; il report HTML generato viene eventualmente caricato su un bucket di \textit{Microsoft Azure Storage}.
 Il flusso di esecuzione si conclude con la rimozione delle cartelle temporanee e la chiusura della connessione SSH.
 
 Il driver supporta gli XCCDF presenti nella \textit{OpenSCAP Security Guide}, ovvero:
@@ -351,33 +347,34 @@ Le funzionalità di OCIL sono:
 Un esempio di OCIL per la valutazione della \textit{FedRAMP readiness} è presente in appendice \ref{appendix:readiness}
 
 \subsection{Driver Survey per Moon Cloud}
-
+\label{subsec:surveymooncloud}
 Si è voluto perciò integrare in Moon Cloud un driver ad interazione umana che, tramite un web-service, proponga all'utente un questionario e generi un report di feedback.
 Nel caso di Moon Cloud, i questionari non sono descritti in OCIL ma utilizzando lo standard JSON Schema\footnote{JSON Schema \textit{http://www.json-schema.org/}}; è possibile eventualmente effettuare la traduzione mediante un foglio di trasformazione \textit{XSLT}.
 
-Il test effettua il download della definizione del questionario da sottoporre, dopodiché lancia una web-application che offre il questionario all'utente. La web application è autenticata con nome utente e password, ed esposta tramite un reverse proxy dinamico chiamato \textit{traefik\footnote{Traefik: https://www.traefik.io}}.
-\textit{Traefik} è un proxy per architetture a microservizi, in grado di leggere la lista dei container attivi dalle API Docker consentendo l'accesso ad eventuali servizi esposti sugli stessi.
-I \textit{container} del driver \textit{Survey} vengono quindi  avviati con la \textit{label} \textit{"proxied"} e sono forniti tramite connessione SSL. Il certificato SSL viene automaticamente generato utilizzando il protocollo \textit{ACME}\footnote{ACME,  \textit{https://tools.ietf.org/html/draft-ietf-acme-acme-04}} e il servizio LetsEncrypt.
+Il test effettua il download della definizione del questionario da sottoporre, dopodiché esegue una web-application, autenticata con nome utente e password, che offre il questionario all'utente.
+Il questionario viene effettivamente erogato sul web tramite un reverse proxy per architetture a microservizi chiamato \textit{traefik\footnote{Traefik: https://www.traefik.io}}; questo è in grado di leggere la lista dei container attivi dalle \textit{API} di Docker, filtrarle in base alle etichette applicate al container, ed esporre all'esterno i servizi.
 
-A questo punto viene inviata una notifica a mezzo \textit{e-mail} per il destinatario, con il link per accedere e compilare lo stesso.
-Nel momento in cui il questionario viene sottomesso, viene generato un report in PDF, che è successivamente caricato in un \textit{Windows Azure Storage} analogamente al report \textit{OSCAP} precedentemente illustrato.
+I \textit{container} di tipo \textit{Survey} vengono quindi  avviati con l'etichetta \textit{proxied\_survey} e sono forniti in HTTPS.
+La generazione del certificato è stata automatizzata utilizzando il protocollo \textit{ACME}\footnote{ACME,  \textit{https://tools.ietf.org/html/draft-ietf-acme-acme-04}} e il servizio LetsEncrypt\footnote{https://www.letsencrypt.com}.
 
-La difficoltà principale riscontrata nella realizzazione di questo driver risiede nell'introduzione di un processo manuale all'interno del framework Moon Cloud, pensato per eseguire test in modo automatico.
-Il flusso di esecuzione, in questo caso, è invece caratterizzato da una fase bloccante che non termina finché l'utente non ha compilato il questionario stesso.
-Lo \textit{scheduler} di Moon Cloud, per come originariamente ideato, programma l'esecuzione dei test eseguendone \textit{n} alla volta, dove \textit{n} è un parametro di concorrenza (\textit{--max-concurrency}) generalmente calcolato in base alla potenza computazionale e al numero di core disponibili sull'\textit{execution node}.
+Una volta avviato il web service, viene inviata una notifica a mezzo \textit{e-mail} per il destinatario, con il link per accedere e compilare lo stesso.
+Al momento della sottomissione del questionario, viene generato un report in PDF, che è successivamente caricato in \textit{Windows Azure Storage} analogamente al report \textit{OSCAP} trattato nella sezione \ref{sec:openscapmooncloud}.
 
-L'introduzione dell'azione bloccante ha perciò comportato una saturazione dei thread, rendendo impossibile lo \textit{scheduling} di nuovi test.
-Questo problema è stato affrontato dapprima aumentando il valore di \textit{max-concurrency}, poi facendo scalare orizzontalmente il framework, tuttavia è necessaria una reingegnerizzazione del processo di esecuzione di alcune tipologie di test, etichettati come "bloccanti".
+La difficoltà principale riscontrata nella realizzazione di questo driver consiste nell'introduzione di un processo manuale all'interno del framework Moon Cloud, ingegnerizzato per eseguire test in modo automatico.
+Il flusso di esecuzione, in questo caso, è invece caratterizzato da una fase bloccante che termina soltanto dopo un'azione manuale dell'utente; lo \textit{scheduler} di Moon Cloud, pertanto, programma l'esecuzione dei test allocando un thread pool di dimensione fissa, modificabile tramite il parametro \textit{--max-concurrency} e generalmente calcolata in base alla potenza computazionale e al numero di core disponibili sull'\textit{execution node}.
+
+L'esecuzione di un numero elevato di test di tipo \textit{Survey} ha perciò comportato una saturazione del \textit{thread pool}, rendendo impossibile l'esecuzione anche di test automatici.
+Questo problema è stato affrontato dapprima aumentando il valore di \textit{max-concurrency}, poi facendo scalare orizzontalmente il framework; tuttavia è necessaria una reingegnerizzazione del processo di esecuzione di queste tipologie di test, che devono essere trattati separatamente dai test automatici.
 
 A tal fine sono state proposte due soluzioni:
 \begin{itemize}
-    \item La prima soluzione proposta è implementabile aggiungendo un \textit{timer} di durata massima all'esecuzione del test: quando il timer scade, il test viene rimosso restituendo un risultato \textit{False} e il container relativo viene cancellato.
-\item La seconda soluzione proposta consiste nell'eseguire il driver in background, per poi monitorarne lo stato con un test ad esecuzione periodica. 
+    \item La prima soluzione proposta è implementabile aggiungendo un \textit{timer} di durata massima all'esecuzione del test: quando il timer scade, il test viene rimosso restituendo un risultato \textit{False} e il container del driver relativo viene cancellato.
+\item La seconda soluzione proposta consiste nell'eseguire il container del driver in background, per poi monitorarne lo stato con un ulteriore test ad esecuzione periodica. 
 In questo caso avremmo quindi una evaluation rule così composta:
 \begin{Verbatim}[frame=single]
 a#1 implies a#2
 \end{Verbatim}
-In questo modo \textit{a\#1} lancia il driver "survey" in background terminando con "true", mentre \textit{a\#2} viene eseguito periodicamente per raccogliere il risultato del questionario, e restituisce "false" finché il questionario non è stato compilato.
+In questo modo \textit{a\#1} lancia il driver "survey" in background terminande con valore "true", mentre \textit{a\#2} viene eseguito periodicamente per raccogliere il risultato del questionario, e restituisce "false" finché il questionario non è stato compilato.
 \end{itemize}
 \subsubsection{Flusso di esecuzione}
 \begin{figure}[H]

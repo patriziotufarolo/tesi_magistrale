@@ -1,23 +1,55 @@
 \documentclass[../main.tex]{subfiles}
 \begin{document}
 \chapter{Validazione del framework}
-\section{Deployment di Moon Cloud}
-\section{Sicurezza del deployment}
-\subsection{Caratteristiche del deployment}
+In questo capitolo verrà proposta una validazione di un deployment di test del framework Moon Cloud, mediante la valutazione della sicurezza tramite l'esecuzione del driver sviluppato a tutti i livelli dello stack cloud (infrastruttura, piattaforma, software). 
 
+\section{Deployment di Moon Cloud}
+
+Il deployment dell'ambiente di test è stato effettuato su un'architettura multi-layer così composta:
+\begin{itemize}
+    \item A livello di infrastruttura, un nodo fisico, Dell PowerEdge T430 equipaggiato con processore Intel(R) Xeon(R) CPU E5-2630 v4 (10 core fisici e 40 thread logici), 48GB di RAM e 5 dischi da 1TB ciascuno in configurazione RAID 1. Su questa macchina è stato installato il sistema operativo CentOS 7.2, e il software Open Stack Newton.
+        Successivamente sono state create 3 macchine virtuali con sistema operativo CentOS 7.2, in un flavor con 4GB di RAM e 10GB di disco.
+    \item A livello di piattaforma, un cluster Docker Swarm di 2 nodi per i componenti core di Moon Cloud. La terza macchina virtuale è stata utilizzata come nodo di esecuzione per un cluster di dimensione unaria.
+    \item A livello software, i componenti di Moon Cloud: 7 servizi core, gestiti tramite container Docker sul cluster swarm e 3 microservizi per la gestione del nodo di esecuzione.
+        \textbf{Componenti Core}
+        \begin{itemize}
+            \item API
+            \item Database
+            \item Repository
+            \item Database \textit{time-series} per i risultati
+            \item Evaluation Manager
+            \item RabbitMQ per la comunicazione tra API e Container
+            \item Traefik (reverse proxy) per l'esposizione delle API
+        \end{itemize}
+        \textbf{Componenti execution node e execution cluster}
+        \begin{itemize}
+            \item Execution Manager
+            \item Monitor Execution Manager
+            \item Traefik (reverse proxy) per l'esposizione di alcune tipologie di test
+        \end{itemize}
+\end{itemize}
+
+
+\section{Sicurezza del deployment}
+L'analisi della sicurezza è stata effettuata a livello di infrastruttura, analizzando le configurazioni sul sistema operativo del server fisico e le caratteristiche del setup OpenStack; a livello di piattaforma, analizzando le configurazioni del template utilizzato per le macchine virtuali Docker e i container Moon Cloud; a livello applicativo, analizzando la sicurezza nei meccanismi di integrazione dei vari componenti.
 \subsection{Infrastruttura}
-\subsubsection{Test sull'hypervisor}
-\subsubsection{Test su OpenStack}
+\subsubsection{Analisi OpenSCAP del server fisico}
+
+test finished
+started at 1496183480
+ended at 1496184352
+lasted -872 seconds
+
+report available at
+https://moonclouddashboard.blob.core.windows.net/pdfcontainer/f4a1943cff
+
+\subsubsection{Analisi di OpenStack}
 
 \subsection{Piattaforma}
-\subsubsection{Test a livello VM}
-\subsubsection{Test su Docker}
-\subsubsection{Test su Container di Moon Cloud}
+\subsubsection{Analisi OpenSCAP sul template delle VM}
+\subsubsection{Analisi dei container Moon Cloud}
 
 \subsection{Applicazione}
-\subsubsection{Test sui componenti software}
-
-\section{Valutazione delle prestazioni}
-
+\subsubsection{Analisi dei componenti software}
 
 \end{document}
