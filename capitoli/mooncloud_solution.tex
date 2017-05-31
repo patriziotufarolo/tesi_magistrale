@@ -2,7 +2,7 @@
 \begin{document}
 \chapter{Moon Cloud: un framework per il monitoraggio e la security assurance}
 \section{Introduzione}
-In questo capitolo verrà approfondito Moon Cloud\footnote{MOnitoring and assurance ON Cloud, \textit{https://www.moon-cloud.eu/}}, un framework per il monitoraggio e l'assurance di sistemi tradizionali, cloud e Internet of Things, sviluppato dal laboratorio SESAR Lab\footnote{SEcure Service-oriented Architectures Research Lab - \textit{http://sesar.di.unimi.it}} dell'Università degli Studi di Milano.
+In questo capitolo verrà approfondito Moon Cloud\footnote{MOnitoring and assurance ON Cloud, \textit{https://www.moon-cloud.eu/}}, un framework per il monitoraggio e l'assurance di sistemi tradizionali, cloud e Internet of Things, sviluppato dai ricercatori del laboratorio SESAR Lab\footnote{SEcure Service-oriented Architectures Research Lab - \textit{http://sesar.di.unimi.it}} dell'Università degli Studi di Milano.
 
 L'obiettivo del progetto Moon Cloud è quello di implementare una metodologia automatica per la valutazione della sicurezza, delle performance e di altre proprietà non funzionali, offrendo un processo di assurance basato su attività di auditing e raccolta di evidenze.
 
@@ -15,9 +15,7 @@ Le caratteristiche di Moon Cloud sono le seguenti\cite{MoonCloudWebsite}:
 
 L'orchestrazione avviene tramite una  \textit{dashboard} grafica erogata in modalità \textit{Software as-a-Service}, la quale si interfaccia con diversi componenti che ne implementano la logica di funzionamento, l'esecuzione dei test, il collezionamento dei risultati e il reporting dello stato di compliance del sistema analizzato.
 
-Moon Cloud nasce sulla scia del progetto europeo FP7 CUMULUS - il cui obiettivo è quello di fornire un framework per la certificazione di servizi cloud mediante l'assessment di proprietà non funzionali\cite{CumulusBigDoc} - da cui riprende alcune caratteristiche architetturali. 
-
-L'obiettivo di questo capitolo è quello di dare al lettore il \textit{know-how} necessario a comprendere le motivazioni di alcune decisioni prese nella realizzazione della tesi, in particolar modo per gestire alcune limitazioni del framework Moon Cloud. 
+L'obiettivo di questo capitolo è quello di dare al lettore il \textit{know-how} necessario a comprendere le motivazioni di alcune decisioni prese nella realizzazione della tesi ed alcune limitazioni del framework Moon Cloud. 
 Di seguito sarà proposta una breve panoramica sulla terminologia utilizzata, sulle componenti principali,  e sui principi di funzionamento dei processi di \textit{assessment} e \textit{compliance} all'interno della piattaforma.
 
 
@@ -68,7 +66,7 @@ La seconda invece, rappresenta il vero e proprio backend del framework, gestendo
 \begin{itemize}
     \item \textbf{Execution Cluster} (8), ovvero l'insieme dei nodi - \textit{execution node}, (9)  - che eseguono materialmente il test. I cluster sono equipaggiati da uno \textit{scheduler} (7), che gestisce l'esecuzione temporizzata dei test periodici, per effettuare il monitoraggio in modo continuo, inviando i test in esso memorizzati a cadenze temporali scandite da un pattern \textit{CRON}\footnote{http://man7.org/linux/man-pages/man5/crontab.5.html}.
     \item \textbf{Execution Manager} (10), ovvero il servizio che gestisce il lavoro di ciascun nodo del cluster.        
-        Gli \textit{execution manager} di uno stesso cluster sono connessi alla stessa coda: all'arrivo di un messaggio essi ne effettuano il \textit{prefetch}, ne validano il contenuto, effettuano il download il driver relativo al controllo referenziato dal test dal repository (11), eseguono lo stesso con gli input contenuti nel messaggio, e collezionano gli output del test in un database non relazionale \textit{time series}(12).
+        Gli \textit{execution manager} di uno stesso cluster sono connessi alla stessa coda: all'arrivo di un messaggio essi effettuano il download il driver relativo al controllo referenziato dal test dal repository (11), eseguono lo stesso con gli input contenuti nel messaggio, e collezionano gli output del test nel \textit{results database}. 
     \item \textbf{Evaluation Module} (13), rimane in ascolto sul database \textit{time-series} (12) in attesa di eventi. Quando lo stato di uno specifico test cambia, avvia la procedura di valutazione di tutte le \textit{ER} che fanno riferimento a tale test, e ne memorizza il risultato nel database di management (4).
     \item \textbf{Repository} (10), contiene i driver per i controlli di sicurezza. È realizzato tramite un ambiente Git\footnote{Git, \textit{https://git-scm.com/}}, di cui condivide le funzionalità, e da un \textit{registry} di \textit{container}, che rappresentano il singolo driver. Il processo di sviluppo di un driver è ultimato da un motore di \textit{continuous integration} che contestualmente al caricamento del codice dello stesso sul \textit{repository} effettua la build del \textit{container} associato e test automatici di validazione e sanitizzazione dello stesso, per poi pubblicare il \textit{container} sul \textit{registry}..
 \end{itemize}
@@ -204,7 +202,7 @@ All'interno del container sono presenti due componenti:
 Altri due file molto importanti sono:
 \begin{itemize}
     \item \textit{Dockerfile}, che costituisce la definizione di ogni container Docker. Questo permette di installare o compilare eventuali dipendenze software utili all'esecuzione del driver 
-    \item \textit{requirements\.txt}, che, in Python, contiene tutte le librerie del database PyPI\footnote{https://pypi.python.org/} da cui il codice del driver dipende.
+    \item \textit{requirements.txt}, che, in Python, contiene tutte le librerie del database PyPI\footnote{https://pypi.python.org/} da cui il codice del driver dipende.
 \end{itemize}
 
 
