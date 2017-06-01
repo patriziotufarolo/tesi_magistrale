@@ -195,13 +195,13 @@ All'interno del container sono presenti due componenti:
     \item{\textit{driver.py}}, che fornisce un'\textit{interfaccia} mediante la classe \textit{Driver} che ciascun payload dovrà implementare.
         Una peculiarità della classe \textit{Driver} è la presenza della sottoclasse \textit{\_\_metaclass\_\_} che fornisce un meccanismo di \textit{subscription} per tutte le classi che ereditano da Driver. Questo permette di far funzionare il meccanismo di \textit{autodiscovery}, permettendo a chi scrive il payload di lavorare in modo agnostico rispetto alle funzionalità del framework.
         L'esecuzione effettiva del codice avviene per mezzo del metodo \textit{run} e un meccanismo di gestione delle operazioni atomiche in due flussi (forward e rollback) dettagliatamente illustrati nella sezione successiva.
-        Un'altra classe molto importante è la classe \textit{DriverResult} che fornisce la possibilità di restituire le misurazioni effettuate dal controllo in forma \textit{chiave-valore}.
+        La classe \textit{DriverResult} fornisce la possibilità di restituire le misurazioni effettuate dal controllo in forma \textit{chiave-valore}.
 \end{itemize}
 
-Altri due file molto importanti sono:
+Altri file rilevanti sono:
 \begin{itemize}
-    \item \textit{Dockerfile}, che costituisce la definizione di ogni container Docker. Questo permette di installare o compilare eventuali dipendenze software utili all'esecuzione del driver 
-    \item \textit{requirements.txt}, che, in Python, contiene tutte le librerie del database PyPI\footnote{https://pypi.python.org/} da cui il codice del driver dipende.
+    \item \textit{Dockerfile}, che costituisce la definizione di ogni container Docker. Questo permette di specializzare ulteriormente il container del driver mediante l'installazione di dipendenze binarie ed ulteriori personalizzazioni.
+    \item \textit{requirements\.txt}, che, in Python, contiene tutte le librerie del database PyPI\footnote{https://pypi.python.org/} da cui il codice del driver dipende.
 \end{itemize}
 
 
@@ -243,10 +243,10 @@ R_1 \subseteq R =\{ r_{x-1}, r_(x-2), ... , r_{x-n}\}
    \caption{Esecuzione di un test con operazioni di rollback}\label{fig:probeRb}
  \end{minipage}
 \end{figure}
-Nella figura \ref{fig:probeOk} è mostrata l'esecuzione di un driver di sonda il cui test viene eseguito correttamente.
+Nella Figura \ref{fig:probeOk} è mostrata l'esecuzione di un driver di sonda il cui test viene eseguito correttamente.
 Il risultato dell'ultima operazione atomica deve essere un valore \textit{boolean} e viene utilizzato come risultato finale (1).
 
-In caso di fallimento di un'operazione $o_x \in P$ , $x \leq n$ (figura \ref{fig:probeRb}) (1) l'interfaccia della classe \textit{Driver} si occupa di lasciare il sistema target in uno stato sicuro provvedendo ad eseguire in sequenza le operazioni di rollback e restituendo come risultato \textit{False}.
+In caso di fallimento di un'operazione $o_x \in P$ , $x \leq n$ (Figura \ref{fig:probeRb}) (1) l'interfaccia della classe \textit{Driver} si occupa di lasciare il sistema target in uno stato sicuro provvedendo ad eseguire in sequenza le operazioni di rollback e restituendo come risultato \textit{False}.
 
 Gli  input globali del test sono  disponibili interrogando la proprietà "\textit{testinstances}", un dizionario a due livelli che contiene nella chiave di primo livello il nome della fase a cui l'input è riferito, nella chiave di secondo livello il nome della chiave del valore di input.
 
@@ -296,7 +296,7 @@ con le seguenti chiavi:
 
 \section{Esempio}
 
-Verrà di seguito proposto un esempio per illustrare la definizione completa di un processo di valutazione all'interno della piattaforma Moon Cloud.
+Verrà di seguito proposto un esempio per illustrare la definizione completa di un processo di valutazione all'interno della piattaforma Moon Cloud, che verrà poi usato come base per le attività in questo lavoro di tesi.
 La proprietà analizzata da questo esempio è la \textit{confidenzialità del dato} ottenuta dall'aggregazione in \textit{and} logico di due diversi controlli:
 \begin{enumerate}
     \item{Confidenzialità dello storage (\textit{c\#1})}

@@ -18,11 +18,21 @@
 \graphicspath{{immagini}{../immagini/}}
 
 \setlength{\headheight}{15pt}
-
+\makeatletter
+\renewcommand{\chaptermark}[1]{%
+  \ifnum\value{chapter}>0
+    \markboth{Capitolo \thechapter{}: #1}{}%
+  \else
+    \markboth{#1}{}%
+  \fi}
+\makeatother
 \fancypagestyle{frontmatter}{%
   \fancyhf{}% Clear header/footer
   \fancyfoot[C]{\thepage}%
 }
+
+
+
 \fancypagestyle{mainmatter}{%
   \fancyhf{}% Clear header/footer
   \fancyhead[LE,RO]{\itshape \nouppercase \rightmark}

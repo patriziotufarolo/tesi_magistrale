@@ -190,14 +190,31 @@ OpenSCAP è disponibile nei repository delle distribuzioni Linux ed è composto 
 \label{sec:openscapmooncloud}
 Al fine di effettuare i controlli NIST 800-53 per FedRAMP in Moon Cloud, è stato implementato un apposito driver Moon Cloud per OpenSCAP, in grado di pilotare il tool \textit{oscap} su un server remoto per effettuarne l'analisi; la comunicazione tra il driver e l'host target avviene tramite il protocollo SSH, implementato con la libreria Python \textit{paramiko}.
 
+
+\begin{figure}[H]
+\begin{tabular}{rl} 
+\begin{minipage}{0.4\textwidth} 
+\centering
+\includegraphics[height=15cm]{immagini/DRIVER_OPENSCAP.png}
+
+\end{minipage} 
+
+\begin{minipage}{0.54\textwidth} 
 Come prima cosa, vengono  letti i parametri per la connessione: \textit{hostname} o indirizzo IP del target, la porta TCP per SSH, e le credenziali di un utente privilegiato; è supportata l'autenticazione sia tramite password che mediante chiave pubblica.
 
 Viene quindi avviata la connessione SSH e, tramite essa, viene creata una directory temporanea sul server. Questa directory andrà a contenere gli XCCDF selezionati, e sarà eliminata alla fine dell'esecuzione.
+
 A seguire, viene effettuato un controllo della presenza di OpenSCAP sul server, che rappresenta un prerequisito per l'esecuzione. Se il file eseguibile \textit{oscap} non viene trovato, il test si blocca ed avvia la sequenza di rollback.
 
 Dopo aver interpreato le configurazioni di OpenSCAP ricevute in input (file XCCDF da considerare, profilo scelto, eventuale download di risorse remote specificate nel XCCDF), viene lanciato il comando \textit{oscap}; il report HTML generato viene eventualmente caricato su un bucket di \textit{Microsoft Azure Storage}.
+
 Il flusso di esecuzione si conclude con la rimozione delle cartelle temporanee e la chiusura della connessione SSH.
 
+\end{minipage} 
+\end{tabular}
+
+\caption{Flusso di esecuzione del driver}\label{fig:flussodriver1}
+\end{figure}
 Il driver supporta gli XCCDF presenti nella \textit{OpenSCAP Security Guide}, ovvero:
 \begin{table}[H]
     \begin{tabulary}{\textwidth}{cccc}
@@ -212,17 +229,11 @@ Il driver supporta gli XCCDF presenti nella \textit{OpenSCAP Security Guide}, ov
 
     \end{tabulary}
 \end{table}
+
 I profili relativi a ciascun XCCDF sono ottenibili con il comando:
 \begin{Verbatim}[frame=single]
 oscap info file.xml
 \end{Verbatim}
-\subsubsection{Flusso di esecuzione}
-\begin{figure}[H]
-\centering
-\includegraphics[height=15cm]{immagini/DRIVER_OPENSCAP.png}
-\caption{Flusso di esecuzione del driver}\label{fig:flussodriver1}
-
-\end{figure}
 
 \subsubsection{Metadata}
 

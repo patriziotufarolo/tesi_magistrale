@@ -2,12 +2,12 @@
 \begin{document}
 \chapter*{Introduzione}
 \addcontentsline{toc}{chapter}{Introduzione}
+\markboth{Introduzione}{Introduzione}
 
 Negli ultimi anni, l'adozione del paradigma cloud ha permesso alle organizzazioni di usufruire di vantaggi prestazionali ed economici nell'erogazione dei servizi IT, grazie sia alle caratteristiche di scalabilità ed elasticità proprie dello stesso, che alla possibilità di allocare risorse in modalità \textit{on-demand}.
 
 
-Tuttavia, la natura distribuita ed automatizzata della cloud introduce numerose problematiche di sicurezza e valutazione del rischio, soprattutto per quelle realtà in procinto di effettuare migrazioni parziali o totali delle loro infrastrutture \emph{on premises} tradizionali.
-
+Tuttavia, la natura distribuita ed automatizzata della cloud introduce numerose problematiche di sicurezza e valutazione del rischio, soprattutto per quelle realtà in procinto di effettuare migrazioni parziali o totali delle loro infrastrutture.
 
 La centralizzazione degli aspetti di sicurezza nelle mani di un \textit{cloud service provider} rappresenta infatti uno dei maggiori limiti dell'approccio, e richiede un rapporto di fiducia reciproca tra il fornitore del servizio e il cliente. Questo rapporto di fiducia, attualmente basato sulla reputazione del provider, rappresenta la base per minimizzare il rischio e limitare il perimetro di attacco, e per stabilire le responsabilità di ogni entità coinvolta nella gestione degli incidenti.
 
@@ -17,56 +17,50 @@ La security assurance mira ad incrementare il livello di attendibilità di un si
 Una delle tecniche che possono essere utilizzate consiste nella produzione di evidenze fidate e replicabili, basate su attività di testing e monitoraggio.
 
 
-In particolare, il lavoro di tesi ha come obiettivo la verifica continua e automatica della compliance allo standard FedRAMP, il programma governativo americano per la valutazione del rischio e l'autorizzazione all'utilizzo di servizi cloud nelle agenzie federali, che è stato adottato in diversi domini ad alta criticità come ad esempio Amazon AWS e il Dipartimento della Difesa americano.
+In particolare, il lavoro di tesi ha come obiettivo la verifica continua e automatica della compliance allo standard FedRAMP, il programma governativo americano per la valutazione del rischio e l'autorizzazione all'utilizzo di servizi cloud nelle agenzie federali, che è stato adottato in diversi domini ad alta criticità come ad esempio Amazon AWS e il Dipartimento della Difesa US.
 
 Ci si è concentrati quindi da un lato sull'analisi e sullo studio dello standard FedRAMP, allo scopo di identificare i controlli di sicurezza di interesse per una valutazione di compliance (descritti nel documento NIST SP 800-53); dall'altro nell'implementazione dei controlli di sicurezza identificati e nella loro integrazione all'interno di Moon Cloud, una piattaforma a micro-servizi per la trasparency, l'assessment e il monitoraggio continuativo di proprietà non funzionali.
 
 
-Il lavoro di tesi vuole fornire un'ambiente per la valutazione di compliance continua e automatica allo standard FedRAMP e assumere un ruolo di supporto per tutti gli attori coinvolti nel processo di autorizzazione, in particolare i fornitori di servizi che vogliano attestarne la \textit{readiness}.
+Il lavoro di tesi vuole fornire un componente per la valutazione della compliance continua e automatica ai controlli di sicurezza di FedRAMP e assumere un ruolo di supporto per tutti gli attori coinvolti nel processo di autorizzazione, in particolare i fornitori di servizi che vogliano attestarne la \textit{readiness}.
 
-
-Nell'ambito della tesi è stato inoltre redatto un articolo dal titolo "A security benchmark for OpenStack" che, partendo dal benchmark CIS, identifica alcuni controlli di sicurezza specifici per il prodotto in oggetto.
+Nell'ambito della tesi è stato inoltre redatto un articolo dal titolo "A security benchmark for OpenStack" che, partendo dal benchmark CIS, identifica alcuni controlli di sicurezza specifici per OpenStack.
 Questo è stato sottomesso ed accettato alla conferenza IEEE Cloud 2017 in programma dal 25 al 30 Giugno  ad Honolulu (Hawaii, USA).
 
 
-Il lavoro di tesi può essere riassunto come segue:
-\begin{itemize}
-\item \textit{Analisi di FedRAMP}, individuazione dei punti chiave del programma e studio di metodologie a supporto delle attività e degli attori coinvolti nel processo di autorizzazione.
-\item \textit{Design e implementazione di driver} per la valutazione automatica e continua dei controlli di sicurezza.
-Al fine di garantire la copertura delle specifiche del framework, sono stati utilizzati due diversi approcci per l'esecuzione dei controlli di sicurezza:
+L'analisi dei punti chiave di \textit{FedRAMP} ha consentito di individuare alcune metodologie per supportare le attività degli attori coinvolti nel processo di autorizzazione; sono stati quindi implementati due driver per la valutazione automatica e continua dei controlli di sicurezza NIST 800-53.
+Al fine di garantire la copertura delle specifiche del programma, sono stati utilizzati due diversi approcci per l'esecuzione dei controlli di sicurezza:
 \begin{itemize}
 \item \textit{driver per i controlli automatici}, la cui esecuzione avviene in modo autonomo, per l'\textit{assessment} delle proprietà non-funzionali effettivamente implementate nei sistemi informatici;
 \item \textit{driver per i controlli ad interazione umana}, effettuati tramite la somministrazione online di questionari, per l'analisi dei processi di business.
 \end{itemize}
-\item \textit{Integrazione dei controlli di sicurezza automatici} all'interno della piattaforma multi-layer Moon Cloud.
-\item \textit{Validazione} della soluzione proposta e dei corrispondenti controlli di sicurezza nell'ambito della verifica della compliance della piattaforma Moon Cloud allo standard FedRAMP. La fase di validazione ha anche tenuto in considerazione i costi prestazionali dei controlli di sicurezza.
-\end{itemize}
+Questi driver sono stati poi integrati all'interno della piattaforma multi-layer Moon Cloud, e validati attraverso la verifica della compliance della piattaforma Moon Cloud allo standard FedRAMP, tenendo conto dei costi prestazionali dei controlli di sicurezza effettuati.
 
 L'organizzazione dei capitoli è la seguente:
 \begin{itemize}
-    \item \textbf{Capitolo 1 - Security assurance: lo stato dell'arte e la sfida}
-        Nel primo capitolo sono analizzate le problematiche di sicurezza nella migrazione di infrastrutture tradizionali verso la \textit{cloud} illustrando le soluzioni proposte dalla letteratura.
-        Tra queste, vengono approfondite le tecnche di \textit{assurance} mediante certificazione e controllo della \textit{compliance} tramite la raccolta di evidenze.
-    \item \textbf{Capitolo 2 - Moon Cloud, un framework per il monitoraggio e la security assurance}
-        Nel secondo capitolo viene illustrato Moon Cloud, una soluzione software prodotta dal laboratorio SESAR dell'Università degli Studi di Milano, avente come obiettivo la security assurance.
-    \item \textbf{Capitolo 3 - FedRAMP - Federal Risk and Authorization Management Program}
-        Nel terzo capitolo viene analizzato FedRAMP, analizzando i punti chiave del programma, i ruoli e le responsabilità degli attori coinvolti, e identificando
+    \item \textbf{Capitolo 1 - Security assurance: lo stato dell'arte e la sfida.}
+        \\Nel primo capitolo sono analizzate le problematiche di sicurezza nella migrazione di infrastrutture tradizionali verso la \textit{cloud} illustrando le soluzioni proposte in letteratura.
+        Tra queste, vengono approfondite le tecniche di \textit{assurance} basate su certificazione e controllo della \textit{compliance}.
+    \item \textbf{Capitolo 2 - Moon Cloud, un framework per il monitoraggio e la security assurance.}
+        \\Nel secondo capitolo viene illustrato Moon Cloud, una soluzione software prodotta dal laboratorio SESAR dell'Università degli Studi di Milano, avente come obiettivo la security assurance.
+    \item \textbf{Capitolo 3 - FedRAMP - Federal Risk and Authorization Management Program.}
+        Nel terzo capitolo viene analizzato FedRAMP, approfondendone i punti chiave, i ruoli e le responsabilità degli attori coinvolti, e identificando
         i possibili approcci per implementarne i controlli di sicurezza all'interno di Moon Cloud, al fine di fornire uno strumento a supporto delle attività di ciascun attore.
-    \item \textbf{Capitolo 4 - Implementazione dei controlli di sicurezza FedRAMP in Moon Cloud}
+    \item \textbf{Capitolo 4 - Implementazione dei controlli di sicurezza FedRAMP in Moon Cloud.}\\
         Nel quarto capitolo viene proposto un approccio ibrido orchestrato tramite l'integrazione di attività di \textit{security assessment} automatiche e ad interazione umana (per i controlli di sicurezza di carattere proceduale e l'analisi dei processi di business)
         e ne viene illustrata una possibile implementazione.
         Nel primo caso, viene presentato il framework OpenSCAP, un ecosistema realizzato da Red Hat per le attività di auditing, e ne viene proposta un'integrazione con Moon Cloud.
         Nel secondo caso, viene presentato un driver Moon Cloud ad interazione umana, che invia questionari personalizzabili tramite template agli utenti interessati, richiedendone la compilazione e creando un report in PDF.
-    \item \textbf{Capitolo 5 - Validazione del framework}
-        Nel quinto capitolo viene effettuata la validazione del lavoro svolto, in particolar modo per l'approccio automatico. Il driver OpenSCAP viene eseguito sul deployment in produzione dello stesso Moon Cloud, per effettuarne l'analisi della sicurezza.
-        Come illustrato nel capitolo 2, Moon Cloud è organizzato in microservizi gestiti tramite \textit{container}.
-        In particolare, il deployment è effettuato su una IaaS OpenStack e una PaaS Docker: viene perciò analizzata l'infrastruttura OpenStack sottostante, mediante OpenSCAP e controlli di sicurezza specifici mappati sui requisiti FedRAMP; viene quindi eseguito l'\textit{assessment} dei container dei vari componenti di Moon Cloud e dei canali di comunicazione.
-        Infine, viene proposta una valutazione delle performance del lavoro svolto e saranno trattate alcune delle problematiche riscontrate.
+    \item \textbf{Capitolo 5 - Validazione del framework.}\\
+        Nel quinto capitolo viene effettuata la validazione del lavoro svolto. Il driver OpenSCAP viene eseguito sul deployment in produzione dello stesso Moon Cloud, per effettuarne un'analisi di sicurezza.
+        Come illustrato nel capitolo 2, Moon Cloud è organizzato in microservizi gestiti tramite \textit{container}; in particolare, il deployment è effettuato su una IaaS OpenStack e una PaaS Docker.
+        L'analisi si articola perciò in due fasi:
+        \begin{enumerate}
+            \item analisi dell'infrastruttura OpenStack sottostante, mediante OpenSCAP e controlli di sicurezza specifici mappati sui requisiti FedRAMP;
+            \item \textit{assessment} dei container dei vari componenti di Moon Cloud e dei canali di comunicazione.
+        \end{enumerate}
     \item \textbf{Capitolo 6 - Conclusione e sviluppi futuri}
-        Nel capitolo finale vengono mostrati alcuni sviluppi futuri del progetto in questione, che spaziano dall'integrazione dei driver sviluppati con altri standard, per arrivare all'utilizzo dell'approccio illustrato in casistiche analoghe al processo di auditing della compliance.
-
-
-
+        Nel capitolo finale vengono mostrati alcuni sviluppi futuri, che spaziano dall'integrazione dei driver sviluppati con altri standard, per arrivare all'utilizzo dell'approccio illustrato in casistiche analoghe al processo di auditing della compliance.
 \end{itemize}
 
 
