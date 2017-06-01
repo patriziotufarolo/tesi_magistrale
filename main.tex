@@ -84,7 +84,12 @@
 
 
 % ABILITA BIBLIO
-\usepackage[backend=biber, style=numeric, sorting=none]{biblatex}
+\usepackage[backend=biber, style=numeric, sorting=none, maxbibnames=5]{biblatex}
+
+
+\setcounter{biburllcpenalty}{7000}
+\setcounter{biburlucpenalty}{8000}
+
 \addbibresource{bibliografia.bib}
 \input{linguaggi/python.tex}
 \input{linguaggi/html.tex}

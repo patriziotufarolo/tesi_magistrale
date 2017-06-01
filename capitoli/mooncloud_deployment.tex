@@ -72,7 +72,7 @@ I risultati restituiti in output segnalano:
 In particolare, delle 72 valutazioni fallite, 11 sono state catalogate da OpenSCAP con \textit{severity} bassa, 50 con \textit{severity} media e 11 con \textit{severity} elevata; lo score della copertura XCCDF ottenuto è 71.17\%.
 \vfill\newpage
 \subsubsection{Risultato del test: valutazioni fallite}
-\begin{ltabulary}{|p{10cm}|p{5cm}|}
+\begin{ltabulary}{|p{10cm}|p{4cm}|}
     \hline
     \textbf{Descrizione} & \textbf{Security Control}
     \\ \hline
@@ -148,6 +148,7 @@ Verify File Hashes with RPM                                                     
 Verify firewalld Enabled                                                              & CM-6(b) \\ \hline
 
 \end{ltabulary}
+\captionof{table}{Risultati valutazione driver OpenSCAP a livello IaaS} 
 \begin{figure}[H]
     \centering
     \includegraphics[width=10cm]{immagini/test_oscap_1_1.png}
@@ -219,8 +220,9 @@ Laddove è applicata la dicitura "Non applicabile", si intende che il controllo 
     {[R23]} Storage Reliability                                                                       & CP-4, CP-9                       & Fallito         \\ \hline
     {[R24]} Data Remanence Avoidance                                                                  & SC-4                             & Fallito         \\ \hline
 \end{ltabulary}
+\captionof{table}{Valutazione della compliance FedRAMP nel setup OpenStack di Moon Cloud} 
+
 Il 55\% delle valutazioni ha avuto esito negativo sull'ambiente di sviluppo, in quanto esso non è ovviamente predisposto per essere utilizzato in scenari di produzione.
-Nel caso in cui \textit{Moon Cloud} vorrà ricevere l'autorizzazione provvisoria ad operare dalla JBO FedRAMP è ovviamente necessario che sia installato su un provider \textit{IaaS} autorizzato (ad esempio Microsoft Azure).
 
 \subsection{Piattaforma}
 \subsubsection{Analisi OpenSCAP sul template delle macchine virtuali}
@@ -253,6 +255,7 @@ https://moonclouddashboard.blob.core.windows.net/pdfcontainer/b73210ae24
 --
 \end{comment}
 \subsubsection{Analisi del cluster Docker Swarm}
+\label{ref:dockerswarmanalysis}
 L'analisi del cluster Swarm è stata condotta utilizzando lo strumento \textit{Docker Security Benchmark}\footnote{Docker Security Benchmark - \textit{https://www.dockerbench.com}}.
 Di seguito è proposto un mapping tra le verifiche fallite e i controlli di sicurezza FedRAMP non rispettati; per motivi di proprietà intellettuale i nomi di alcuni container sono stati oscurati.
     \begin{ltabulary}{|p{9cm}|p{5cm}|}
@@ -274,22 +277,79 @@ Unencrypted overlay network: ingress (swarm), mooncloud (swarm)                 
 Run swarm manager in auto-lock mode                                                                                                                                                                                                                                                         & SC-27                                               \\ \hline
 Create a user for the container                                                                                                                                                                                                                                                             &  AC-4(21), AC-5, AC-6 (01), AC-6(02), AC-6(05)                                                     \\ \hline
 Running as root:  mooncloud\_evaluationmodule, mooncloud\_api, mooncloud\_traefik, mooncloud\_monitor\_execution\_manager, mooncloud\_dashboard, mooncloud\_*********, mooncloud\_***********, mooncloud\_db, mooncloud\_******, mooncloud\_execution\_manager                              &  AC-4(21), AC-5, AC-6 (01), AC-6(02), AC-6(05)                                                   \\ \hline
-Enable Content trust for Docker:  mooncloud\_evaluationmodule, mooncloud\_api, mooncloud\_traefik, mooncloud\_monitor\_execution\_manager, mooncloud\_dashboard, mooncloud\_*********, mooncloud\_***********, mooncloud\_db, mooncloud\_******, mooncloud\_execution\_manager              &                                                     \\ \hline
-No AppArmorProfile Found:   mooncloud\_evaluationmodule, mooncloud\_api, mooncloud\_traefik, mooncloud\_monitor\_execution\_manager, mooncloud\_dashboard, mooncloud\_*********, mooncloud\_***********, mooncloud\_db, mooncloud\_******, mooncloud\_execution\_manager                    &                                                     \\ \hline
-No selinux SecurityOptions Found:  mooncloud\_evaluationmodule, mooncloud\_api, mooncloud\_traefik, mooncloud\_monitor\_execution\_manager, mooncloud\_dashboard, mooncloud\_*********, mooncloud\_***********, mooncloud\_db, mooncloud\_******, mooncloud\_execution\_manager             &                                                     \\ \hline
-Container running with root FS mounted R/W:  mooncloud\_evaluationmodule, mooncloud\_api, mooncloud\_traefik, mooncloud\_monitor\_execution\_manager, mooncloud\_dashboard, mooncloud\_*********, mooncloud\_***********, mooncloud\_db, mooncloud\_******, mooncloud\_execution\_manager   &                                                     \\ \hline
-
+Enable Content trust for Docker:  mooncloud\_evaluationmodule, mooncloud\_api, mooncloud\_traefik, mooncloud\_monitor\_execution\_manager, mooncloud\_dashboard, mooncloud\_*********, mooncloud\_***********, mooncloud\_db, mooncloud\_******, mooncloud\_execution\_manager              &  AU-3(1), CM-07, SC-07, SC-08                                                   \\ \hline
+No AppArmorProfile Found:   mooncloud\_evaluationmodule, mooncloud\_api, mooncloud\_traefik, mooncloud\_monitor\_execution\_manager, mooncloud\_dashboard, mooncloud\_*********, mooncloud\_***********, mooncloud\_db, mooncloud\_******, mooncloud\_execution\_manager                    & AC-3, AC-4, AC-5, AC-6, AU-5                    \\ \hline
+No selinux SecurityOptions Found:  mooncloud\_evaluationmodule, mooncloud\_api, mooncloud\_traefik, mooncloud\_monitor\_execution\_manager, mooncloud\_dashboard, mooncloud\_*********, mooncloud\_***********, mooncloud\_db, mooncloud\_******, mooncloud\_execution\_manager             & AC-3, AC-4, AC-5, AC-6, AU-5                      \\ \hline
+Container running with root FS mounted R/W:  mooncloud\_evaluationmodule, mooncloud\_api, mooncloud\_traefik, mooncloud\_monitor\_execution\_manager, mooncloud\_dashboard, mooncloud\_*********, mooncloud\_***********, mooncloud\_db, mooncloud\_******, mooncloud\_execution\_manager   & SI-12                                           \\ \hline
+%SA-2
 \end{ltabulary}
 
 
 
 \subsubsection{Livello applicativo: analisi dei componenti software}
 
-L'analisi applicativa sulla piattaforma Moon Cloud è stata svolta analizzando le configurazioni dei servizi e la loro implementazione.
+L'attività di assessment a livello applicativo è stata svolta ispezionando le configurazioni dei servizi e la loro implementazione, in un ambiente di sviluppo.
+Per ragioni di proprietà intellettuale sarà di seguito fornita una descrizione ad alto livello dei componenti e delle problematiche individuate.
+
+\begin{ltabulary}{|p{3cm}|p{11cm}|}
+\hline
+\textbf{Componente} & \textbf{Analisi} \\
+\hline
+\endhead
+
+API e Database & È stato effettuato un \textit{vulnerability assessment} blackbox sfruttando i software \textit{SQLMap}\footnote{SQLMap, \textit{http://www.sqlmap.org}} e \textit{OpenVAS}\footnote{OpenVAS, \textit{http://www.openvas.org}} e non sono state riscontrate vulnerabilità note.
+Le API sono esposte con protocollo \textit{HTTPS}, il certificato ha chiave \textit{RSA} a 4096 bit, è firmato con \textit{SHA256} ed è stato emesso dalla Certification Authority \textit{Let's Encrypt Authority X3}. Sono supportati i protocolli \textit{TLSv1}, \textit{TLSv1.1}, \textit{TLSv1.2}, il supporto a \textit{SSLv2} e \textit{SSLv3} è disabilitato per prevenire attacchi di downgrade del protocollo. Sono supportati due cifrari deboli, \textit{TLS\_ECDHE\_RSA\_ WITH\_3DES\_EDE\_ CBC\_SHA} e \textit{TLS\_RSA\_WITH\_ 3DES\_EDE\_CBC\_SHA}. L'esecuzione del test Moon Cloud per la verifica della connessione HTTPS ha riportato risultati positivi, restituendo il livello A.
+
+L'autenticazione è basata su \textit{bearer token}, che vengono specificati in ogni richiesta nell'header HTTP "\textit{Authorization}"; l'utilizzo sicuro di questo approccio è vincolato a due fattori:
+\begin{itemize}
+    \item L'utilizzo di un canale cifrato in modo sicuro (verificato)
+    \item L'applicazione di politiche di scadenza dei token (verificato)
+\end{itemize}.
+
+È presente un meccanismo di autorizzazione di tipo \textit{RBAC}\footnote{Role-based access control}; non sono applicate politiche sulla lunghezza né sulla complessità delle password; non sono presenti mecccanismi di rotazione delle stesse.
+
+È stato riscontrato l'utilizzo di un server SMTP per l'invio delle e-mail configurato privo di autenticazione e di meccanismi di cifratura dei dati in transito.
+
+La connessione con il database non avviene in modo cifrato, né sono cifrati i dati memorizzati sullo stesso. Le password utente sono protette da hash \textit{pbkdf2\_sha256}\footnote{Password-Based Key Derivation Function}.
+\\ \hline
 
 
-Di seguito i punti critici individuati:
+Repository & Il repository è raggiungibile solamente da rete interna. La connessione è cifrata tramite HTTPS, con certificato emesso da "Let's Encrypt Authority X3", dalle caratteristiche analoghe al certificato API. Anche in questo caso, il test Moon Cloud per la verifica della connessione SSL ha riportato risultati positivi.
 
-\subsubsection{Conclusioni}
+\\ \hline
+ 
+Database dei risultati & Il database dei risultati è esposto tramite interfaccia HTTP, senza cifratura. Non sono presenti meccanismi di cifratura né in transito né \textit{at-rest}. L'autenticazione al database è effettuata tramite \textit{HTTP basic authentication}.
+                       
+\\ \hline
 
+Evaluation Manager & È stato effettuato un \textit{vulnerability assessment} blackbox sfruttando i software \textit{SQLMap} e \textit{OpenVAS} e non sono state identificate vulnerabilità note.
+Le API, il cui accesso è effettuato in chiaro, sono utilizzate solo localmente per lanciare le operazioni di valutazione. Il componente comunica con il database dei risultati e con il database API in chiaro. La comunicazione avviene in ogni caso su reti \textit{overlay} separate e cifrate.
+Le credenziali di autenticazione al database API hanno privilegi minimi di accesso sulle sola tabelle relative alle valutazioni dei test.  \\ \hline
+
+Execution Manager & L'execution manager riceve i dati in input dai test tramite un meccanismo di comunicazione basato su code. Su questo non sono stati configurati meccanismi di cifratura dei dati, né meccanismi di firma volti a preservare l'integrità dei dati in transito.
+I driver dei test sono eseguiti comunicando con un cluster Docker tramite socket Unix in chiaro; il download degli stessi viene fatto dal repository con connessione cifrata tramite SSL e autorizzata con meccanismi \textit{MAC}\footnote{Mandatory Access Control}. 
+ \\ \hline
+\end{ltabulary}
+
+\begin{comment}
+\section{Conclusioni}
+
+È stato effettuato l'\textit{assessment} del setup \textit{multi-layer} di un ambiente di sviluppo per un'architettura a microservizi.
+
+Per l'analisi del \textbf{livello infrastrutturale}, è stato utilizzato il driver sviluppato in questo lavoro di tesi, il cui obiettivo è quello di integrare le funzionalità di \textit{OpenSCAP} in \textit{Moon Cloud}. I risultati ottenuti, ampiamente caratterizzati in un report, hanno evidenziato varie carenze nella configurazione del sistema operativo della macchina fisica, soprattutto dal punto di vista della gestione delle politiche di accesso, la mancanza di meccanismi di \textit{trust} nei \textit{repository} dei pacchetti e l'assenza di meccanismi di auditing.
+Per l'analisi del setup \textit{Open Stack}, ci si è basati sul contenuto dell'articolo "A security benchmark for Open Stack" \cite{MyPaper}, del quale è stato effettuato un mapping sui requisiti FedRAMP. I risultati ottenuti evidenziano ancora una volta mancanza di accuratezza nella configurazione degli aspetti di sicurezza. Tuttavia, poiché i sistemi installati sono dedicati all'utilizzo in laboratorio e non orientate alla produzione ed all'erogazione di servizi verso terzi, il livello di sicurezza effettivamente implementato è di qualità accettabile.
+
+Per l'analisi del \textbf{livello di piattaforma}, è stato utilizzato nuovamente il driver \textit{OpenSCAP}, dopodiché è stato effettuato il \textit{benchmarking} della configurazione di sicurezza del cluster \textit{Docker Swarm}. Per ciascuna delle regole non validate, è stato effettuato il mapping sui requisiti FedRAMP violati.
+I container Docker vengono eseguiti con utente \textit{root} e senza l'utilizzo di \textit{user namespace}, non sono presenti meccanismi di \textit{mandatory access control} come \textit{AppArmor} o \textit{selinux}. 
+ 
+L'analisi del \textbf{livello applicativo}, infine, si è svolta ispezionando i componenti dell'architettura \textit{Moon Cloud} e i meccanismi di comunicazione tra gli stessi. Sono state rilevate numerose carenze, alcune a livello di configurazione quindi sostenibili in un ambiente di sviluppo (appartenenti alla classe \textit{CM} di FedRAMP), altre a livello implementativo.
+I canali di comunicazione tra alcuni componenti (coda per l'esecuzione dei test, connessione al database, comunicazione con il database dei risultati) sono in chiaro; considerando inoltre che le reti \textit{overlay} di \textit{Docker} non sono configurate in modo cifrato (come illustrato in sezione \ref{ref:dockerswarmanalysis}), il rischio di esposizione di informazioni sensibili è alto.
+
+Il database a supporto delle API necessita di livello di sicurezza implementato a causa della tipologia dei dati trattati dalla piattaforma, come ad esempio i dati di autenticazione e le proprietà dei \textit{target} che devono essere verificati.
+A tal proposito potrebbe essere integrato un \textit{vault} sicuro, crittografato con meccanismi e algoritmi \textit{FIPS compliant}.
+
+Affinché il progetto Moon Cloud possa ricevere l'autorizzazione provvisoria ad operare dalla JBO FedRAMP, è necessario implementare le soluzioni ai problemi illustrati.
+Per quanto riguarda l'aspetto infrastrutturale e di piattaforma, una possibilità è quella di rivolgersi a fornitori di servizi già autorizzati (Azure), come ad esempio Azure.
+Le carenze del livello applicativo, invece, devono essere gestite in modo opportuno dal team di sviluppo applicando le \textit{remediation} opportune rispetto ai security control \textit{NIST 800-53}.
+\end{comment}
 \end{document}

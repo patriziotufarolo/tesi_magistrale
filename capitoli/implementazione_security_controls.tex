@@ -151,7 +151,7 @@ Una regola (\xmlinline{<Rule />}) può quindi referenziare uno o più controlli 
 
 \subsubsection{OVAL}
 OVAL, \textit{Open Vulnerability and Assessment Language}, ha come obiettivo proprio quello di automatizzare le operazioni di assessment descritte dall'XCCDF.
-Il processo di \textit{assessment} può essere diviso in tre passaggi:
+Il processo di \textit{assessment} può essere diviso in tre passaggi \cite{nist800126}.:
 \begin{itemize}
     \item Rappresentazione delle informazioni relative al sistema da testare (\textit{OVAL system characteristics})
     \item Definizione delle condizioni che un sistema deve avere affinché abbia una vulnerabilità (\textit{OVAL definition})
@@ -159,7 +159,7 @@ Il processo di \textit{assessment} può essere diviso in tre passaggi:
 \end{itemize}
 Il linguaggio può essere poi esteso con specifiche aggiuntive magari istanziate su una singola tecnologia (ad es. \textit{Oval Language UNIX Component Model Specification} per i sistemi operativi UNIX e UNIX-like, o \textit{OVAL Language Windows Component Model Specification} per i sistemi Windows).
 Dal punto di vista del componente implementato, la parte più importante da considerare è rappresentata dalla \textit{OVAL definition}, che è richiamata dalle regole XCCDF.
-L'obiettiivo è quello di descrivere: \textit{i)} le condizioni che un sistema deve avere affinché abbia una determinata vulnerabilità, \textit{ii)} definizione di eventuali rimedi e patch, \textit{iii)} definizioni per definire le condizioni da verificare per determinare se un determinato software o componente è installato, \textit{iv)} definizioni per la \textit{compliance} ad una politica o ad una definizione specifica.
+L'obiettiivo è quello di descrivere: \textit{i)} le condizioni che un sistema deve avere affinché abbia una determinata vulnerabilità, \textit{ii)} definizione di eventuali rimedi e patch, \textit{iii)} definizioni per definire le condizioni da verificare per determinare se un determinato software o componente è installato, \textit{iv)} definizioni per la \textit{compliance} ad una politica o ad una definizione specifica \cite{nist800126}.
 
 Sulla base di ciò è possibile, tramite OVAL, determinare se una regola \textit{XCCDF} sia valida o meno sul sistema testato. 
 Si tratta, tuttavia, di un linguaggio orientato all'automazione, che pertanto non può essere applicato in caso di verifiche umane e procedurali, come molti dei controlli di sicurezza analizzati.
@@ -340,7 +340,7 @@ oscap info file.xml
 \end{js}
 Il codice del driver è stato allegato nell'Appendice \ref{appendix:driver1}
 
-\section{Controlli ad interazione umana}
+\section{Implementazione dei controlli ad interazione umana}
 Poiché, come già ampiamente trattato, non è possibile eseguire in maniera automatica tutti i controlli di sicurezza, l'obiettivo di questa tesi è
 anche quello di fornire uno strumento per la verifica dei controlli di carattere procedurale che prevedono intrinsecamente un'interazione umana.
 
