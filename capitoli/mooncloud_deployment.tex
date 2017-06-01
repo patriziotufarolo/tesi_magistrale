@@ -306,9 +306,9 @@ L'autenticazione è basata su \textit{bearer token}, che vengono specificati in 
     \item L'applicazione di politiche di scadenza dei token (verificato)
 \end{itemize}.
 
-È presente un meccanismo di autorizzazione di tipo \textit{RBAC}\footnote{Role-based access control}; non sono applicate politiche sulla lunghezza né sulla complessità delle password; non sono presenti mecccanismi di rotazione delle stesse.
+Le autorizzazioni sono gestite in modalità \textit{RBAC}\footnote{Role-based access control}; non sono applicate politiche sulla lunghezza né sulla complessità delle password; non sono presenti mecccanismi di rotazione delle stesse.
 
-È stato riscontrato l'utilizzo di un server SMTP per l'invio delle e-mail configurato privo di autenticazione e di meccanismi di cifratura dei dati in transito.
+È stato riscontrato l'utilizzo di un server SMTP per l'invio delle e-mail senza autenticazione e cifratura dei dati in transito.
 
 La connessione con il database non avviene in modo cifrato, né sono cifrati i dati memorizzati sullo stesso. Le password utente sono protette da hash \textit{pbkdf2\_sha256}\footnote{Password-Based Key Derivation Function}.
 \\ \hline
@@ -326,8 +326,8 @@ Evaluation Manager & È stato effettuato un \textit{vulnerability assessment} bl
 Le API, il cui accesso è effettuato in chiaro, sono utilizzate solo localmente per lanciare le operazioni di valutazione. Il componente comunica con il database dei risultati e con il database API in chiaro. La comunicazione avviene in ogni caso su reti \textit{overlay} separate e cifrate.
 Le credenziali di autenticazione al database API hanno privilegi minimi di accesso sulle sola tabelle relative alle valutazioni dei test.  \\ \hline
 
-Execution Manager & L'execution manager riceve i dati in input dai test tramite un meccanismo di comunicazione basato su code. Su questo non sono stati configurati meccanismi di cifratura dei dati, né meccanismi di firma volti a preservare l'integrità dei dati in transito.
-I driver dei test sono eseguiti comunicando con un cluster Docker tramite socket Unix in chiaro; il download degli stessi viene fatto dal repository con connessione cifrata tramite SSL e autorizzata con meccanismi \textit{MAC}\footnote{Mandatory Access Control}. 
+Execution Manager & L'execution manager riceve i dati in input dai test tramite un meccanismo di comunicazione basato su code. Su questo non è stata configurata la cifratura dei dati per proteggere la confidenzialità, né di firma volti a preservarne l'integrità.
+I driver dei test sono eseguiti comunicando con un cluster Docker tramite socket Unix in chiaro; il download degli stessi viene fatto dal repository con connessione cifrata tramite SSL e autorizzata con modalità \textit{MAC}\footnote{Mandatory Access Control}. 
  \\ \hline
 \end{ltabulary}
 
@@ -336,11 +336,11 @@ I driver dei test sono eseguiti comunicando con un cluster Docker tramite socket
 
 È stato effettuato l'\textit{assessment} del setup \textit{multi-layer} di un ambiente di sviluppo per un'architettura a microservizi.
 
-Per l'analisi del \textbf{livello infrastrutturale}, è stato utilizzato il driver sviluppato in questo lavoro di tesi, il cui obiettivo è quello di integrare le funzionalità di \textit{OpenSCAP} in \textit{Moon Cloud}. I risultati ottenuti, ampiamente caratterizzati in un report, hanno evidenziato varie carenze nella configurazione del sistema operativo della macchina fisica, soprattutto dal punto di vista della gestione delle politiche di accesso, la mancanza di meccanismi di \textit{trust} nei \textit{repository} dei pacchetti e l'assenza di meccanismi di auditing.
+Per l'analisi del \textbf{livello infrastrutturale}, è stato utilizzato il driver sviluppato in questo lavoro di tesi, il cui obiettivo è quello di integrare le funzionalità di \textit{OpenSCAP} in \textit{Moon Cloud}. I risultati ottenuti, ampiamente caratterizzati in un report, hanno evidenziato varie carenze nella configurazione del sistema operativo della macchina fisica, soprattutto dal punto di vista della gestione delle politiche di accesso, la mancanza di meccanismi di \textit{trust} nei \textit{repository} dei pacchetti e l'assenza di tecnologie di auditing.
 Per l'analisi del setup \textit{Open Stack}, ci si è basati sul contenuto dell'articolo "A security benchmark for Open Stack" \cite{MyPaper}, del quale è stato effettuato un mapping sui requisiti FedRAMP. I risultati ottenuti evidenziano ancora una volta mancanza di accuratezza nella configurazione degli aspetti di sicurezza. Tuttavia, poiché i sistemi installati sono dedicati all'utilizzo in laboratorio e non orientate alla produzione ed all'erogazione di servizi verso terzi, il livello di sicurezza effettivamente implementato è di qualità accettabile.
 
 Per l'analisi del \textbf{livello di piattaforma}, è stato utilizzato nuovamente il driver \textit{OpenSCAP}, dopodiché è stato effettuato il \textit{benchmarking} della configurazione di sicurezza del cluster \textit{Docker Swarm}. Per ciascuna delle regole non validate, è stato effettuato il mapping sui requisiti FedRAMP violati.
-I container Docker vengono eseguiti con utente \textit{root} e senza l'utilizzo di \textit{user namespace}, non sono presenti meccanismi di \textit{mandatory access control} come \textit{AppArmor} o \textit{selinux}. 
+I container Docker vengono eseguiti con utente \textit{root} e senza l'utilizzo di \textit{user namespace}, non sono presenti soluzioni \textit{mandatory access control} come \textit{AppArmor} o \textit{selinux}. 
  
 L'analisi del \textbf{livello applicativo}, infine, si è svolta ispezionando i componenti dell'architettura \textit{Moon Cloud} e i meccanismi di comunicazione tra gli stessi. Sono state rilevate numerose carenze, alcune a livello di configurazione quindi sostenibili in un ambiente di sviluppo (appartenenti alla classe \textit{CM} di FedRAMP), altre a livello implementativo.
 I canali di comunicazione tra alcuni componenti (coda per l'esecuzione dei test, connessione al database, comunicazione con il database dei risultati) sono in chiaro; considerando inoltre che le reti \textit{overlay} di \textit{Docker} non sono configurate in modo cifrato (come illustrato in sezione \ref{ref:dockerswarmanalysis}), il rischio di esposizione di informazioni sensibili è alto.
