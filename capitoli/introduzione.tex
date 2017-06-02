@@ -42,7 +42,7 @@ L'organizzazione dei capitoli è la seguente:
         \\Nel primo capitolo sono analizzate le problematiche di sicurezza nella migrazione di infrastrutture tradizionali verso la \textit{cloud} illustrando le soluzioni proposte in letteratura.
         Tra queste, vengono approfondite le tecniche di \textit{assurance} basate su certificazione e controllo della \textit{compliance}.
     \item \textbf{Capitolo 2 - Moon Cloud, un framework per il monitoraggio e la security assurance.}
-        \\Nel secondo capitolo viene illustrato Moon Cloud, una soluzione software prodotta dal laboratorio SESAR dell'Università degli Studi di Milano, avente come obiettivo la security assurance.
+        \\Nel secondo capitolo viene illustrato Moon Cloud, una soluzione software prodotta da alcuni ricercatori del laboratorio SESAR dell'Università degli Studi di Milano, avente come obiettivo la security assurance.
     \item \textbf{Capitolo 3 - FedRAMP - Federal Risk and Authorization Management Program.}
         Nel terzo capitolo viene analizzato FedRAMP, approfondendone i punti chiave, i ruoli e le responsabilità degli attori coinvolti, e identificando
         i possibili approcci per implementarne i controlli di sicurezza all'interno di Moon Cloud, al fine di fornire uno strumento a supporto delle attività di ciascun attore.
@@ -52,12 +52,13 @@ L'organizzazione dei capitoli è la seguente:
         Nel primo caso, viene presentato il framework OpenSCAP, un ecosistema realizzato da Red Hat per le attività di auditing, e ne viene proposta un'integrazione con Moon Cloud.
         Nel secondo caso, viene presentato un driver Moon Cloud ad interazione umana, che invia questionari personalizzabili tramite template agli utenti interessati, richiedendone la compilazione e creando un report in PDF.
     \item \textbf{Capitolo 5 - Validazione del framework.}\\
-        Nel quinto capitolo viene effettuata la validazione del lavoro svolto. Il driver OpenSCAP viene eseguito sul deployment in produzione dello stesso Moon Cloud, per effettuarne un'analisi di sicurezza.
-        Come illustrato nel capitolo 2, Moon Cloud è organizzato in microservizi gestiti tramite \textit{container}; in particolare, il deployment è effettuato su una IaaS OpenStack e una PaaS Docker.
-        L'analisi si articola perciò in due fasi:
+        Nel quinto capitolo viene effettuata la validazione del lavoro svolto. Il driver \textit{OpenSCAP} viene eseguito sul deployment di sviluppo dello stesso \textit{Moon Cloud}, per effettuarne un'analisi di sicurezza.
+        Come illustrato nel capitolo 2, \textit{Moon Cloud} è organizzato in microservizi gestiti tramite \textit{container}; in particolare, il deployment è effettuato su una IaaS OpenStack e una PaaS Docker.
+        L'analisi si articola perciò in tre fasi:
         \begin{enumerate}
-            \item analisi dell'infrastruttura OpenStack sottostante, mediante OpenSCAP e controlli di sicurezza specifici mappati sui requisiti FedRAMP;
-            \item \textit{assessment} dei container dei vari componenti di Moon Cloud e dei canali di comunicazione.
+            \item valutazione dell'infrastruttura OpenStack sottostante, mediante OpenSCAP e controlli di sicurezza specifici mappati sui requisiti FedRAMP;
+            \item valutazione del livello di piattaforma, costituito da un cluster Docker Swarm;
+            \item \textit{assessment} dei vari componenti di Moon Cloud e dei canali di comunicazione.
         \end{enumerate}
     \item \textbf{Capitolo 6 - Conclusione e sviluppi futuri}
         Nel capitolo finale vengono mostrati alcuni sviluppi futuri, che spaziano dall'integrazione dei driver sviluppati con altri standard, per arrivare all'utilizzo dell'approccio illustrato in casistiche analoghe al processo di auditing della compliance.

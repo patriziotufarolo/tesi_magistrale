@@ -1,16 +1,21 @@
 \documentclass[../main.tex]{subfiles}
 \begin{document}
 \chapter{Validazione del framework}
-In questo capitolo verrà proposta una validazione di un deployment di test del framework Moon Cloud, mediante la valutazione della sicurezza tramite l'esecuzione del driver sviluppato a tutti i livelli dello stack cloud (infrastruttura, piattaforma, software). 
+In questo capitolo verrà proposta una validazione del lavoro svolto, effettuando una valutazione della sicurezza in un deployment di sviluppo della piattaforma \textit{Moon Cloud}.
+L'obiettivo è quello di validare il framework \textit{Moon Cloud} rispetto ai requisiti \textit{FedRAMP}.
 
-\section{Deployment di Moon Cloud}
+A tal fine sono stati effettuati diversi test, ispezionando i livelli \textit{IaaS}, \textit{PaaS} e \textit{SaaS},
+eseguendo, ove opportuno, il driver sviluppato in sezione \ref{sec:openscapmooncloud} e presentandone una valutazione delle prestazioni.  
 
-Il deployment dell'ambiente di test è stato effettuato su un'architettura multi-layer così composta:
+L'ambiente di sviluppo è costituito da un'architettura multi-layer così composta:
 \begin{itemize}
     \item A livello di infrastruttura, un nodo fisico, Dell PowerEdge T430 equipaggiato con processore Intel(R) Xeon(R) CPU E5-2630 v4 (10 core fisici e 40 thread logici), 48GB di RAM e 5 dischi da 1TB ciascuno in configurazione RAID 1. Su questa macchina è stato installato il sistema operativo CentOS 7.2, e il software Open Stack Newton.
-        Successivamente sono state create 3 macchine virtuali con sistema operativo CentOS 7.2, in un flavor con 4GB di RAM e 10GB di disco.
-    \item A livello di piattaforma, un cluster Docker Swarm di 2 nodi per i componenti core di Moon Cloud. La terza macchina virtuale è stata utilizzata come nodo di esecuzione per un cluster di dimensione unaria.
-    \item A livello software, i componenti di Moon Cloud: 7 servizi core, gestiti tramite container Docker sul cluster swarm e 3 microservizi per la gestione del nodo di esecuzione.\\
+
+        È stata quindi effettuata la valutazione della sicurezza a livelli di sistema operativo, utilizzando il driver \textit{OpenSCAP} (del quale sono state collezionate alcune misurazioni sull'impatto prestazionale), e successivamente è stato proposto un benchmarking del setup OpenStack, effettuando un mapping delle recommendation descritte dell'articolo \textit{"A security benchmark for OpenStack"}\cite{MyPaper} sui \textit{security control} FedRAMP. 
+    \item A livello di piattaforma, un cluster Docker Swarm composto da 3 macchine virtuali identiche, con 4GB di RAM, 10GB di disco e sistema operativo CentOS 7.2.
+        La valutazione della sicurezza è stata effettuata tramite il driver \textit{OpenSCAP} per analizzare il sistema operativo \textit{guest}, poi eseguendo il \textit{Docker Benchmark for Security}\footnote{https://dockerbench.com} proponendo, anche in questo caso, il mapping tra i risultati ottenuti e i \textit{requisiti FedRAMP}.
+
+    \item A livello software, i componenti di Moon Cloud: 5 microservizi \textit{core} e 2 microservizi per la gestione del nodo di esecuzione.\\
         \textbf{Componenti Core}
         \begin{itemize}
             \item API
@@ -18,22 +23,24 @@ Il deployment dell'ambiente di test è stato effettuato su un'architettura multi
             \item Repository
             \item Database dei risultati
             \item Evaluation Manager
-            \item Meccanismo di comunicazione basato su code
-            \item Reverse proxy
         \end{itemize}
         \textbf{Componenti execution node e execution cluster}
         \begin{itemize}
             \item Execution Manager
-            \item Monitor Execution Manager
-            \item Traefik (reverse proxy) per l'esposizione del servizio web \textit{Survey}
+            \item Reverse proxy
         \end{itemize}
+
+        È stato effettuato l'\textit{assessment} dei vari componenti di \textit{Moon Cloud} e dei meccanismi di integrazione e comunicazione utilizzati; per ragioni di proprietà intellettuale, l'analisi è stata illustrata ad alto livello.
 \end{itemize}
 
+\section{Infrastruttura}
+La valutazione dei componenti infrastrutturali si è svolta in due fasi:
+\begin{enumerate}
+    \item Assessment del sistema operativo del server fisico, utilizzando il driver \textit{OpenSCAP} illustrato in sezione \ref{sec:openscapmooncloud}, del quale sono state collezionate informazioni sulle performance di esecuzione;
+    \item Valutazione di OpenStack sulla base deile recommendation dell'articolo \textit{"A security benchmark for OpenStack"}\cite{MyPaper}. 
+\end{enumerate}
 
-\section{Sicurezza del deployment}
-L'analisi della sicurezza è stata effettuata a livello di infrastruttura, analizzando le configurazioni sul sistema operativo del server fisico e le caratteristiche del setup OpenStack; a livello di piattaforma, analizzando le configurazioni del template utilizzato per le macchine virtuali Docker e i container Moon Cloud; a livello applicativo, analizzando la sicurezza nei meccanismi di integrazione dei vari componenti.
-\subsection{Infrastruttura}
-\subsubsection{Analisi OpenSCAP del server fisico}
+\subsection{Analisi OpenSCAP del server fisico}
 \begin{comment}
 test finished
 started at 1496183480
@@ -41,9 +48,10 @@ ended at   1496184352
 lasted -872 seconds
 report available at
 https://moonclouddashboard.blob.core.windows.net/pdfcontainer/f4a1943cff
-
+Il test è stato eseguito utilizzando il driver realizzato, specificando in input il documento XCCDF "\textit{ssg-centos7}" unitamente al profilo "\textit{nist-800-171-cui}". 
 \end{comment}
-Il test è stato eseguito utilizzando il driver realizzato, specificando in input il documento XCCDF "\textit{ssg-centos7}" unitamente al profilo "\textit{nist-800-171-cui}".
+Per il primo test eseguito, è stato utilizzato il driver realizzato, il quale effettua una connessione SSH al sistema target, verifica che sia installato \textit{OpenSCAP}, effettua il caricamento dei file XCCDF selezionati, e ne esegue l'assessment caricando poi i risultati sul servizio di storage di oggetti di Microsoft Azure.
+
 Il documento \textit{JSON} dato in input al test è il seguente:
 \begin{js}
 {
@@ -58,8 +66,15 @@ Il documento \textit{JSON} dato in input al test è il seguente:
     }
 }
 \end{js}
+La sezione \textit{read\_ssh\_configuration} contiene i parametri per la connessione SSH, che sono stati omessi per motivi di riservatezza; in \textit{read\_xccdf\_configuration}, sono invece specificati:
+\begin{itemize}
+    \item Il documento XCCDF (\textit{ssg-centos7}), contenente la checklist automatizzabile da eseguire
+    \item Il profilo (\textit{nist-800-171-cui}), che specifica i test effettivamente selezionati per l'esecuzione (il profilo in questione, sebbene di valore semantico apparentemente differente da quanto atteso, include i test \textit{NIST 800-53}).
+    \item La volontà di effettuare il download delle risorse remote specificate nella checklist.
+\end{itemize}
+Infine, \textit{read\_azure\_configuration} contiene i parametri per l'upload del report su Microsoft Azure, anch'essi omessi per ragioni di riservatezza.
 
-I risultati restituiti in output segnalano:
+L'esecuzione del test ha riportato:
 \begin{itemize}
     \item 119 valutazioni effettuate con successo
     \item 72 valutazioni fallite
@@ -189,7 +204,10 @@ Dalla figura \ref{ref:plot1cpuio} è possibile notare come l'impatto del test su
  \caption{Utilizzo della memoria}\label{ref:plot1mem}
 \end{figure}
 In figura \ref{ref:plot1mem} è stato invece illustrato l'utilizzo della memoria durante l'esecuzione del test, che rimane sempre inferiore all'1\%. Anche in questo caso l'impatto prestazionale è minimo; il \textit{footprint} di \textit{OpenSCAP} e delle relative \textit{probes} non raggiunge i 5MB in memoria virtuale (\textit{VSZ}), rimanendo inoltre sotto i 500 KB in memoria RAM(\textit{RSS}).
-Questo driver si presta particolarmente a scenari di esecuzione programmata e automatica, per effettuare monitoraggio continuativo, dimostrandosi adeguato per l'utilizzo in Moon Cloud.
+
+Questo driver si presta particolarmente a scenari di esecuzione programmata e automatica, per effettuare monitoraggio continuativo, dimostrandosi adeguato per l'utilizzo in Moon Cloud, il cui obiettivo è quello di effettuare controlli periodici per la valutazione della compliance.
+
+
 
 \subsubsection{Analisi di OpenStack}
 I documenti XCCDF forniti da OpenSCAP non sono risultati efficienti per l'assessment dei controlli di sicurezza per Open Stack, in quanto le definizioni \textit{OVAL} non sono state redatte
