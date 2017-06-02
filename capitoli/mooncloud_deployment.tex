@@ -9,10 +9,11 @@ eseguendo, ove opportuno, il driver sviluppato in sezione \ref{sec:openscapmoonc
 
 L'ambiente di sviluppo è costituito da un'architettura multi-layer così composta:
 \begin{itemize}
-    \item A livello di infrastruttura, un nodo fisico, Dell PowerEdge T430 equipaggiato con processore Intel(R) Xeon(R) CPU E5-2630 v4 (10 core fisici e 40 thread logici), 48GB di RAM e 5 dischi da 1TB ciascuno in configurazione RAID 1. Su questa macchina è stato installato il sistema operativo CentOS 7.2, e il software Open Stack Newton.
+    \item A livello di infrastruttura, un nodo fisico, Dell PowerEdge T430 equipaggiato con processore Intel(R) Xeon(R) CPU E5-2630 v4 (10 core fisici e 40 thread logici), 48GB di RAM e 5 dischi da 1TB ciascuno in configurazione RAID 1. Su questa macchina è stato installato il sistema operativo CentOS 7.2, e il software OpenStack Newton.
 
         È stata quindi effettuata la valutazione della sicurezza a livelli di sistema operativo, utilizzando il driver \textit{OpenSCAP} (del quale sono state collezionate alcune misurazioni sull'impatto prestazionale), e successivamente è stato proposto un benchmarking del setup OpenStack, effettuando un mapping delle recommendation descritte dell'articolo \textit{"A security benchmark for OpenStack"}\cite{MyPaper} sui \textit{security control} FedRAMP.
     \item A livello di piattaforma, un cluster Docker Swarm composto da 3 macchine virtuali identiche, con 4GB di RAM, 10GB di disco e sistema operativo CentOS 7.2.
+        
         La valutazione della sicurezza è stata effettuata tramite il driver \textit{OpenSCAP} per analizzare il sistema operativo \textit{guest}, poi eseguendo il \textit{Docker Benchmark for Security}\footnote{https://dockerbench.com} proponendo, anche in questo caso, il mapping tra i risultati ottenuti e i \textit{requisiti FedRAMP}.
         \vfill\newpage
 
@@ -212,7 +213,7 @@ Questo driver si presta particolarmente a scenari di esecuzione programmata e au
 Come discusso nel Capitolo 3, FedRAMP fornisce un programma di autorizzazione ciclico, le cui attività sono svolte da organizzazioni eterogenee con periodicità generalmente semestrali o annuali. L'utilizzo di strumenti di monitoraggio continuativo ed auditing è demandato al \textit{cloud service provider} ed alle organizzazioni di terze parti ingaggiate; in relazione alle analisi di performance svolte ed alla completezza dei risultati ottenibili mediante \textit{OpenSCAP}, è possibile affermare che il driver sviluppato abilita Moon Cloud a diventare uno strumento di supporto per le attività del CSP e delle 3PAO.
 
 \subsection{Analisi di OpenStack}
-I documenti XCCDF forniti da OpenSCAP non sono risultati efficienti per l'assessment dei controlli di sicurezza per Open Stack, in quanto le definizioni \textit{OVAL} non sono state completate.
+I documenti XCCDF forniti da OpenSCAP non sono risultati efficienti per l'assessment dei controlli di sicurezza per OpenStack, in quanto le definizioni \textit{OVAL} non sono state completate.
 
 Questa sezione, pertanto, fa riferimento ad alcune raccomandazioni del paper "\textit{A Security Benchmark for OpenStack}" \cite{MyPaper}. Ogni raccomandazione recensita è mappata sui requisiti FedRAMP corrispondenti. A causa del fatto che l'implementazione dei controlli automatici per alcuni di queste non sono disponibili, l'analisi è stata fatta in modo manuale ispezionando le configurazioni.
 
@@ -221,7 +222,7 @@ Laddove è applicata la dicitura "Non applicabile", si intende che il controllo 
     \hline
     \textbf{Reccomendation} & \textbf{FedRAMP SCs} & \textbf{Risultato} \\ \hline
     \endhead 
-    {[R1]} Patch Levels                                                                              & SA-10(1), SI(3)                  & Passato         \\ \hline
+    {[R1]} Patch Levels                                                                              &  CM-2, CM-2(2), SA-10(1), SI(3)                  & Passato         \\ \hline
     {[R2]} Create and Enforce Account and Password Management Policies                                & AC-2, AC-2(3), AC-6, AC-7, AC-9  & Fallito         \\ \hline
     {[R3]} Use a Central Directory for Authentication and Authorization.                              & AC-3, AC-17                      & Fallito         \\ \hline
     {[R4]} Configure Firewalls to Restrict Access                                                     & CM-6, CM-7                       & Passato         \\ \hline
@@ -250,6 +251,8 @@ Laddove è applicata la dicitura "Non applicabile", si intende che il controllo 
 In Tabella \ref{table:fedr_os}, è possibile vedere come il 55\% delle valutazioni abbia avuto esito negativo su questo setup OpenStack, in quanto esso non è predisposto per essere utilizzato in scenari di produzione.
 
 \section{Piattaforma}
+La valutazione della sicurezza è stata effettuata tramite il driver \textit{OpenSCAP} per analizzare il sistema operativo \textit{guest}, poi eseguendo il \textit{Docker Benchmark for Security}\footnote{https://dockerbench.com} proponendo, anche in questo caso, il mapping tra i risultati ottenuti e i \textit{requisiti FedRAMP}.
+
 \subsection{Analisi OpenSCAP sul template delle macchine virtuali}
 Il test con il driver OpenSCAP è stato ripetuto sulle macchine virtuali dei nodi appartenenti al cluster Swarm.
 
@@ -282,7 +285,9 @@ https://moonclouddashboard.blob.core.windows.net/pdfcontainer/b73210ae24
 \subsection{Analisi del cluster Docker Swarm}
 \label{ref:dockerswarmanalysis}
 L'analisi del cluster Swarm è stata condotta utilizzando lo strumento \textit{Docker Security Benchmark}\footnote{Docker Security Benchmark - \textit{https://www.dockerbench.com}}.
+Poiché i nodi del cluster sono stati creati a partire dallo stesso template, è proposta di seguito un'unica analisi.
 Di seguito è proposto un mapping tra le verifiche fallite e i controlli di sicurezza FedRAMP non rispettati; per motivi di proprietà intellettuale i nomi di alcuni container sono stati oscurati.
+
     \begin{ltabulary}{|p{9cm}|p{5cm}|}
         \hline
         \textbf{Controllo} & \textbf{FedRAMP SCs} \\
@@ -309,8 +314,10 @@ Container running with root FS mounted R/W:  mooncloud\_evaluationmodule, mooncl
 %SA-2
 \end{ltabulary}
 
-
-
+Dall'analisi è emerso che non sono stati installati meccanismi di auditing, né per il demone Docker, né per i relativi file di configurazione, inoltre le attività di logging non avvengono in modo centralizzato. Ciò viola i requisiti FedRAMP appartenenti alla classe auditing, in particolar modo \textit{AU-3}, \textit{AU-8} e \textit{AU-12}.
+Il demone Docker è in ascolto su una porta TCP (piuttosto che su una socket Unix), senza che la crittografia \textit{TLS} sia stata abilitata;  Il kernel, inoltre, non è stato compilato con il supporto ai \textit{namespace utente}, il cui obiettivo è quello di isolare ulteriormente le attività del container, né è stato creato un utente specifico per ciascun servizio; il filesystem dei container non viene montato in modalità read-only.
+Per le reti di overlay, inoltre, non è stata abilitata la crittografia (in violazione di \textit{SC-8}, \textit{SC-8(1)}, \textit{SC-10}): l'onere di proteggere le comunicazioni è lasciato al livello \textit{SaaS}.
+Infine, non sono stati abilitati software di mandatory access control come SELinux e AppArmor (in violazione di \textit{AC-3}, \textit{AC-4}, \textit{AC-5}, \textit{AC-6}, \textit{AU-5}).
 \section{Livello applicativo: analisi dei microservizi}
 
 L'attività di assessment a livello applicativo è stata svolta ispezionando le configurazioni dei servizi e la loro implementazione, in un ambiente di sviluppo.
@@ -349,12 +356,19 @@ Database dei risultati & Il database dei risultati è esposto tramite interfacci
 
 Evaluation Manager & È stato effettuato un \textit{vulnerability assessment} blackbox sfruttando i software \textit{SQLMap} e \textit{OpenVAS} e non sono state identificate vulnerabilità note.
 Le API, il cui accesso è effettuato in chiaro, sono utilizzate solo localmente per lanciare le operazioni di valutazione. Il componente comunica con il database dei risultati e con il database API in chiaro. La comunicazione avviene in ogni caso su reti \textit{overlay} separate e cifrate.
-Le credenziali di autenticazione al database API hanno privilegi minimi di accesso sulle sola tabelle relative alle valutazioni dei test.  \\ \hline
+Le credenziali di autenticazione al database API hanno privilegi minimi di accesso sulle sole tabelle relative alle valutazioni dei test.  \\ \hline
 
 Execution Manager & L'execution manager riceve i dati in input dai test tramite un meccanismo di comunicazione basato su code. Su questo non è stata configurata la cifratura dei dati per proteggere la confidenzialità, né di firma volti a preservarne l'integrità.
 I driver dei test sono eseguiti comunicando con un cluster Docker tramite socket Unix in chiaro; il download degli stessi viene fatto dal repository con connessione cifrata tramite SSL e autorizzata con modalità \textit{MAC}\footnote{Mandatory Access Control}. 
  \\ \hline
 \end{ltabulary}
+
+Sono state rilevate numerose carenze, alcune a livello di configurazione - appartenenti alla classe \textit{CM} - e sostenibili in un ambiente di sviluppo, altre a livello implementativo, che devono essere risolte affinché il progetto Moon Cloud possa ricevere l'autorizzazione provvisoria ad operare dalla JBO di FedRAMP.
+
+I canali di comunicazione tra alcuni componenti (coda per l'esecuzione dei test, connessione al database, comunicazione con il database dei risultati) sono in chiaro; considerando inoltre che le reti \textit{overlay} di \textit{Docker} non sono configurate in modo cifrato (come illustrato in sezione \ref{ref:dockerswarmanalysis}), il rischio di esposizione di informazioni sensibili è alto.
+
+A causa della tipologia dei dati trattati dalla piattaforma (credenziali di autenticazione, proprietà dei target da verificare, inventari), il database a supporto delle API necessita di un livello di sicurezza maggiore; questo può essere ottenuto implementando tecniche di anonimizzazione dei dati ed integrando un vault sicuro, crittografato con algoritmi FIPS compliant.
+
 
 \begin{comment}
 \section{Conclusioni}
@@ -362,7 +376,7 @@ I driver dei test sono eseguiti comunicando con un cluster Docker tramite socket
 È stato effettuato l'\textit{assessment} del setup \textit{multi-layer} di un ambiente di sviluppo per un'architettura a microservizi.
 
 Per l'analisi del \textbf{livello infrastrutturale}, è stato utilizzato il driver sviluppato in questo lavoro di tesi, il cui obiettivo è quello di integrare le funzionalità di \textit{OpenSCAP} in \textit{Moon Cloud}. I risultati ottenuti, ampiamente caratterizzati in un report, hanno evidenziato varie carenze nella configurazione del sistema operativo della macchina fisica, soprattutto dal punto di vista della gestione delle politiche di accesso, la mancanza di meccanismi di \textit{trust} nei \textit{repository} dei pacchetti e l'assenza di tecnologie di auditing.
-Per l'analisi del setup \textit{Open Stack}, ci si è basati sul contenuto dell'articolo "A security benchmark for Open Stack" \cite{MyPaper}, del quale è stato effettuato un mapping sui requisiti FedRAMP. I risultati ottenuti evidenziano ancora una volta mancanza di accuratezza nella configurazione degli aspetti di sicurezza. Tuttavia, poiché i sistemi installati sono dedicati all'utilizzo in laboratorio e non orientate alla produzione ed all'erogazione di servizi verso terzi, il livello di sicurezza effettivamente implementato è di qualità accettabile.
+Per l'analisi del setup \textit{OpenStack}, ci si è basati sul contenuto dell'articolo "A security benchmark for OpenStack" \cite{MyPaper}, del quale è stato effettuato un mapping sui requisiti FedRAMP. I risultati ottenuti evidenziano ancora una volta mancanza di accuratezza nella configurazione degli aspetti di sicurezza. Tuttavia, poiché i sistemi installati sono dedicati all'utilizzo in laboratorio e non orientate alla produzione ed all'erogazione di servizi verso terzi, il livello di sicurezza effettivamente implementato è di qualità accettabile.
 
 Per l'analisi del \textbf{livello di piattaforma}, è stato utilizzato nuovamente il driver \textit{OpenSCAP}, dopodiché è stato effettuato il \textit{benchmarking} della configurazione di sicurezza del cluster \textit{Docker Swarm}. Per ciascuna delle regole non validate, è stato effettuato il mapping sui requisiti FedRAMP violati.
 I container Docker vengono eseguiti con utente \textit{root} e senza l'utilizzo di \textit{user namespace}, non sono presenti soluzioni \textit{mandatory access control} come \textit{AppArmor} o \textit{selinux}. 
@@ -370,11 +384,11 @@ I container Docker vengono eseguiti con utente \textit{root} e senza l'utilizzo 
 L'analisi del \textbf{livello applicativo}, infine, si è svolta ispezionando i componenti dell'architettura \textit{Moon Cloud} e i meccanismi di comunicazione tra gli stessi. Sono state rilevate numerose carenze, alcune a livello di configurazione quindi sostenibili in un ambiente di sviluppo (appartenenti alla classe \textit{CM} di FedRAMP), altre a livello implementativo.
 I canali di comunicazione tra alcuni componenti (coda per l'esecuzione dei test, connessione al database, comunicazione con il database dei risultati) sono in chiaro; considerando inoltre che le reti \textit{overlay} di \textit{Docker} non sono configurate in modo cifrato (come illustrato in sezione \ref{ref:dockerswarmanalysis}), il rischio di esposizione di informazioni sensibili è alto.
 
-Il database a supporto delle API necessita di livello di sicurezza implementato a causa della tipologia dei dati trattati dalla piattaforma, come ad esempio i dati di autenticazione e le proprietà dei \textit{target} che devono essere verificati.
+Il database a supporto delle API necessita di livello di sicurezza maggiore, implementando tecniche di anonimia del dato e crittografia, a causa della tipologia dei dati trattati dalla piattaforma, come ad esempio i dati di autenticazione e le proprietà dei \textit{target} che devono essere verificati.
 A tal proposito potrebbe essere integrato un \textit{vault} sicuro, crittografato con meccanismi e algoritmi \textit{FIPS compliant}.
 
 Affinché il progetto Moon Cloud possa ricevere l'autorizzazione provvisoria ad operare dalla JBO FedRAMP, è necessario implementare le soluzioni ai problemi illustrati.
 Per quanto riguarda l'aspetto infrastrutturale e di piattaforma, una possibilità è quella di rivolgersi a fornitori di servizi già autorizzati (Azure), come ad esempio Azure.
-Le carenze del livello applicativo, invece, devono essere gestite in modo opportuno dal team di sviluppo applicando le \textit{remediation} opportune rispetto ai security control \textit{NIST 800-53}.
+Le carenze del livello applicativo, invece, devono essere gestite dal team di sviluppo applicando le \textit{remediation} opportune rispetto ai security control \textit{NIST 800-53}.
 \end{comment}
 \end{document}

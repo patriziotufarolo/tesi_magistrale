@@ -83,8 +83,8 @@ I documenti utilizzati sono di tipo \textit{XML}\footnote{eXtensible Markup Lang
 I componenti di \textit{SCAP} possono essere divisi nelle seguenti categorie:
 \begin{itemize}
     \item Linguaggi (XCCDF\footnote{eXtensible Configuration Checklist Description Format}, OVAL\footnote{Open Vulnerability and Assessment Language}, OCIL\footnote{Open Checklist Interactive Language})
-    \item Enumerazioni (CPE\footnote{Common Platform Enumeration, \textit{http://cpe.mitre.org}}, CCE\footnote{Common Configuration Enumeration \textit{http://cce.mitre.org}}, CVE\footnote{Common Vulnerability Exposure \textit{http://cve.mitre.org}})
-    \item Sistemi di misurazione e \textit{scoring} (CVSS\footnote{Common Vulnerability Scoring System \textit{https://nvd.nist.gov/vuln-metrics/cvss}}, CCSS\footnote{Common Configuration Scoring System})
+    \item Enumerazioni (CPE\footnote{Common Platform Enumeration, \textit{http://cpe.mitre.org}}, CCE\footnote{Common Configuration Enumeration, \textit{http://cce.mitre.org}}, CVE\footnote{Common Vulnerability Exposurei, \textit{http://cve.mitre.org}})
+    \item Sistemi di misurazione e \textit{scoring} (CVSS\footnote{Common Vulnerability Scoring Systemi, \textit{https://nvd.nist.gov/vuln-metrics/cvss}}, CCSS\footnote{Common Configuration Scoring System})
     \item Sistemi di \textit{trustworthiness} (TMSAD\footnote{Trust Model for Security Automation Data})
 \end{itemize}
 
@@ -159,7 +159,7 @@ Il processo di \textit{assessment} può essere diviso in tre passaggi \cite{nist
 \end{itemize}
 Il linguaggio può essere poi esteso con specifiche aggiuntive magari istanziate su una singola tecnologia (ad es. \textit{Oval Language UNIX Component Model Specification} per i sistemi operativi UNIX e UNIX-like, o \textit{OVAL Language Windows Component Model Specification} per i sistemi Windows).
 Dal punto di vista del componente implementato, la parte più importante da considerare è rappresentata dalla \textit{OVAL definition}, che è richiamata dalle regole XCCDF.
-L'obiettiivo è quello di descrivere: \textit{i)} le condizioni che un sistema deve avere affinché abbia una determinata vulnerabilità, \textit{ii)} definizione di eventuali rimedi e patch, \textit{iii)} definizioni per definire le condizioni da verificare per determinare se un determinato software o componente è installato, \textit{iv)} definizioni per la \textit{compliance} ad una politica o ad una definizione specifica \cite{nist800126}. Sulla base di ciò è possibile, tramite OVAL, determinare se una regola \textit{XCCDF} sia valida o meno sul sistema testato. 
+L'obiettiivo è quello di descrivere: \textit{i)} le condizioni che un sistema deve avere affinché abbia una determinata vulnerabilità, \textit{ii)} definizione di eventuali rimedi e patch, \textit{iii)} definizioni per definire le condizioni da verificare per determinare se un certo software o componente è installato, \textit{iv)} definizioni per la \textit{compliance} ad una politica o ad una definizione specifica \cite{nist800126}. Sulla base di ciò è possibile, tramite OVAL, determinare se una regola \textit{XCCDF} sia valida o meno sul sistema testato. 
 Si tratta, tuttavia, di un linguaggio orientato all'automazione, che pertanto non può essere applicato in caso di verifiche umane e procedurali, come molti dei controlli di sicurezza analizzati.
 In questi casi il linguaggio adatto è OCIL, \textit{Open Checklist Interactive Language}.
 
@@ -384,7 +384,7 @@ In questo caso avremmo quindi una evaluation rule così composta:
 \begin{Verbatim}[frame=single]
 a#1 implies a#2
 \end{Verbatim}
-In questo modo \textit{a\#1} lancia il driver "survey" in background terminande con valore "true", mentre \textit{a\#2} viene eseguito periodicamente per raccogliere il risultato del questionario, e restituisce "false" finché il questionario non è stato compilato.
+In questo modo \textit{a\#1} lancia il driver "survey" in background terminando con valore "true", mentre \textit{a\#2} viene eseguito periodicamente per raccogliere il risultato del questionario, e restituisce "false" finché il questionario non è stato compilato.
 \end{itemize}
 \subsubsection{Flusso di esecuzione}
 \begin{figure}[H]

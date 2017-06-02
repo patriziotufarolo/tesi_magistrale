@@ -50,6 +50,7 @@ Di seguito sarà proposta una breve panoramica sulla terminologia utilizzata, su
 \caption{Architettura e componenti di Moon Cloud}\label{fig:MCArchi}
 \end{figure}
 In figura \ref{fig:MCArchi} sono illustrate l'architettura del framework Moon Cloud e l'interazione tra i vari microservizi che lo compongono.
+
 Questa può essere divisa in due aree. La prima, accessibile dagli utenti del sistema fornisce le funzionalità di gestione e comprende:
 \begin{itemize}
     \item \textbf{Dashboard} (1), sviluppata in Javascript, HTML5 e CSS mediante il framework Angular.JS. Rappresenta il punto di ingresso per l'utente, e fornisce un'interfaccia grafica per la fruizione delle funzionalità del prodotto. La \textit{Dashboard} è supportata da API HTTP servite in modo sicuro tramite il protocollo TLS (2).
@@ -80,7 +81,7 @@ Si tratta di un processo complesso, che richiede l'aggregazione delle valutazion
     Sia $\Rec{}$ la \textit{recommendation} da verificare, la \textit{reccomendation verification} è una funzione  $\widehat{\Rec{}}$  definita sulla tupla $\langle$$\EP{}$, $\ER{}$$\rangle$ che restituisce un valore booleano \{true, false\} dove:
 
 \begin{itemize}
-    \item $\EP{}$ è l'insieme di \textit{processi di valutazione} \{$\Eval{}$\} da eseguire. L'\textit{output} del processo di valutazione è un valore \textit{booleano} che espreime se la valutazione abbia avuto successo o no, aggregato alle \textit{evidence} collezionate a supporto del risultato.
+    \item $\EP{}$ è l'insieme di \textit{processi di valutazione} \{$\Eval{}$\} da eseguire. L'\textit{output} del processo di valutazione è un valore \textit{booleano} che esprime se la valutazione abbia avuto successo o no, aggregato alle \textit{evidence} collezionate a supporto del risultato.
         \item $\ER{}$ è una \textit{evaluation rule} espressa come formula di logica proposizionale, i cui termini sono i singoli processi di valutazione $\Eval{}$. Essa combina il risultato di vari processi $\Eval{}$$\in$$\EP{}$ e restituisce true se la valutazione ha successo, altrimenti restituisce false.
 \end{itemize}
 \end{definition}
@@ -99,7 +100,7 @@ Un controllo $C$ specifica i dettagli su come collezionare le evidenze su un tar
     $C$ è definito su una tripla della forma $\langle$$\phi$, $\lambda$, $\pi$$\rangle$, dove:
 \begin{itemize}
 	\item $\phi$ è il flusso di esecuzione del processo di raccolta  delle evidenze. È composto da una sequenza di operazioni atomiche. 
-	\item $\lambda$ è un insieme di \textit{parametri} necessari a collegare il flusso $\phi$ al target $t$ 
+	\item $\lambda$ è un insieme di \textit{parametri} necessari a collegare il flusso $\phi$ al target $t$. 
 	\item $\pi$ è un insieme di \textit{Environmental Settings} che descrivono le caratteristiche dell'ambiente in cui il controllo deve essere eseguito e le possibili dipendenze software dello stesso. 
 \end{itemize}
 \end{definition}
@@ -193,7 +194,7 @@ All'interno del container sono presenti due componenti:
     \item{\textit{entrypoint.py}}, il cui ruolo è quello di leggere ed effettuare la deserializzazione degli \textit{input}, leggere i metadati del driver, e precaricare la classe del driver.
         Il discovery della classe viene fatto in modo automatico da una directory chiamata \textit{test/} che andremo a dettagliare tra poco.
     \item{\textit{driver.py}}, che fornisce un'\textit{interfaccia} mediante la classe \textit{Driver} che ciascun payload dovrà implementare.
-        Una peculiarità della classe \textit{Driver} è la presenza della sottoclasse \textit{\_\_metaclass\_\_} che fornisce un meccanismo di \textit{subscription} per tutte le classi che ereditano da Driver. Questo permette di far funzionare il meccanismo di \textit{autodiscovery}, permettendo a chi scrive il payload di lavorare in modo agnostico rispetto alle funzionalità del framework.
+        Una peculiarità della classe \textit{Driver} è la presenza della sottoclasse \textit{\_\_metaclass\_\_} che fornisce un meccanismo di \textit{subscription} per tutte le classi che ereditano da Driver. Questo permette di far funzionare il meccanismo di \textit{autodiscovery}, consentendo a chi scrive il payload di lavorare in modo agnostico rispetto alle funzionalità del framework.
         L'esecuzione effettiva del codice avviene per mezzo del metodo \textit{run} e un meccanismo di gestione delle operazioni atomiche in due flussi (forward e rollback) dettagliatamente illustrati nella sezione successiva.
         La classe \textit{DriverResult} fornisce la possibilità di restituire le misurazioni effettuate dal controllo in forma \textit{chiave-valore}.
 \end{itemize}
@@ -201,7 +202,7 @@ All'interno del container sono presenti due componenti:
 Altri file rilevanti sono:
 \begin{itemize}
     \item \textit{Dockerfile}, che costituisce la definizione di ogni container Docker. Questo permette di specializzare ulteriormente il container del driver mediante l'installazione di dipendenze binarie ed ulteriori personalizzazioni.
-    \item \textit{requirements\.txt}, che, in Python, contiene tutte le librerie del database PyPI\footnote{https://pypi.python.org/} da cui il codice del driver dipende.
+    \item \textit{requirements.txt}, che, in Python, contiene tutte le librerie del database PyPI\footnote{https://pypi.python.org/} da cui il codice del driver dipende.
 \end{itemize}
 
 

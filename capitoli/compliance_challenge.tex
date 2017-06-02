@@ -48,7 +48,7 @@ Per quanto concerne la proprietà di disponibilità, la dicotomia va ricercata t
 Il \textit{cloud computing} offre intrinsecamente solidità in quanto basato sui concetti di scalabilità, elasticità e ridondanza. Grazie ai meccanismi di orchestrazione tramite API è infatti possibile configurare le applicazioni per l'\textit{auto-scaling}, al fine di mantenere una qualità adeguata nell'erogazione del servizio al crescere degli utenti. Ciò, dal punto di vista della sicurezza, ha portato a notevoli benefici per quanto riguarda la mitigazione di attacchi DoS\footnote{Denial of Service}, garantendo la continuità di servizio riducendo i costi.
 Tuttavia esistono dei prerequisiti per garantire la disponibilità: innanzitutto il \textit{cloud service provider} deve assicurare la ridondanza dei dati e della rete, contemplando l'ipotesi di distribuire le risorse su più località geografiche, con l'obiettivo sia di prevenire guasti localizzati che di erogare la risorsa dalla località più vicina rispetto all'utente.
 
-Nel momento in cui funzionalità comunemente demandate ad hardware specifico vengono implementano in software, si determinano sia benefici che svantaggi che devono sia essere contemplati in fase di valutazione del rischio che trattati nei contratti di service level agreement. Una compromissione dell'interfaccia di gestione della piattaforma cloud, sia che si tratti di una dashboard sia che si tratti di un'interfaccia API, può portare a un'interruzione di servizio.
+Nel momento in cui funzionalità comunemente demandate ad hardware specifico vengono implementate in software, si determinano sia benefici che svantaggi che devono sia essere contemplati in fase di valutazione del rischio che trattati nei contratti di service level agreement. Una compromissione dell'interfaccia di gestione della piattaforma cloud, sia che si tratti di una dashboard sia che si tratti di un'interfaccia API, può portare a un'interruzione di servizio.
 
 Gli standard di sicurezza classici, così come l'assetto normativo e i contratti di \textit{service level agreement}, necessitano di essere adeguati per supportare l'integrazione di tecnologie cloud all'interno degli stack tradizionali, tenendo conto delle problematiche di \textit{shared responsability} presentate.
 
@@ -109,7 +109,7 @@ Saranno di seguito presentati alcuni approcci e tecniche per garantire la sicure
 
 \subsection{Autenticazione e controllo degli accessi}
 I sistemi tradizionali per l'autenticazione e il controllo degli accessi si sono verificati inefficienti per la cloud, pertanto è stato necessario definire nuovi approcci. L'adozione di nuovi \textit{pattern} di sviluppo orientati alla scalabilità - come ad esempio il pattern \textit{micro-services}, naturale evoluzione delle architetture SOA - ha reso necessario sviluppare meccanismi di autenticazione decentralizzati e federati.
-Almulia and Yeun [2010] offrono una panoramica sui protocolli di autenticazione e \textit{identity management}, analizzandone la sicurezza, l'effort implementativo e i costi \cite{Ieee5542654}.
+Almulia e Yeun offrono una panoramica sui protocolli di autenticazione e \textit{identity management}, analizzandone la sicurezza, l'effort implementativo e i costi \cite{Ieee5542654}.
 
 Costituendo parte critica per la maggior parte dei sistemi, i servizi di autenticazione, gestione dell'identità e gestione delle policy di accesso sono erogati \textit{as-a-service}.
 
@@ -142,7 +142,7 @@ Come illustrato da Velten and Stumpf \cite{Velten2013} e più recentemente da Sz
 \section{Approcci per assurance, testing, monitoraggio e compliance}
 I progressi nella ricerca sulla sicurezza della cloud hanno portato la necessità di avere tecniche di \textit{security assurance} per aumentare la confidenza degli utenti nei confronti del provider \cite{6814039}.
 Per \textit{assurance} si intende la modalità per ottenere, con un certo livello di precisione, la consapevolezza che l'infrastruttura e/o le applicazioni manterranno nel tempo una o più proprietà di sicurezza, e la loro operatività non sarà compromessa indipendentemente da malfunzionamenti o attacchi \cite{goertzel2007software}.
-In accordo con Ardagna et Al. \cite{Ardagna:2015:SAC:2808687.2767005}, è possibile affermare che quello di \textit{assurance} è un concetto più esteso della mera nozione di \textit{sicurezza informatica}, comunemente definita come \textit{la protezione delle informazioni e dei sistemi informativi da accessi, utilizzi disclosure, interruzioni del funzionamento, modifiche e distruzioni non autorizzate}.
+In accordo con Ardagna et Al. \cite{Ardagna:2015:SAC:2808687.2767005}, è possibile affermare che quello di \textit{assurance} è un concetto più esteso della mera nozione di \textit{sicurezza informatica}, comunemente definita come \textit{la protezione delle informazioni e dei sistemi informativi da accessi, utilizzi, disclosure, interruzioni del funzionamento, modifiche e distruzioni non autorizzate}.
 Nella cloud è molto facile avere livelli di sicurezza elevati con livelli di assurance scarsi poiché le funzionalità di sicurezza realmente implementate sono difficilmente percepite. 
 
 Per la messa in sicurezza delle realtà che decidono di trasferire degli \textit{asset} sulla cloud è necessario considerare tre aspetti fondamentali:
@@ -152,7 +152,7 @@ Per la messa in sicurezza delle realtà che decidono di trasferire degli \textit
     \item Soluzione di assessment, verifica delle policy e della compliance, che permetta sia di verificare lo stato istantaneo del livello di conformità, che di spiegare all'utente le metodologie attuate per mantenere livelli di compliance adeguati, secondo il principio "comply-or-exmplain" di MacNeil and Li \cite{RePEc:bla:corgov:v:14:y:2006:i:5:p:486-496}
 \end{itemize}
 
-L'obiettivo di questo lavoro di tesi è quello di fornire un framework per la security assurance i) insistendo sulla valutazione continuativa dello stato di sicurezza sulla cloud ii) offrendo un framework cloud-based per la security assurance insistendo su
+L'obiettivo di questo lavoro di tesi è quello di fornire un framework per la security assurance i) insistendo sulla valutazione continuativa dello stato di sicurezza sulla cloud ii) offrendo un framework cloud-based per la security assurance basato su
 \begin{itemize}
     \item testing di proprietà non funzionali
     \item monitoraggio continuativo della sicurezza del sistema
@@ -168,7 +168,7 @@ Il \textit{testing} è definito come la fase del ciclo di vita del software comp
 Nel contesto \textit{cloud} possiamo riconoscere due tipologie di soluzioni di testing: quelle specifiche per il collaudo di infrastrutture cloud e quelle generiche per il testing del software, applicabili anche a servizi cloud.
 
 
-Il lavoro di tesi si focalizzerà maggiormente sulla prima categoria insistendo sulla validazione delle proprietà a tutti i livelli dello stack (in accordo con Riungu et. Al\cite{Ieee5708500}); nonostante ciò il framework proposto può essere adattato ad entrambe le tipologie.
+Il lavoro di tesi si focalizzerà maggiormente sulla prima categoria mediante la validazione delle proprietà a tutti i livelli dello stack (in accordo con Riungu et. Al\cite{Ieee5708500}); nonostante ciò il framework proposto può essere adattato ad entrambe le tipologie.
 
 
 \subsection{Monitoraggio continuativo della sicurezza del sistema}
@@ -183,7 +183,7 @@ Proprio per facilitare scenari di \textit{software integration} il framework pro
 
 
 Come per il testing, anche per il monitoraggio è possibile individuare sia soluzioni generiche sia soluzioni specifiche per il mondo \textit{cloud}. Software come \textit{Nagios}\footnote{Nagios, piattaforma di monitoraggio distribuita general purpose, \textit{http://www.nagios.org/}} e \textit{Ganglia}\footnote{Ganglia, soluzione per il monitoraggio delle performance dei cluster in ambito grid computing, \textit{http://ganglia.sourceforge.net}} rientrano nella prima categoria, ma vantano livelli di espandibilità tali da poter essere adeguati ai sistemi di collezionamento delle metriche dei maggiori software cloud.
-Ulteriori soluzioni come \textit{Sensu}\footnote{Sensu, \textit{https://www.sensuapp.org/}}, \textit{Sysdig}\footnote{Sysdig, sistema per l'identificazione dei problemi nei sistemi basati su container\textit{http://www.sysdig.org}}, \textit{Weave}\footnote{Weave, piattaforma SaaS per il monitoraggio di architetture a micro-servizi \textit{https://www.weave.works/}} contengono strumenti specifici per la cloud.
+Ulteriori soluzioni come \textit{Sensu}\footnote{Sensu, \textit{https://www.sensuapp.org/}}, \textit{Sysdig}\footnote{Sysdig, sistema per l'identificazione dei problemi nei sistemi basati su container \textit{http://www.sysdig.org}}, \textit{Weave}\footnote{Weave, piattaforma SaaS per il monitoraggio di architetture a micro-servizi \textit{https://www.weave.works/}} contengono strumenti specifici per la cloud.
 
 Per quanto riguarda gli aspetti di sicurezza, la disponibilità di potenza computazionale on-demand, ha garantito la possibilità di effettuare il deploy scalabile di sistemi IDS\footnote{\textit{Intrusion Detection System}, software per il rilevamento delle intrusioni} e IPS\footnote{\textit{Intrusion Prevention System}, sistemi preventivi per la rilevazione di attività anomale usati per prevenire incidenti informatici}. 
 L'utilizzo di questa tipologia di software è stato approfondito da Modi et al. \cite{7745295}, i quali hanno illustrato come utilizzarli sulla \textit{cloud} al fine di mitigare le diverse tipologie di attacchi al paradigma CIA (attacchi provenienti dall'interno, dall'esterno, attacchi di flooding, \textit{privilege escalation}, \textit{port scanning}, attacchi agli \textit{hypervisor} di virtualizzazione e attacchi tramite \textit{backdoor}). Un lavoro di Ficco et Al. del 2013 \cite{6681240} ha presentato un'architettura multi-layer per il rilevamento delle intrusioni, che supporta l'aggregazione di eventi complessi.
@@ -196,14 +196,14 @@ Il presente lavoro di tesi trova le sue origini nel progetto europeo FP7 CUMULUS
 L'obiettivo del processo di certificazione è quello di fornire quante più evidenze possibili per attestare che un sistema software garantisca determinate proprietà non funzionali e si comporti in modo corretto \cite{Ardagna:2015:SAC:2808687.2767005}; si tratta di un approccio alla sicurezza già sperimentato in altri ambiti che tuttavia rimane di difficile applicazione nel contesto dei \textit{web-services}, in particolare nella cloud \cite{Anisetti:2013:TSC:2460383.2460384}.
 Infatti, le tecniche di certificazione usuali che considerano il software come blocco monolitico, vanno a scontrarsi con una struttura complessa e \textit{multi-tier} \cite{Anisetti:2013:TSC:2460383.2460384}
 e necessitano di essere integrate con i processi e caratteristiche tipiche del mondo cloud, come il deployment, la discovery degli asset, l'elasticità e il paradgima on-demand.
-Il problema è stato dapprima affrontato in Damiani et al. [2009b] \cite{5190685}, in cui è definita una soluzione di certificazione per i servizi basata su certificati di sicurezza basati su test-case firmati.
+Il problema è stato dapprima affrontato in Damiani et al. [2009b] \cite{5190685}, in cui è definita una soluzione di certificazione per i servizi basata su certificati di sicurezza rilasciati tramite l'esecuzione di casi di test firmati.
 Più recentemente Anisetti et. al \cite{CertEvolutiva} \cite{CertSoa} \cite{6649614} hanno proposto uno schema di certificazione sulla base di un processo di testing basato su un modello, esteso poi con un processo di certificazione incrementale al fine di coprire le esigenze evolutive del paradigma dei servizi.
 
 L'obiettivo di questa tesi, tuttavia, non è quello di fornire un meccanismo di certificazione, bensì quello di offrire un framework per il controllo della conformità di un sistema rispetto alle proprietà non funzionali attese.
 La metodologia utilizzata è basata sul concetto di \textit{auditing}, ovvero la possibilità  di verificare il comportamento di un sistema per valutarne l'adeguatezza rispetto alle policy dell'utente piuttosto che ai regolamenti o alle leggi vigenti \cite{Ardagna:2015:SAC:2808687.2767005}.
 Si vuole quindi rendere la cloud \textit{auditable} - al fine di ottemperare alle esigenze di transparency dell'utente, incrementando così il livello di fiducia dell'utente nei confronti del provider e permettendo allo stesso di essere in grado di effettuare scelte ponderate delle varie soluzioni rispetto ai propri requisiti, funzionali e non.
 
-La \textit{transparency} consiste, per l'appunto, nel concedere all'utente una visione di alto livello a dati aggregati ed evidenze collezionati dal provider stesso a basso livello, ed è considerato alla base di ogni approccio efficace per la cloud assurance \cite{6814039} \cite{6375614}.
+La \textit{transparency} consiste, per l'appunto, nel concedere all'utente una visione di alto livello a dati aggregati ed evidenze collezionati dal provider stesso a basso livello, ed è considerata alla base di ogni approccio efficace per la cloud assurance \cite{6814039} \cite{6375614}.
 
 
 L'assenza di \textit{transparency} infatti rende i problemi di sicurezza difficilmente percettibili per l'utente \cite{Ardagna:2015:SAC:2808687.2767005}, in quanto i contratti di \textit{service level agreement} non forniscono parametri tecnici per misurare il livello di sicurezza delle applicazioni e dei dati ospitati sulla cloud \cite{6684427}.

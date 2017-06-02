@@ -2,37 +2,33 @@
 \begin{document}
 \chapter{Conclusioni e sviluppi futuri}
 \section {Conclusioni}
-In questo lavoro di tesi sono state analizzate le problematiche conseguenti alla migrazione di servizi verso la cloud, illustrando le tecniche sviluppate dalla letteratura.
-È stato poi presentato \textit{Moon Cloud}, un framework sviluppato dal laboratorio SESAR Lab\footnote{SEcure Service-oriented Architectures Research Lab - \textit{http://sesar.di.unimi.it}} dell'Università degli Studi di Milano, il cui obiettivo è quello di implementare una metodologia automatica per la valutazione della sicurezza, delle performance e di altre proprietà non funzionali, offrendo un processo di assurance basato su attività di auditing e raccolta di evidenze.
+In questo lavoro di tesi sono state analizzate le problematiche conseguenti alla migrazione di servizi verso la cloud, illustrando le tecniche sviluppate in letteratura.
+È stato poi presentato \textit{Moon Cloud}, un framework sviluppato da alcuni ricercatori del laboratorio SESAR Lab\footnote{SEcure Service-oriented Architectures Research Lab - \textit{http://sesar.di.unimi.it}} dell'Università degli Studi di Milano, il cui obiettivo è quello di implementare una metodologia automatica per la valutazione della sicurezza, delle performance e di altre proprietà non funzionali, offrendo un processo di assurance basato su attività di auditing e raccolta di evidenze.
 
 Successivamente è stato approfondito \textit{FedRAMP}, il programma federale per l'autorizzazione e l'analisi del rischio per l'adozione dei servizi cloud nelle agenzie governative, caratterizzando le fasi critiche del programma e illustrando come Moon Cloud possa costituire uno strumento di supporto per i vari attori.
 Analizzando i controlli di sicurezza di FedRAMP, è stata quindi effettuata una suddivisione tra controlli automatizzabili e controlli procedurali: per i primi è stato proposto un \textit{driver} \textit{Moon Cloud} basato su OpenSCAP, per la seconda tipologia, invece, è stato fornito un driver per l'esecuzione di sondaggi.
 
-Infine, i controlli sviluppati sono stati validati mediante l'analisi della sicurezza del \textit{deployment} multi-tier di un'architettura a microservizi, il framework Moon Cloud stesso, offrendo una prospettiva sulle performance di esecuzione.
+Infine, i controlli sviluppati sono stati validati mediante l'analisi della sicurezza del \textit{deployment} multi-tier di un'architettura a microservizi, il framework Moon Cloud stesso, offrendo un'analisi delle performance di esecuzione.
 
-Per l'analisi del \textbf{livello infrastrutturale}, è stato utilizzato il driver sviluppato in questo lavoro di tesi, il cui obiettivo è quello di integrare le funzionalità di \textit{OpenSCAP} in \textit{Moon Cloud}, del quale sono state misurate le prestazioni. I risultati ottenuti, ampiamente caratterizzati in un report, hanno evidenziato varie carenze nella configurazione del sistema operativo della macchina fisica, soprattutto dal punto di vista della gestione delle politiche di accesso, la mancanza di meccanismi di \textit{trust} nei \textit{repository} dei pacchetti e l'assenza di soluzioni di auditing.
+Per l'analisi del \textbf{livello infrastrutturale}, è stato utilizzato il driver sviluppato in questo lavoro di tesi, il cui obiettivo è quello di integrare le funzionalità di \textit{OpenSCAP} in \textit{Moon Cloud}, del quale sono state misurate le prestazioni. I risultati ottenuti, ampiamente caratterizzati in un report, hanno evidenziato varie carenze nella configurazione del sistema operativo della macchina fisica rispetto ai requisiti FedRAMP, soprattutto dal punto di vista della gestione delle politiche di accesso, la mancanza di meccanismi di \textit{trust} nei \textit{repository} dei pacchetti e l'assenza di soluzioni di auditing.
 Per l'analisi del setup \textit{Open Stack}, ci si è basati sul contenuto dell'articolo "A security benchmark for Open Stack" \cite{MyPaper}, del quale è stato effettuato un mapping sui requisiti FedRAMP. I risultati ottenuti evidenziano ancora una volta mancanza di accuratezza nella configurazione degli aspetti di sicurezza. Tuttavia, poiché i sistemi installati sono dedicati all'utilizzo in laboratorio e non orientate alla produzione ed all'erogazione di servizi verso terzi, il livello di sicurezza effettivamente implementato è di qualità accettabile.
 
 Per l'analisi del \textbf{livello di piattaforma}, è stato utilizzato nuovamente il driver \textit{OpenSCAP}, dopodiché è stato effettuato il \textit{benchmarking} della configurazione di sicurezza del cluster \textit{Docker Swarm}. Per ciascuna delle regole non validate, è stato effettuato il mapping sui requisiti FedRAMP violati.
 I container Docker vengono eseguiti con utente \textit{root} e senza l'utilizzo di \textit{user namespace}, non sono presenti software per il \textit{mandatory access control} come \textit{AppArmor} o \textit{selinux}. 
  
-L'analisi del \textbf{livello applicativo}, infine, si è svolta ispezionando i componenti dell'architettura \textit{Moon Cloud} e i canali di comunicazione tra gli stessi. Sono state rilevate numerose carenze, alcune a livello di configurazione quindi sostenibili in un ambiente di sviluppo (appartenenti alla classe \textit{CM} di FedRAMP), altre a livello implementativo.
-I canali di comunicazione tra alcuni componenti (coda per l'esecuzione dei test, connessione al database, comunicazione con il database dei risultati) sono in chiaro; considerando inoltre che le reti \textit{overlay} di \textit{Docker} non sono configurate in modo cifrato (come illustrato in sezione \ref{ref:dockerswarmanalysis}), il rischio di esposizione di informazioni sensibili è alto.
-
-Il database a supporto delle API necessita di livello di sicurezza implementato a causa della tipologia dei dati trattati dalla piattaforma, come ad esempio i dati di autenticazione e le proprietà dei \textit{target} che devono essere verificati.
-A tal proposito potrebbe essere integrato un \textit{vault} sicuro, crittografato con algoritmi \textit{FIPS compliant}.
+L'analisi del \textbf{livello applicativo}, infine, si è svolta ispezionando i componenti dell'architettura \textit{Moon Cloud} e i canali di comunicazione tra gli stessi. Sono state rilevate numerose carenze, alcune a livello di configurazione quindi comprensibili in un ambiente di sviluppo (appartenenti alla classe \textit{CM} di FedRAMP), altre a livello implementativo; in particolar modo relativamente ai canali di comunicazione tra alcuni componenti e allo \textit{storage} dei dati nel database.
 
 Affinché il progetto Moon Cloud possa ricevere l'autorizzazione provvisoria ad operare dalla JBO FedRAMP, è necessario implementare le soluzioni ai problemi illustrati.
 Per quanto riguarda l'aspetto infrastrutturale e di piattaforma, una possibilità è quella di rivolgersi a fornitori di servizi già autorizzati, come ad esempio Azure.
-Le carenze del livello applicativo, invece, devono essere gestite in modo opportuno applicando le \textit{remediation} opportune rispetto ai security control NIST 800-53.
+Le carenze del livello applicativo, invece, devono essere gestite applicando le \textit{remediation} opportune rispetto ai security control NIST 800-53.
 
 \section {Sviluppi futuri}
 Questa tesi si presta a numerosi sviluppi futuri, che possono riguardare sia il perfezionamento dei driver Moon Cloud realizzati, sia l'integrazione degli stessi per la valutazione della compliance per altri standard di settore.
 
 La metodologia di \textit{assurance} illustrata, permette sia di effettuare l'assessment automatico di proprietà non funzionali mediante l'esecuzione di test, sia di analizzare proprietà di sicurezza di carattere procedurale, andando ad ispezionare processi di business condotti perlopiù da attori umani.
 
-Pertanto, se da una parte l'approccio fornito può essere utilizzato per effettuare controlli di compliance verso altre normative e standard, (come ad esempio PCI-DSS, HIPAA e la famiglia ISO27000), da un'altra è possibile adattare le tecniche presentate a contesti alternativi, pur utili a garantire livelli di sicurezza elevati all'interno di un'organizzazione.
-Uno tra questi, può essere la valutazione delle competenze in ambito di sicurezza informatica dei dipendenti di un'azienda, la valutazione del grado di accettabilità delle misure di sicurezza adottate, l'automazione di valutazioni comportamentali ad esempio con test di \textit{phishing} controllati.
+Pertanto, se da una parte l'approccio fornito può essere utilizzato per effettuare controlli di compliance verso altre normative e standard (come ad esempio PCI-DSS, HIPAA e la famiglia ISO27000), da un'altra è possibile adattare le tecniche presentate a contesti alternativi, pur utili a garantire livelli di sicurezza elevati all'interno di un'organizzazione.
+Tra questi ricordiamo la valutazione delle competenze in ambito di sicurezza informatica dei dipendenti di un'azienda, la valutazione del grado di accettabilità delle misure di sicurezza adottate, l'automazione di valutazioni comportamentali ad esempio con test di \textit{phishing} controllati.
 
 
 In questo lavoro di tesi si è voluto inoltre dimostrare come la soluzione \textit{Moon Cloud} possa essere adattata a vari casi d'uso fornendo, nello scenario specifico, supporto a ciascuno degli attori coinvolti nel programma FedRAMP.
@@ -42,7 +38,7 @@ Il lavoro di analisi svolto su FedRAMP ha, inoltre, l'obiettivo di fornire delle
 
 Inoltre, i componenti sviluppati possono essere ulteriormente raffinati e perfezionati.
 Per quanto riguarda il driver \textit{OpenSCAP}, è possibile produrre \textit{XCCDF} per l'esecuzione di test di sicurezza relativi ad altre tecnologie.
-Uno dei limiti del driver è costituito dalla necessità di avere il pacchetto \textit{oscap} installato sul server target; in tal senso, una delle possibili soluzioni adottabili, potrebbe essere quella di effettuare un fork di \textit{OpenSCAP} per implementare l'esecuzione remota dei controlli, riconducendo l'approccio \textit{OpenSCAP} alla metodologia \textit{Moon Cloud}.
+Uno dei limiti del driver è costituito dalla necessità di avere il pacchetto \textit{oscap} installato sul server target; in tal senso, una delle possibile soluzioni, potrebbe essere quella di effettuare un fork di \textit{OpenSCAP} per implementare l'esecuzione remota dei controlli, riconducendo l'approccio \textit{OpenSCAP} alla metodologia \textit{Moon Cloud}.
 
 La web application fornita per l'erogazione dei questionari nel controllo \textit{Survey}, invece, può essere adattata allo standard \textit{OCIL} mediante la redazione di un foglio \textit{XSLT} per la traduzione da \textit{OCIL} a \textit{JSON Schema}; possono essere inoltre introdotti meccanismi per garantire l'autenticità e l'integrità dei dati inviati, mediante l'utilizzo di dispositivi per la firma digitale e di tecnologie per lo storage sicuro dei report.
 

@@ -8,7 +8,7 @@ Verrà poi esposta la struttura del documento, dopodiché ci si concentrerà sul
 In conclusione saranno esposti i concetti di \textit{readiness} e di \textit{compliance} al programma, e sarà approfondita l'implementazione di FedRAMP in Amazon AWS.
 
 \section{Cos'è FedRAMP}
-FedRAMP è il programma governativo americano l'applicazione del \textbf{FISMA} (Federal Information Security Management Act) nell'adozione di tecnologie cloud.
+FedRAMP è il programma governativo americano per l'applicazione del \textbf{FISMA} (Federal Information Security Management Act) nell'adozione di tecnologie cloud.
 Esso propone un approccio standardizzato al \textit{security assessment}, alle autorizzazioni e al monitoraggio continuo di prodotti e servizi cloud, fornendo un insieme di requisiti di sicurezza e un programma di assessment indipendente, nato dalla collaborazione di esperti di sicurezza e di tecnologie cloud.
 Le entità coinvolte nella redazione di questo programma sono state molte: la General Services Administration (GSA), il National Institute of Standards and Technology (NIST), il dipartimento di Sicurezza Nazionale (Department of Homeland Security, DHS), il dipartimento della Difesa (Department of Defense, DOD), la National Security Agency (NSA), l'Office of Management and Budget (OMB).
 
@@ -18,7 +18,7 @@ Nonostante sia stato sviluppato nel contesto USA, la dinamicità e l'elasticità
 Il FISMA è uno standard di sicurezza, entrato in vigore come legge il 17 Dicembre 2002 come "Titolo III" dell'E-Government Act\cite{united2004information}: ciascun sistema che ospiti dati governativi deve essere autorizzato tramite il FISMA prima di essere messo in produzione.
 Esso definisce tre obiettivi principali per la sicurezza dei sistemi informativi federali:
 \begin{itemize}
-    \item \textbf{Confidenzialità}, per garantire restrizioni autorizzate sull'accesso e la \textit{disclosure} dei dati, con l'obiettivo di proteggere la privacy ed eventuale informazioni sul proprietario odegli stessi
+    \item \textbf{Confidenzialità}, per garantire restrizioni autorizzate sull'accesso e la \textit{disclosure} dei dati, con l'obiettivo di proteggere la privacy ed eventuale informazioni sul proprietario degli stessi
     \item \textbf{Integrità}, per proteggere il dato da manipolazioni o azioni distruttive e per garantire allo stesso tempo l'autenticità e la non-repudiabilità dell'informazione
     \item \textbf{Disponibilità}, per assicurare condizioni di affidabilità nell'accesso al dato
 \end{itemize}
@@ -54,7 +54,7 @@ FedRAMP affronta la problematica nei seguenti modi\cite{understandingFedRAMP}:
     \item Fornendo processi di valutazione della sicurezza e autorizzazione congiunti, basati su una serie di requisiti e controlli standardizzati, sulla base dell'impatto del sistema 
     \item Strutturando un processo di analisi e valutazione della conformità condotto da Organizzazioni di terze parti approvate (3PAO), per valutare costantemente la capacità di un provider di servizi cloud (CSP) di soddisfare requisiti di sicurezza desiderati
     \item Coordinando servizi di monitoraggio continuo
-    \item Fornendo pacchetti di autorizzazione composti da servizi cloud già revisionati da una Joint Authorization Board (JAB), composta da esperti di sicurezza provienienti dal DHS, dalla GSA e del DoD. 
+    \item Fornendo pacchetti di autorizzazione composti da servizi cloud già revisionati da una Joint Authorization Board (JAB), composta da esperti di sicurezza provienienti dal DHS, dalla GSA e del DoD 
     \item Offrendo un linguaggio standardizzato per aiutare i dipartimenti e gli enti governativi ad integrare i requisiti di FedRAMP all'interno dei processi interni
     \item Un repository di pacchetti di autorizzazione per i servizi cloud che possono essere utilizzati dal governo
 \end{itemize}
@@ -62,7 +62,7 @@ FedRAMP affronta la problematica nei seguenti modi\cite{understandingFedRAMP}:
 L'utilizzo di un framework centralizzato ha inevitabilmente determinato un risparmio notevole anche in termini economici, sia per il governo americano, che per i cloud service provider: si stima che questo ammonti a circa \$250,000 per ciascun sistema autorizzato, per un totale di circa 160 implementazioni dello standard FISMA. Il risparmio stimato per il governo è quindi di 40 milioni di dollari \cite{7036263}.
 \section{Struttura}
 Il programma fornisce un percorso che i fornitori di servizi cloud possono intraprendere per ottenere una autorizzazione provvisoria, da sottoporre in una successiva fase di \textit{security assessment} che verrà poi revisionata dalla \textit{JAB}.
-Mediante questo approccio preventivo è possibile quindi anticipare l'\textit{assessment} dei controlli di sicurezza e di velocizzare il processo di autorizzazione definitiva dell'applicativo o sistema cloud.
+Mediante questo approccio preventivo è possibile quindi anticipare l'\textit{assessment} dei controlli di sicurezza e velocizzare il processo di autorizzazione definitiva dell'applicativo o sistema cloud.
 \subsection{CSP: FedRAMP readiness}
 
 Il provider che vuole partecipare a FedRAMP deve innanzitutto soddisfare una serie di requisiti di \textit{readiness}:
@@ -75,7 +75,7 @@ Il provider che vuole partecipare a FedRAMP deve innanzitutto soddisfare una ser
     \item Fornire un meccanismo di identificazione e autenticazione a due fattori per l'accesso locale agli account privilegiati
     \item Avere la possibilità di eseguire analisi del codice per le soluzioni software proprietarie
     \item Avere protezioni di confine garantendo isolamento logico e fisico degli asset
-    \item Avere l'abilità di rimediare a situazioni di rischio elevato entro i 30 giorni (90 giorni per le situazioni di rischio moderato)
+    \item Avere l'abilità di rimediare a situazioni di rischio elevato entro 30 giorni (90 giorni per le situazioni di rischio moderato)
     \item Fornire un inventario e configurazioni standard per tutti i dispositivi
     \item Avere meccanismi di sicurezza che impediscano la fuoriuscita di informazioni nell'utilizzo di mezzi di comunicazione condivisi
     \item Adottare meccanismi di crittografia per preservare la confidenzialità e l'integrità dei dati trasmessi sulla rete
@@ -104,7 +104,7 @@ A seguito di una revisione della \textit{readiness} da parte dell'ufficio di ges
 L'attore principale è il fornitore di servizi, il quale sottometterà un \textit{security package} e sarà designato come candidato all'autorizzazione. Lo svolgimento del processo può avvenire in due modi:
 \begin{itemize}
     \item \textit{Processo condotto da un'agenzia federale}, che vuole far autorizzare a FedRAMP i sistemi cloud correntemente attivi. In tal caso il processo è totalmente controllato e monitorato dall'ente, il cui compito è quello di sorvegliare sull'implementazione dei controlli di sicurezza mancanti nei sistemi del fornitore di servizi. L'autorizzazione sarà quindi emessa direttamente dall'agenzia.
-    \item \textit{Processo mantenuto dalla Joint Authorization Board}, che analizzerà il livello di sicurezza del fornitore ed emetterà una autorizzazione provvisoria
+    \item \textit{Processo mantenuto dalla Joint Authorization Board}, che analizzerà il livello di sicurezza del fornitore ed emetterà una autorizzazione provvisoria.
 \end{itemize}
 
 \vfill
@@ -126,7 +126,7 @@ Il ruolo degli enti federali è quello di garantire che, per tutti i progetti ne
 
 
 Le agenzie devono catalogare i propri sistemi in un inventario, specificando quali di questi siano di tipo cloud e quali invece siano sistemi tradizionali. È raccomandabile avere un referente che sia preparato a rispondere a quesiti riguardanti l'implementazione dei requisiti FedRAMP.
-Per facilitare ciò alcune informazioni utili potrebbero essere \textit{i) il nome del sistema cloud, ii) la descrizione del servizio fornito dal sistema, iii) il contatto dl proprietario del sistema, iv) la data di autorizzazione, v) lo stato della compliance} \cite{fedrampFramework}.
+Per facilitare ciò alcune informazioni utili potrebbero essere \textit{i) il nome del sistema cloud, ii) la descrizione del servizio fornito dal sistema, iii) il contatto del proprietario del sistema, iv) la data di autorizzazione, v) lo stato della compliance} \cite{fedrampFramework}.
 
 
 In fase di migrazione di sistemi tradizionali sul cloud, così come nell'adattamento di servizi cloud pre-esistenti a FedRAMP, è necessario che i requisiti del programma siano rispettati. Le agenzie devono quindi effetturare un'analisi approfondita delle conseguenze del cambio di tecnologia, per determinare i controlli di sicurezza aggiuntivi da effettuare.
@@ -136,14 +136,14 @@ Se, invece, il fornitore del servizio è un privato e questi non ha effettuato l
 Le agenzie, sulla base di specifiche esigenze, possono sottomettere eventuali controlli aggiuntivi rispetto a quelli basilari; questi devono devono essere adeguatamente documentati e motivati. Gli altri enti possono poi decidere di adottare questi controlli.
 Allo stesso modo, come già trattato, le agenzie possono riutilizzare autorizzazioni emesse per altri enti.
 
-Sulla base del E-Government Act del 2002 (Titolo III, Sezione 3544), le agenzie devono inoltre effettuare analisi del rischio periodiche, valutando l'impatto di eventuali violazione della confidenzialitàe dell'integrità dei dati\cite{fedrampFramework}.
+Sulla base del E-Government Act del 2002 (Titolo III, Sezione 3544), le agenzie devono inoltre effettuare analisi del rischio periodiche, valutando l'impatto di eventuali violazione della confidenzialità e dell'integrità dei dati\cite{fedrampFramework}.
 
 Uno degli obiettivi della piattaforma presentata in questo lavoro di tesi, è quello di fornire uno strumento a supporto delle agenzie federali per la gestione della sicurezza degli asset inventariati (sistemi tradizionali e cloud), fornendo sia meccanismi di \textit{auto-discovery} degli stessi (ad esempio mediante l'integrazione con le API dei cloud service provider, oppure tramite la scansione delle reti locali), sia un processo di monitoraggio continuativo della stato della compliance.
 
 \subsubsection{Organizzazioni di terze parti (3PAO)}
 Affinché un servizio cloud possa essere autorizzato da FedRAMP, è necessario che un'organizzazione di terze parti ne analizzi la sicurezza mediante l'esecuzione dei controlli standardizzati nel documento NIST 800-53.
 Per ottenere l'abilitazione ad effettuare queste analisi, l'organizzazione può decidere di iniziare un percorso di accreditamento, il cui obiettivo è quello di garantire che che le analisi siano effettuate in maniera consistente, dettagliata e indipendente.
-A tal fine, l'organizzazione deve inviare sottomettere del materiale in grado di dimostrare di essere in grado sia di eseguire analisi tecniche adeguate ai livelli attesi, sia di avere competenza nella gestione dei processi di \textit{compliance}.
+A tal fine, l'organizzazione deve sottomettere del materiale in grado di dimostrare di essere in grado sia di eseguire analisi tecniche adeguate ai livelli attesi, sia di avere competenza nella gestione dei processi di \textit{compliance}.
 Questi criteri vengono certificati dalla \textit{American Association for Laboratory Accreditation (A2LA)} che, dopo aver verificato le effettive competenze tecniche in capo alll'organizzazione, effettua un processo di controllo della conformità rispetto allo standard ISO/IEC 17020 (Disposizioni per la transizione degli accreditamenti degli Organismi di ispezione (OdI)).
 
 
@@ -174,7 +174,7 @@ Le modalità con cui un fornitore di servizi può essere autorizzato sono tre:
 Quindi, affinché un sistema cloud sia conforme con FedRAMP:
 \begin{itemize}
     \item deve essere stato creato e sottomesso un pacchetto, utilizzando i template idonei
-    \item deve essere stato eseguito l'assessment, da parte di un'organizzazione di terze parti accreditata e indipendente, mediante l'esecuzione dei controlli di sicurezza relativi al livello di sensibilità del sistema (basso o medio, in quanto i sistemi ad alta sensibilità non sono supportati dal programma e devono essere gestiti separatamente).
+    \item deve essere stato eseguito l'assessment, da parte di un'organizzazione di terze parti accreditata e indipendente, mediante l'esecuzione dei controlli di sicurezza relativi al livello di sensibilità del sistema (basso o medio, in quanto i sistemi ad alta sensibilità non sono supportati dal programma e devono essere gestiti separatamente)
     \item l'assessment deve aver restituito risultati positivi, attestando che i requisiti di sicurezza siano effettivamente verificati
     \item deve essere stata erogata un'autorizzazione ad operare, provvisoria o definitiva
 \end{itemize}
@@ -188,7 +188,8 @@ Successivamente al rilascio dell'autorizzazione provvisoria ad operare, il \text
 \begin{itemize}
     \item \textbf{FIPS 199} nel quale, come precedentemente illustrato, va effettuata la categorizzazione dei sistemi in base al relativo livello di sensibilità, sulla base del documento NIST 800-60. I fornitori di servizi a livello IaaS e PaaS devono seguire le indicazioni della sezione C.3.5 di tale documento.
     \item \textbf{E-Authentication} per l'analisi dei processi dell'autenticazione elettronica, al fine di garantire che siano state implementate misure idonee a minimizzare il livello di rischio. I criteri da utilizzare in questo caso, sono riferiti al documento NIST 800-63.
-    \item \textbf{PTA e PIA}, Privacy Threshold Analysis \& Privacy Impact Assessment, composti da solo quattro domande che hanno lo scopo di individuare il livello di privacy relativo al sistema e di pianificare l'esecuzione degli eventuali controlli di sicurezza relativi In particolare va specificato se l'esecuzione di questi controlli implica l'utilizzo di eventuali meccanismi di autenticazione con impatti sulla privacy (ad esempio utilizzo dell'autenticazione biometrica per l'accesso ai locali) per gli operatori dell'organizzazione di terze parti che eseguono gli stessi.
+    \item \textbf{PTA e PIA}, Privacy Threshold Analysis \& Privacy Impact Assessment, composti da solo quattro domande che hanno lo scopo di individuare il livello di privacy relativo al sistema e di pianificare l'esecuzione degli eventuali controlli di sicurezza relativi.
+        In particolare va specificato se l'esecuzione di questi controlli implica l'utilizzo di eventuali meccanismi di autenticazione con impatti sulla privacy (ad esempio utilizzo dell'autenticazione biometrica per l'accesso ai locali) per gli operatori dell'organizzazione di terze parti che eseguono gli stessi.
     \item \textbf{CTW}, Control Taylor WorkBook, il cui obiettivo è quello di riassumere gli scenari di utilizzo dei servizi offerti da parte dell'agenzia.
     \item \textbf{CIS}, Control Implementation Summary, nel quale è indicato lo stato dell'implementazione dei controlli nel sistema e il responsabile del processo di gestione degli stessi.
     \item \textbf{SSP}, System Security Plan, il quale descrive le modalità con cui sono (o saranno) implementati i controlli di sicurezza previsti.
