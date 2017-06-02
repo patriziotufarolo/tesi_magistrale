@@ -159,9 +159,7 @@ Il processo di \textit{assessment} può essere diviso in tre passaggi \cite{nist
 \end{itemize}
 Il linguaggio può essere poi esteso con specifiche aggiuntive magari istanziate su una singola tecnologia (ad es. \textit{Oval Language UNIX Component Model Specification} per i sistemi operativi UNIX e UNIX-like, o \textit{OVAL Language Windows Component Model Specification} per i sistemi Windows).
 Dal punto di vista del componente implementato, la parte più importante da considerare è rappresentata dalla \textit{OVAL definition}, che è richiamata dalle regole XCCDF.
-L'obiettiivo è quello di descrivere: \textit{i)} le condizioni che un sistema deve avere affinché abbia una determinata vulnerabilità, \textit{ii)} definizione di eventuali rimedi e patch, \textit{iii)} definizioni per definire le condizioni da verificare per determinare se un determinato software o componente è installato, \textit{iv)} definizioni per la \textit{compliance} ad una politica o ad una definizione specifica \cite{nist800126}.
-
-Sulla base di ciò è possibile, tramite OVAL, determinare se una regola \textit{XCCDF} sia valida o meno sul sistema testato. 
+L'obiettiivo è quello di descrivere: \textit{i)} le condizioni che un sistema deve avere affinché abbia una determinata vulnerabilità, \textit{ii)} definizione di eventuali rimedi e patch, \textit{iii)} definizioni per definire le condizioni da verificare per determinare se un determinato software o componente è installato, \textit{iv)} definizioni per la \textit{compliance} ad una politica o ad una definizione specifica \cite{nist800126}. Sulla base di ciò è possibile, tramite OVAL, determinare se una regola \textit{XCCDF} sia valida o meno sul sistema testato. 
 Si tratta, tuttavia, di un linguaggio orientato all'automazione, che pertanto non può essere applicato in caso di verifiche umane e procedurali, come molti dei controlli di sicurezza analizzati.
 In questi casi il linguaggio adatto è OCIL, \textit{Open Checklist Interactive Language}.
 
@@ -186,16 +184,16 @@ OpenSCAP è disponibile nei repository delle distribuzioni Linux ed è composto 
 \end{itemize}
 
 
+\vfill
 \subsection{Driver OpenSCAP per Moon Cloud}
 \label{sec:openscapmooncloud}
 Al fine di effettuare i controlli NIST 800-53 per FedRAMP in Moon Cloud, è stato implementato un apposito driver Moon Cloud per OpenSCAP, in grado di pilotare il tool \textit{oscap} su un server remoto per effettuarne l'analisi; la comunicazione tra il driver e l'host target avviene tramite il protocollo SSH, implementato con la libreria Python \textit{paramiko}.
-
 
 \begin{figure}[H]
 \begin{tabular}{rl} 
 \begin{minipage}{0.4\textwidth} 
 \centering
-\includegraphics[height=15cm]{immagini/DRIVER_OPENSCAP.png}
+\includegraphics[height=12cm]{immagini/DRIVER_OPENSCAP.png}
 
 \end{minipage} 
 
@@ -229,7 +227,8 @@ Il driver supporta gli XCCDF presenti nella \textit{OpenSCAP Security Guide}, ov
 
     \end{tabulary}
 \end{table}
-
+\vfill
+\newpage
 I profili relativi a ciascun XCCDF sono ottenibili con il comando:
 \begin{Verbatim}[frame=single]
 oscap info file.xml

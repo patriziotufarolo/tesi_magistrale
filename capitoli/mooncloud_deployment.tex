@@ -11,11 +11,12 @@ L'ambiente di sviluppo è costituito da un'architettura multi-layer così compos
 \begin{itemize}
     \item A livello di infrastruttura, un nodo fisico, Dell PowerEdge T430 equipaggiato con processore Intel(R) Xeon(R) CPU E5-2630 v4 (10 core fisici e 40 thread logici), 48GB di RAM e 5 dischi da 1TB ciascuno in configurazione RAID 1. Su questa macchina è stato installato il sistema operativo CentOS 7.2, e il software Open Stack Newton.
 
-        È stata quindi effettuata la valutazione della sicurezza a livelli di sistema operativo, utilizzando il driver \textit{OpenSCAP} (del quale sono state collezionate alcune misurazioni sull'impatto prestazionale), e successivamente è stato proposto un benchmarking del setup OpenStack, effettuando un mapping delle recommendation descritte dell'articolo \textit{"A security benchmark for OpenStack"}\cite{MyPaper} sui \textit{security control} FedRAMP. 
+        È stata quindi effettuata la valutazione della sicurezza a livelli di sistema operativo, utilizzando il driver \textit{OpenSCAP} (del quale sono state collezionate alcune misurazioni sull'impatto prestazionale), e successivamente è stato proposto un benchmarking del setup OpenStack, effettuando un mapping delle recommendation descritte dell'articolo \textit{"A security benchmark for OpenStack"}\cite{MyPaper} sui \textit{security control} FedRAMP.
     \item A livello di piattaforma, un cluster Docker Swarm composto da 3 macchine virtuali identiche, con 4GB di RAM, 10GB di disco e sistema operativo CentOS 7.2.
         La valutazione della sicurezza è stata effettuata tramite il driver \textit{OpenSCAP} per analizzare il sistema operativo \textit{guest}, poi eseguendo il \textit{Docker Benchmark for Security}\footnote{https://dockerbench.com} proponendo, anche in questo caso, il mapping tra i risultati ottenuti e i \textit{requisiti FedRAMP}.
+        \vfill\newpage
 
-    \item A livello software, i componenti di Moon Cloud: 5 microservizi \textit{core} e 2 microservizi per la gestione del nodo di esecuzione.\\
+    \item A livello applicativo, i componenti di Moon Cloud: 5 microservizi \textit{core} e 2 microservizi per la gestione del nodo di esecuzione.\\
         \textbf{Componenti Core}
         \begin{itemize}
             \item API
@@ -85,7 +86,6 @@ L'esecuzione del test ha riportato:
 \end{figure}
 
 In particolare, delle 72 valutazioni fallite, 11 sono state catalogate da OpenSCAP con \textit{severity} bassa, 50 con \textit{severity} media e 11 con \textit{severity} elevata; lo score della copertura XCCDF ottenuto è 71.17\%.
-\vfill\newpage
 \subsubsection{Risultato del test: valutazioni fallite}
 \begin{ltabulary}{|p{10cm}|p{4cm}|}
     \hline
@@ -176,6 +176,9 @@ In figura \ref{ref:report_oscap_1_1} è riportata una parte del report generato 
 o nel repository GIT\\
 \textit{https://github.com/patriziotufarolo/tesi\_magistrale/}.
 
+
+Relativamente all'analisi condotta a livello infrastruttura e stata effettuata 	un'analisi delle performance e del costo dell'esecuzione del driver OpenSCAP.
+
 La valutazione delle \textit{OVAL} mediante il driver realizzato è durata 872 secondi; di seguito sono riportate le statistiche relative all'utilizzo delle risorse nell'esecuzione del test.
 Queste sono state raccolte tramite il software \texttt{pidstat}, isolando esclusivamente i processi coinvolti nel processo di assessment.
 \begin{figure}[H]
@@ -206,12 +209,13 @@ Dalla figura \ref{ref:plot1cpuio} è possibile notare come l'impatto del test su
 In figura \ref{ref:plot1mem} è stato invece illustrato l'utilizzo della memoria durante l'esecuzione del test, che rimane sempre inferiore all'1\%. Anche in questo caso l'impatto prestazionale è minimo; il \textit{footprint} di \textit{OpenSCAP} e delle relative \textit{probes} non raggiunge i 5MB in memoria virtuale (\textit{VSZ}), rimanendo inoltre sotto i 500 KB in memoria RAM(\textit{RSS}).
 
 Questo driver si presta particolarmente a scenari di esecuzione programmata e automatica, per effettuare monitoraggio continuativo, dimostrandosi adeguato per l'utilizzo in Moon Cloud, il cui obiettivo è quello di effettuare controlli periodici per la valutazione della compliance.
+Come discusso nel Capitolo 3, FedRAMP fornisce un programma di autorizzazione ciclico, le cui attività sono svolte da organizzazioni eterogenee con periodicità generalmente semestrali o annuali. L'utilizzo di strumenti di monitoraggio continuativo ed auditing è demandato al \textit{cloud service provider} ed alle organizzazioni di terze parti ingaggiate; in relazione alle analisi di performance svolte ed alla completezza dei risultati ottenibili mediante \textit{OpenSCAP}, è possibile affermare che il driver sviluppato abilita Moon Cloud a diventare uno strumento di supporto per le attività del CSP e delle 3PAO.
 
+\subsection{Analisi di OpenStack}
+I documenti XCCDF forniti da OpenSCAP non sono risultati efficienti per l'assessment dei controlli di sicurezza per Open Stack, in quanto le definizioni \textit{OVAL} non sono state completate.
 
-
-\subsubsection{Analisi di OpenStack}
-I documenti XCCDF forniti da OpenSCAP non sono risultati efficienti per l'assessment dei controlli di sicurezza per Open Stack, in quanto le definizioni \textit{OVAL} non sono state redatte
 Questa sezione, pertanto, fa riferimento ad alcune raccomandazioni del paper "\textit{A Security Benchmark for OpenStack}" \cite{MyPaper}. Ogni raccomandazione recensita è mappata sui requisiti FedRAMP corrispondenti. A causa del fatto che l'implementazione dei controlli automatici per alcuni di queste non sono disponibili, l'analisi è stata fatta in modo manuale ispezionando le configurazioni.
+
 Laddove è applicata la dicitura "Non applicabile", si intende che il controllo non è effettuabile nello specifico scenario valutato.
 \begin{ltabulary}{|p{6cm}|p{4cm}|p{2cm}|}
     \hline
@@ -238,12 +242,15 @@ Laddove è applicata la dicitura "Non applicabile", si intende che il controllo 
     {[R23]} Storage Reliability                                                                       & CP-4, CP-9                       & Fallito         \\ \hline
     {[R24]} Data Remanence Avoidance                                                                  & SC-4                             & Fallito         \\ \hline
 \end{ltabulary}
+\begin{center}
 \captionof{table}{Valutazione della compliance FedRAMP nel setup OpenStack di Moon Cloud} 
+\label{table:fedr_os}
+\end{center}
 
-Il 55\% delle valutazioni ha avuto esito negativo sull'ambiente di sviluppo, in quanto esso non è ovviamente predisposto per essere utilizzato in scenari di produzione.
+In Tabella \ref{table:fedr_os}, è possibile vedere come il 55\% delle valutazioni abbia avuto esito negativo su questo setup OpenStack, in quanto esso non è predisposto per essere utilizzato in scenari di produzione.
 
-\subsection{Piattaforma}
-\subsubsection{Analisi OpenSCAP sul template delle macchine virtuali}
+\section{Piattaforma}
+\subsection{Analisi OpenSCAP sul template delle macchine virtuali}
 Il test con il driver OpenSCAP è stato ripetuto sulle macchine virtuali dei nodi appartenenti al cluster Swarm.
 
 I risultati restituiti in output segnalano:
@@ -272,7 +279,7 @@ report available at
 https://moonclouddashboard.blob.core.windows.net/pdfcontainer/b73210ae24
 --
 \end{comment}
-\subsubsection{Analisi del cluster Docker Swarm}
+\subsection{Analisi del cluster Docker Swarm}
 \label{ref:dockerswarmanalysis}
 L'analisi del cluster Swarm è stata condotta utilizzando lo strumento \textit{Docker Security Benchmark}\footnote{Docker Security Benchmark - \textit{https://www.dockerbench.com}}.
 Di seguito è proposto un mapping tra le verifiche fallite e i controlli di sicurezza FedRAMP non rispettati; per motivi di proprietà intellettuale i nomi di alcuni container sono stati oscurati.
@@ -304,7 +311,7 @@ Container running with root FS mounted R/W:  mooncloud\_evaluationmodule, mooncl
 
 
 
-\subsubsection{Livello applicativo: analisi dei componenti software}
+\section{Livello applicativo: analisi dei microservizi}
 
 L'attività di assessment a livello applicativo è stata svolta ispezionando le configurazioni dei servizi e la loro implementazione, in un ambiente di sviluppo.
 Per ragioni di proprietà intellettuale sarà di seguito fornita una descrizione ad alto livello dei componenti e delle problematiche individuate.
