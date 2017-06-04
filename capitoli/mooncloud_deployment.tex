@@ -313,7 +313,10 @@ No selinux SecurityOptions Found:  mooncloud\_evaluationmodule, mooncloud\_api, 
 Container running with root FS mounted R/W:  mooncloud\_evaluationmodule, mooncloud\_api, mooncloud\_traefik, mooncloud\_monitor\_execution\_manager, mooncloud\_dashboard, mooncloud\_*********, mooncloud\_***********, mooncloud\_db, mooncloud\_******, mooncloud\_execution\_manager   & SI-12                                           \\ \hline
 %SA-2
 \end{ltabulary}
-
+\begin{center}
+\captionof{table}{Valutazione della compliance FedRAMP nel setup Docker Swarm di Moon Cloud} 
+\label{table:fedr_dock}
+\end{center}
 Dall'analisi è emerso che non sono stati installati meccanismi di auditing, né per il demone Docker, né per i relativi file di configurazione, inoltre le attività di logging non avvengono in modo centralizzato. Ciò viola i requisiti FedRAMP appartenenti alla classe auditing, in particolar modo \textit{AU-3}, \textit{AU-8} e \textit{AU-12}.
 Il demone Docker è in ascolto su una porta TCP (piuttosto che su una socket Unix), senza che la crittografia \textit{TLS} sia stata abilitata;  Il kernel, inoltre, non è stato compilato con il supporto ai \textit{namespace utente}, il cui obiettivo è quello di isolare ulteriormente le attività del container, né è stato creato un utente specifico per ciascun servizio; il filesystem dei container non viene montato in modalità read-only.
 Per le reti di overlay, inoltre, non è stata abilitata la crittografia (in violazione di \textit{SC-8}, \textit{SC-8(1)}, \textit{SC-10}): l'onere di proteggere le comunicazioni è lasciato al livello \textit{SaaS}.
